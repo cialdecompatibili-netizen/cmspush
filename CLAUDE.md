@@ -195,7 +195,41 @@ cmspush/
 - Sito live: <https://cialdecompatibili-netizen.github.io/cmspush/>
 - CMS admin (solo Mirco): <https://cialdecompatibili-netizen.github.io/cmspush/admin/>
 
-## Nota critica: baseurl
+## ⚠️ REGOLA CRITICA: Portabilità link — zero link hardcoded
+
+cmspush è un prodotto in vendita. Deve funzionare su **qualsiasi repo GitHub Pages** senza modifiche manuali, sia in root (`nomecliente.github.io`) che in sottocartella (`nomecliente.github.io/repo`).
+
+### Regola assoluta
+**MAI usare link interni con path assoluto hardcoded** come `href="/blog/"` o `href="/about/"`.
+
+### Come scrivere i link in Jekyll (sempre)
+| Situazione | Sintassi corretta |
+|---|---|
+| Link a pagina interna in `.md` o `.html` | `{{ '/blog/' | relative_url }}` |
+| Link a post in Liquid | `{{ post.url | relative_url }}` |
+| Link a categoria/tag | `{{ '/categories/#' | append: cat | relative_url }}` |
+| Link a asset (CSS, immagini) | `{{ '/assets/img/foo.png' | relative_url }}` |
+| Link esterno (GitHub, email, ecc.) | normale `href="https://..."` — ok |
+
+### Il filtro `relative_url`
+Aggiunge automaticamente il `baseurl` configurato in `_config.yml`. Se `baseurl` è vuoto (cliente root), non aggiunge nulla. Se è `/cmspush`, aggiunge `/cmspush`. Zero modifiche manuali da parte del cliente.
+
+### File già verificati e corretti (audit completo)
+- `_pages/blog.md` — post.url, categories, tags → tutti `relative_url` ✅
+- `_pages/home.md` — link `/blog/` → `relative_url` ✅
+- `_includes/home-content.html` — link `/blog/`, `/about/` → `relative_url` ✅
+- `_data/navigation.yml` — gestito da Minimal Mistakes che aggiunge `baseurl` automaticamente ✅
+
+### Quando aggiungi nuovi file
+Prima del push, controlla sempre con:
+```powershell
+Select-String -Path "_pages\*.md","_layouts\*.html","_includes\*.html" -Pattern 'href="/'
+```
+Se escono risultati con path interni → vanno corretti con `relative_url`.
+
+---
+
+
 
 - Il **sito vetrina cmspush** (repo di sviluppo) ha `baseurl: "/cmspush"` nel `_config.yml` perché gira su `cialdecompatibili-netizen.github.io/cmspush`
 - Il **template da vendere ai clienti** deve avere `baseurl: ""` perché i clienti usano `nomecliente.github.io` (root)
