@@ -1,5 +1,4 @@
 # [CLAUDE.md](http://CLAUDE.md) — Memoria di progetto cmspush
-
 ## Cos'è questo progetto
 
 cmspush è un CMS commerciale basato su Jekyll + GitHub Pages. Mirco lo vende ai clienti come prodotto finito. Il cliente riceve il proprio repo GitHub con Jekyll + il CMS admin già integrato. Mirco gestisce gli aggiornamenti centralmente dal repo sorgente.
@@ -16,43 +15,61 @@ CosaValoreRepo sorgente (sviluppo)cialdecompatibili-netizen/cmspushDominio comme
 
 ```
 cmspush/
-├── cms/
-│   └── admin/
-│       └── index.html   ← CMS completo (~1000 righe, tutto in 1 file)
-├── docs/
-├── CHANGELOG.md         ← cronologia versioni (letto dalla tab Changelog)
-├── version.json         ← {"version":"x.x.x","notes":"..."}
-├── CLAUDE.md            ← questo file
-└── README.md
+├── admin/
+│   └── index.html           ← CMS completo (~1000 righe, tutto in 1 file)
+├── _config.yml              ← Jekyll + Minimal Mistakes (baseurl: "/cmspush" sul sito vetrina)
+├── _data/navigation.yml     ← Menu sito
+├── _data/categorie.json     ← Categorie CMS
+├── _includes/
+│   └── home-content.html    ← Landing page di vendita (hero, features, comparativa, download)
+├── _layouts/home.html       ← Layout home
+├── _pages/                  ← Pagine sito (about, blog, novita, 404...)
+├── \_posts/ ← Articoli ├── [CHANGELOG.md](http://CHANGELOG.md) ← Storico versioni (visualizzato su /novita/) ├── version.json ← {"version":"x.x.x","changelog":"..."} — fonte aggiornamenti clienti ├── index.html ← Stub home (layout: home) ├── [CLAUDE.md](http://CLAUDE.md) ← questo file └── [README.md](http://README.md)
+
 ```
 
 ---
 
 ## Come funziona il sistema di aggiornamento
 
-1. Mirco modifica cms/admin/index.html nel repo sorgente
-2. Mirco aggiorna version.json con nuova versione e note
-3. Il cliente apre il suo CMS → tab 🔄 Aggiornamento
-4. Il CMS confronta version.json locale vs remoto (repo sorgente, pubblico)
-5. Se c'è nuova versione → mostra bottone "Aggiorna ora"
-6. Il cliente clicca → il CMS sovrascrive cms/admin/index.html nel repo cliente via GitHub API
+1. Mirco modifica `admin/index.html` nel repo sorgente
+2. Mirco aggiorna `version.json` con nuova versione e note
+3. Il cliente apre il suo CMS → tab 🔄 Aggiornamenti
+4. Il CMS confronta version.json locale vs remoto (repo sorgente, pubblica)
+5. Se c'è nuova versione → badge rosso ! nella sidebar + bottone "Aggiorna ora"
+6. Il cliente clicca → il CMS sovrascrive `admin/index.html` nel repo cliente via GitHub API
 7. La pagina si ricarica automaticamente dopo 3 secondi
 
-Costanti nel codice:
-
-- CMS_SOURCE_REPO = 'cialdecompatibili-netizen/cmspush'
-- CMS_SOURCE_PATH = 'cms/admin/index.html'
-- CMS_VERSION_PATH = 'version.json'
+Costanti JS nel CMS:
+- `CMS_SOURCE_REPO = 'cialdecompatibili-netizen/cmspush'`
+- `CMS_SOURCE_PATH = 'admin/index.html'`
+- `CMS_VERSION_PATH = 'version.json'`
 
 ---
 
-## Le 3 funzioni speciali del CMS
+## Landing page di vendita
+
+Il file `_includes/home-content.html` è la landing page del sito vetrina cmspush. Struttura:
+- **Hero** — titolo, sottotitolo, 2 bottoni (Scarica v1.x €19 + Confronta versioni)
+- **Cos'è cmspush** — paragrafo descrittivo
+- **3 feature steps** — Scrivi e pubblica / Cambia tema / Aggiornamenti automatici
+- **Tabella comparativa v1.x vs v2.x** — v1 disponibile €19, v2 in sviluppo
+- **Sezione download** — CTA finale con link alla repo
+
+Stile: bianco, minimale, solo testo. Grafica da definire in futuro.
+Il bottone download punta a: `https://github.com/cialdecompatibili-netizen/cmspush`
+Il prezzo attuale è: **€19 pagamento unico**.
+
+---
+
+## Tab ⚙️ Impostazioni CMS — campi disponibili
 
 ### 🎨 Tab Tema
 
 - Seleziona skin Minimal Mistakes (9 skin disponibili)
 - Modifica minimal_mistakes_skin in \_config.yml via GitHub API
 - Live in \~60s dopo deploy
+```
 
 ### 📋 Tab Changelog
 
@@ -193,4 +210,6 @@ Alla ripresa leggi in ordine:
 2. version.json (versione attuale)
 3. [CHANGELOG.md](http://CHANGELOG.md) (ultime modifiche)
 4. cms/admin/index.html righe finali (ultimi 80 righe) per vedere lo stato JS Poi chiedi a Mirco cosa fare — non assumere, non riscrivere.
+
+```
 ```
