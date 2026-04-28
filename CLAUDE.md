@@ -177,6 +177,14 @@ cmspush/
 - Sito live: <https://cialdecompatibili-netizen.github.io/cmspush/>
 - CMS admin (solo Mirco): <https://cialdecompatibili-netizen.github.io/cmspush/admin/>
 
+## Nota critica: baseurl
+
+- Il **sito vetrina cmspush** (repo di sviluppo) ha `baseurl: "/cmspush"` nel `_config.yml` perché gira su `cialdecompatibili-netizen.github.io/cmspush`
+- Il **template da vendere ai clienti** deve avere `baseurl: ""` perché i clienti usano `nomecliente.github.io` (root)
+- Il campo **Base URL** è gestibile direttamente dalla tab ⚙️ Impostazioni del CMS admin (legge e scrive `_config.yml` via GitHub API)
+
+---
+
 ## Ripresa sessione
 
 Alla ripresa leggi in ordine:
