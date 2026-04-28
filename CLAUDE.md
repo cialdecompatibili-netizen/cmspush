@@ -138,11 +138,48 @@ Non servono credenziali aggiuntive — il token è già nel remote URL.
 - Leggere solo i range necessari dei file lunghi (offset+length).
 - In caso di dubbio: chiedere prima di fare.
 
-## Link sito live
+## Struttura progetto attuale
 
-- Repo cmspush: <https://github.com/cialdecompatibili-netizen/cmspush>
-- Sito live (dopo aver attivato GitHub Pages in Settings → Pages → main / root): <https://cialdecompatibili-netizen.github.io/cmspush/>
-- CMS admin live: <https://cialdecompatibili-netizen.github.io/cmspush/admin/>
+```
+cmspush/
+├── admin/index.html            ← CMS completo (tab: Articoli, Pagine, Menu, Categorie, Token, Tema, Impostazioni, Aggiornamenti)
+├── _config.yml                 ← Jekyll + Minimal Mistakes (skin: air)
+├── _data/navigation.yml        ← Menu: Home, Blog(/articoli/), Categories, Tags, About, Novità(/novita/)
+├── _data/categorie.json        ← Categorie CMS
+├── _includes/home-content.html ← Contenuto home (slider + sezioni)
+├── _layouts/home.html          ← Layout home con slider CSS
+├── _layouts/blog-custom.html   ← Layout blog lista articoli
+├── _pages/novita.md            ← Pagina Novità → legge CHANGELOG.md automaticamente
+├── _pages/ (about, blog, 404, archivi...)
+├── _posts/                     ← Articoli
+├── version.json                ← {"version":"x.x.x","changelog":"..."} — fonte aggiornamenti clienti
+├── CHANGELOG.md                ← Storico versioni (visualizzato su /novita/)
+└── index.html                  ← Stub home (layout: home)
+```
+
+## Sistema aggiornamenti clienti
+
+- I repo clienti puntano a questa repo come sorgente update
+- version.json contiene versione + note changelog
+- Tab "🔄 Aggiornamenti" nel CMS admin dei clienti:
+  - All'avvio confronta version.json locale vs remoto (senza token, repo pubblica)
+  - Se update disponibile: badge rosso ! nella sidebar + bottone "⬆️ Aggiorna ora"
+  - Il bottone scarica admin/index.html dal sorgente e lo installa nel repo cliente via API
+  - Aggiorna anche version.json locale e ricarica dopo 3 secondi
+- Costanti JS: CMS_SOURCE_REPO, CMS_SOURCE_PATH, CMS_VERSION_PATH
+
+## Workflow rilascio nuova versione
+
+1. Modifica admin/index.html
+2. Aggiorna version.json: {"version":"X.X.X","changelog":"Cosa c'è di nuovo"}
+3. Aggiorna [CHANGELOG.md](http://CHANGELOG.md) (appare automaticamente su /novita/)
+4. Push → i clienti vedono l'update al prossimo accesso al CMS
+
+## Link progetto
+
+- Repo: <https://github.com/cialdecompatibili-netizen/cmspush>
+- Sito live: <https://cialdecompatibili-netizen.github.io/cmspush/>
+- CMS admin (solo Mirco): <https://cialdecompatibili-netizen.github.io/cmspush/admin/>
 
 ## Ripresa sessione
 
