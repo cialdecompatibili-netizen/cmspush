@@ -1,4 +1,6 @@
 title: CMSPush
+baseurl: "/cmspush"
+url: "https://cialdecompatibili-netizen.github.io"
 email:
 description: >-
   Un sito Jekyll con CMS integrato, gestito da CMSPush.
