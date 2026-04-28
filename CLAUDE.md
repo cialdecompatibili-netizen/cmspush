@@ -41,6 +41,7 @@ cmspush/
 7. La pagina si ricarica automaticamente dopo 3 secondi
 
 Costanti JS nel CMS:
+
 - `CMS_SOURCE_REPO = 'cialdecompatibili-netizen/cmspush'`
 - `CMS_SOURCE_PATH = 'admin/index.html'`
 - `CMS_VERSION_PATH = 'version.json'`
@@ -50,15 +51,14 @@ Costanti JS nel CMS:
 ## Landing page di vendita
 
 Il file `_includes/home-content.html` è la landing page del sito vetrina cmspush. Struttura:
+
 - **Hero** — titolo, sottotitolo, 2 bottoni (Scarica v1.x €19 + Confronta versioni)
 - **Cos'è cmspush** — paragrafo descrittivo
 - **3 feature steps** — Scrivi e pubblica / Cambia tema / Aggiornamenti automatici
 - **Tabella comparativa v1.x vs v2.x** — v1 disponibile €19, v2 in sviluppo
 - **Sezione download** — CTA finale con link alla repo
 
-Stile: bianco, minimale, solo testo. Grafica da definire in futuro.
-Il bottone download punta a: `https://github.com/cialdecompatibili-netizen/cmspush`
-Il prezzo attuale è: **€19 pagamento unico**.
+Stile: bianco, minimale, solo testo. Grafica da definire in futuro. Il bottone download punta a: `https://github.com/cialdecompatibili-netizen/cmspush`Il prezzo attuale è: **€19 pagamento unico**.
 
 ---
 
@@ -69,10 +69,11 @@ Il prezzo attuale è: **€19 pagamento unico**.
 - Seleziona skin Minimal Mistakes (9 skin disponibili)
 - Modifica minimal_mistakes_skin in \_config.yml via GitHub API
 - Live in \~60s dopo deploy
+
 ```
 
 ### 📋 Tab Changelog
-
+```
 - Legge [CHANGELOG.md](http://CHANGELOG.md) dal repo del CLIENTE (non dal sorgente)
 - Render markdown minimale (titoli, liste, grassetto)
 - Bottone ↻ per ricaricare

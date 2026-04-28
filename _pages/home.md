@@ -1,4 +1,4 @@
----
+﻿---
 layout: home
 title: "Home"
 permalink: /home-page/
@@ -54,7 +54,7 @@ permalink: /home-page/
     <p class="lx-desc-label">Il progetto</p>
     <h2 class="lx-desc-title">Un posto dove mettere ordine<br>ai pensieri sul digitale</h2>
     <p class="lx-desc-text">Blog su tech, web e cultura digitale. Note da un navigatore del web dal 2000.</p>
-    <a href="/blog/" class="lx-desc-cta">Scopri il blog &nbsp;&rarr;</a>
+    <a href="{{ '/blog/' | relative_url }}" class="lx-desc-cta">Scopri il blog &nbsp;&rarr;</a>
   </div>
 </div>
 
