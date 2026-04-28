@@ -81,6 +81,8 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <button class="nav-item" onclick="showPage('token',this)"><span class="icon">🔑</span>Token</button>
     <button class="nav-item" onclick="showPage('tema',this)"><span class="icon">🎨</span>Tema</button>
     <button class="nav-item" onclick="showPage('impostazioni',this)"><span class="icon">⚙️</span>Impostazioni</button>
+    <div class="nav-label">Sistema</div>
+    <button class="nav-item" id="nav-aggiornamenti" onclick="showPage('aggiornamenti',this)"><span class="icon">🔄</span>Aggiornamenti<span id="update-badge" style="display:none;margin-left:auto;background:#e74c3c;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">!</span></button>
   </nav>
 
   <main class="main">
@@ -314,6 +316,28 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         <button class="btn btn-primary" onclick="salvaImpostazioni()">💾 Salva impostazioni</button>
       </div>
       <div class="msg" id="msg-cfg"></div>
+    </div>
+
+    <!-- AGGIORNAMENTI -->
+    <div class="page" id="page-aggiornamenti">
+      <div class="page-title">🔄 Aggiornamenti</div>
+      <div class="card" id="update-card-check">
+        <div class="card-title">Versione CMS</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-size:13px;color:#555">Versione installata: <strong id="ver-locale">–</strong></div>
+            <div style="font-size:13px;color:#555;margin-top:4px">Versione disponibile: <strong id="ver-remota">–</strong></div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="controllaAggiornamenti()">↻ Controlla</button>
+        </div>
+        <div class="msg" id="msg-update" style="margin-top:12px"></div>
+      </div>
+      <div class="card" id="update-card-new" style="display:none;border:2px solid #6c63ff">
+        <div class="card-title" style="color:#6c63ff">✨ Aggiornamento disponibile</div>
+        <div id="update-notes" style="font-size:13px;color:#444;line-height:1.7;margin-bottom:16px"></div>
+        <button class="btn btn-primary" onclick="eseguiAggiornamento()" id="btn-aggiorna">⬆️ Aggiorna ora</button>
+        <div class="msg" id="msg-update2" style="margin-top:12px"></div>
+      </div>
     </div>
 
   </main>
@@ -873,9 +897,73 @@ async function aggiornaIndexHome(pagePath){
   }catch(e){}
 }
 
+// AGGIORNAMENTI
+const CMS_SOURCE_REPO='cialdecompatibili-netizen/cmspush';
+const CMS_SOURCE_PATH='admin/index.html';
+const CMS_VERSION_PATH='version.json';
+
+async function controllaAggiornamenti(){
+  showMsg('msg-update','⏳ Controllo in corso...','');
+  // Legge version.json locale (questo repo cliente)
+  const resL=await ghGet(CMS_VERSION_PATH);
+  if(!resL.ok)return showMsg('msg-update','❌ Impossibile leggere version.json locale.','err');
+  const dL=await resL.json();
+  const verLocale=JSON.parse(dec(dL.content));
+  document.getElementById('ver-locale').textContent=verLocale.version||'–';
+
+  // Legge version.json dal repo sorgente (senza token, è pubblico)
+  const resR=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_VERSION_PATH}`);
+  if(!resR.ok)return showMsg('msg-update','❌ Impossibile raggiungere il server di aggiornamento.','err');
+  const dR=await resR.json();
+  const verRemota=JSON.parse(dec(dR.content));
+  document.getElementById('ver-remota').textContent=verRemota.version||'–';
+
+  if(verRemota.version===verLocale.version){
+    showMsg('msg-update','✅ Sei già alla versione più recente!','ok');
+    document.getElementById('update-card-new').style.display='none';
+    document.getElementById('update-badge').style.display='none';
+  } else {
+    showMsg('msg-update','','');
+    document.getElementById('update-notes').innerHTML=`<strong>Cosa c'è di nuovo:</strong><br>${verRemota.changelog||verRemota.notes||'Miglioramenti generali.'}`;
+    document.getElementById('update-card-new').style.display='block';
+    document.getElementById('update-badge').style.display='inline-block';
+  }
+}
+
+async function eseguiAggiornamento(){
+  if(!tok())return showMsg('msg-update2','⚠️ Token mancante!','err');
+  document.getElementById('btn-aggiorna').disabled=true;
+  showMsg('msg-update2','⏳ Download aggiornamento...','');
+
+  // Legge il nuovo admin/index.html dal repo sorgente
+  const resSrc=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_SOURCE_PATH}`);
+  if(!resSrc.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore download.','err');}
+  const dSrc=await resSrc.json();
+  const nuovoContenuto=dec(dSrc.content);
+
+  // Legge sha del file locale da sovrascrivere
+  const resLoc=await ghGet(CMS_SOURCE_PATH);
+  if(!resLoc.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore lettura file locale.','err');}
+  const dLoc=await resLoc.json();
+
+  // Sovrascrive admin/index.html nel repo cliente
+  showMsg('msg-update2','⏳ Installazione...','');
+  const resPut=await ghPut(CMS_SOURCE_PATH,'Aggiornamento CMS',nuovoContenuto,dLoc.sha);
+  if(!resPut.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore installazione.','err');}
+
+  // Aggiorna anche version.json locale
+  const resVer=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_VERSION_PATH}`);
+  const dVer=await resVer.json();
+  const resVerLoc=await ghGet(CMS_VERSION_PATH);
+  const dVerLoc=await resVerLoc.json();
+  await ghPut(CMS_VERSION_PATH,'Aggiorna versione CMS',dec(dVer.content),dVerLoc.sha);
+
+  showMsg('msg-update2','✅ Aggiornato! La pagina si ricarica in 3 secondi...','ok');
+  setTimeout(()=>location.reload(),3000);
+}
+
 window.onload=function(){
   document.getElementById('data').value=new Date().toISOString().split('T')[0];
-  // editor visuale attivo di default
   document.getElementById('quill-box').style.display='block';
   document.getElementById('corpo').style.display='none';
   if(tok()){
@@ -887,6 +975,7 @@ window.onload=function(){
     caricaMenu();
     caricaTema();
     caricaImpostazioni();
+    controllaAggiornamenti(); // controlla update automaticamente all'avvio
   }
 };
 </script>

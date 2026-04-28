@@ -140,10 +140,9 @@ Non servono credenziali aggiuntive — il token è già nel remote URL.
 
 ## Link sito live
 
-- Repo cmspush: https://github.com/cialdecompatibili-netizen/cmspush
-- Sito live (dopo aver attivato GitHub Pages in Settings → Pages → main / root):
-  https://cialdecompatibili-netizen.github.io/cmspush/
-- CMS admin live: https://cialdecompatibili-netizen.github.io/cmspush/admin/
+- Repo cmspush: <https://github.com/cialdecompatibili-netizen/cmspush>
+- Sito live (dopo aver attivato GitHub Pages in Settings → Pages → main / root): <https://cialdecompatibili-netizen.github.io/cmspush/>
+- CMS admin live: <https://cialdecompatibili-netizen.github.io/cmspush/admin/>
 
 ## Ripresa sessione
 
