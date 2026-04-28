@@ -282,6 +282,11 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
           <div class="field"><label>Email</label><input type="text" id="cfg-email" placeholder="tu@email.com"></div>
         </div>
         <div class="field"><label>Descrizione</label><input type="text" id="cfg-description" placeholder="Una breve descrizione del sito..."></div>
+        <div class="field">
+          <label>Base URL</label>
+          <input type="text" id="cfg-baseurl" placeholder='Lascia vuoto per sito principale (es. nome.github.io) — oppure /nome-repo per sottocartella'>
+          <div class="hint" style="display:block;margin-top:3px">⚠️ Se il sito è su <strong>nome.github.io</strong> lascia vuoto. Se è su <strong>nome.github.io/repo</strong> scrivi <code>/repo</code>.</div>
+        </div>
       </div>
 
       <div class="card">
@@ -794,6 +799,7 @@ async function caricaImpostazioni(){
   const get=(k,def='')=>{const m=y.match(new RegExp(`^${k}:\\s*(.+)$`,'m'));return m?m[1].trim().replace(/^["']|["']$/g,''):def;};
   document.getElementById('cfg-title').value=get('title');
   document.getElementById('cfg-email').value=get('email');
+  document.getElementById('cfg-baseurl').value=get('baseurl');
   // descrizione multiriga
   const descM=y.match(/description:\s*>-\s*\n\s*(.+)/);
   document.getElementById('cfg-description').value=descM?descM[1].trim():get('description');
@@ -837,9 +843,12 @@ async function salvaImpostazioni(){
   const d=await res.json();_configShaImp=d.sha;
   let y=dec(d.content);
 
-  // titolo, email
+  // titolo, email, baseurl
   y=y.replace(/^title:.*$/m,`title: ${document.getElementById('cfg-title').value.trim()}`);
   y=y.replace(/^email:.*$/m,`email: ${document.getElementById('cfg-email').value.trim()}`);
+  const buVal=document.getElementById('cfg-baseurl').value.trim();
+  if(y.match(/^baseurl:/m)) y=y.replace(/^baseurl:.*$/m,`baseurl: "${buVal}"`);
+  else y=`baseurl: "${buVal}"\n`+y;
 
   // descrizione
   const desc=document.getElementById('cfg-description').value.trim();
