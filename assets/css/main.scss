@@ -1,0 +1,210 @@
+---
+# Front matter vuoto obbligatorio per Jekyll
+---
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+@import "minimal-mistakes";
+
+/* ============================================================
+   TIPOGRAFIA FLUIDA — versione definitiva
+   Principio: clamp(minimo-mobile, fluido-vw, massimo-desktop)
+   Nessun breakpoint manuale, si adatta da 320px a 1600px
+   ============================================================ */
+
+/* --- TITOLI --- */
+
+h1,
+.page__title {
+  font-size: clamp(2rem, 5vw, 3.5rem);  /* 32px → 56px */
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.5em;
+}
+
+h2 {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);  /* 22px → 35px */
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 2em;
+  margin-bottom: 0.4em;
+}
+
+h3 {
+  font-size: clamp(1.1rem, 2.2vw, 1.55rem);  /* 18px → 25px */
+  font-weight: 500;
+  line-height: 1.3;
+  margin-top: 1.6em;
+  margin-bottom: 0.35em;
+}
+
+h4, h5, h6 {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* --- CORPO TESTO --- */
+
+body {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);  /* 16px → 18px */
+  line-height: 1.9;
+  color: #3a3a3a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #ffffff !important;
+}
+
+.initial-content,
+#main,
+.page,
+.page__inner-wrap,
+.page__content,
+.archive,
+.sidebar,
+.sidebar__right {
+  background: #ffffff !important;
+}
+
+/* Paragrafi e liste nei contenuti */
+.page__content p,
+.page__content li {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.9;
+  color: #3a3a3a;
+  margin-bottom: 1.4em;
+}
+
+/* --- LARGHEZZA RIGA IDEALE (60-75 caratteri) --- */
+/* Evita righe lunghissime che stancano l'occhio */
+
+.page__content {
+  max-width: 68ch;  /* ch = larghezza del carattere "0", 68ch = ~70 caratteri */
+}
+
+/* --- SPAZIATURA TITOLO/PARAGRAFO --- */
+/* Il titolo deve "appartenere" al paragrafo che segue, non a quello prima */
+
+.page__content h2,
+.page__content h3,
+.page__content h4 {
+  margin-top: 2.2em;   /* molto spazio SOPRA */
+  margin-bottom: 0.5em; /* poco spazio SOTTO — lega al paragrafo seguente */
+}
+
+/* --- SIDEBAR AUTORE --- */
+
+.author__name {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.author__bio {
+  font-size: clamp(0.88rem, 1.4vw, 1rem);
+  line-height: 1.75;
+  color: #555;
+}
+
+/* --- ARCHIVIO / BLOG (lista post) --- */
+
+.archive__item-title {
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 0.3em;
+}
+
+.archive__item-excerpt {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.8;
+  color: #555;
+}
+
+/* Titolo sezione archivio (es. "Posts") */
+.archive__subtitle {
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #999;
+  font-weight: 400;
+}
+
+/* --- NAVIGAZIONE --- */
+
+.greedy-nav a {
+  font-size: clamp(0.82rem, 1.3vw, 0.93rem);
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+/* Navbar bianca — override skin default */
+.masthead {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e8e8e8 !important;
+  box-shadow: none !important;
+}
+
+.masthead__inner-wrap {
+  background: #ffffff !important;
+}
+
+.greedy-nav {
+  background: #ffffff !important;
+}
+
+.greedy-nav .visible-links a {
+  color: #111 !important;
+}
+
+.greedy-nav .visible-links a:hover {
+  color: #555 !important;
+}
+
+.greedy-nav button.greedy-nav__toggle {
+  background: #ffffff !important;
+  color: #111 !important;
+}
+
+/* --- META INFO (data, tempo lettura) --- */
+
+.page__meta,
+.page__meta-sep,
+.breadcrumbs {
+  font-size: clamp(0.78rem, 1.2vw, 0.88rem);
+  color: #888;
+}
+
+/* --- LEGGIBILITA' GLOBALE --- */
+
+/* Anti-aliasing su tutto il sito per caratteri piu nitidi */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Immagini responsive sempre */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Link nel contenuto — piu leggibili */
+.page__content a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* Blockquote — elegante */
+blockquote {
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.8;
+  color: #555;
+  border-left: 2px solid #ccc;
+  padding-left: 1.5em;
+  margin-left: 0;
+}

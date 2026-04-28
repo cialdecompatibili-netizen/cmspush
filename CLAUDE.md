@@ -100,6 +100,51 @@ Costanti nel codice:
 
 ---
 
+## Cartella di lavoro
+
+**Percorso locale:** `C:\Users\mirco\Desktop\cmspush`**Branch:** main **Remote:** origin → <https://github.com/cialdecompatibili-netizen/cmspush>
+
+---
+
+## Come pushare su GitHub
+
+Il repo è già configurato con token nel remote. Aprire PowerShell o terminale nella cartella cmspush ed eseguire:
+
+```powershell
+cd "C:\Users\mirco\Desktop\cmspush"
+git add .
+git commit -m "descrizione modifica"
+git push
+```
+
+Oppure con messaggio specifico per rilascio versione:
+
+```powershell
+git add .
+git commit -m "Release v1.x.x - descrizione novità"
+git push
+```
+
+Non servono credenziali aggiuntive — il token è già nel remote URL.
+
+---
+
+## REGOLA: TOKEN SCARSI — MODIFICHE MIRATE
+
+- Claude ha token limitati per sessione. Ogni operazione deve essere chirurgica.
+- Prima di creare un file: verifica se esiste già o può essere COPIATO/SPOSTATO da altrove.
+- MAI riscrivere file interi se serve solo modificare una parte — usare edit_block.
+- MAI creare file che esistono già nel progetto sorgente — spostarli con PowerShell.
+- Leggere solo i range necessari dei file lunghi (offset+length).
+- In caso di dubbio: chiedere prima di fare.
+
+## Link sito live
+
+- Repo cmspush: https://github.com/cialdecompatibili-netizen/cmspush
+- Sito live (dopo aver attivato GitHub Pages in Settings → Pages → main / root):
+  https://cialdecompatibili-netizen.github.io/cmspush/
+- CMS admin live: https://cialdecompatibili-netizen.github.io/cmspush/admin/
+
 ## Ripresa sessione
 
 Alla ripresa leggi in ordine:
