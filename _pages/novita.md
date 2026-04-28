@@ -1,6 +1,6 @@
 ﻿---
 layout: single
-title: "Novità"
+title: "Changelog"
 permalink: /novita/
 author_profile: false
 ---
