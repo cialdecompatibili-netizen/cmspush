@@ -1,5 +1,4 @@
-# [CLAUDE.md](http://CLAUDE.md) — Memoria di progetto cmspush
-## Cos'è questo progetto
+# [CLAUDE.md](http://CLAUDE.md) — Memoria di progetto cmspush## Cos'è questo progetto
 
 cmspush è un CMS commerciale basato su Jekyll + GitHub Pages. Mirco lo vende ai clienti come prodotto finito. Il cliente riceve il proprio repo GitHub con Jekyll + il CMS admin già integrato. Mirco gestisce gli aggiornamenti centralmente dal repo sorgente.
 
@@ -10,11 +9,21 @@ cmspush è un CMS commerciale basato su Jekyll + GitHub Pages. Mirco lo vende ai
 CosaValoreRepo sorgente (sviluppo)cialdecompatibili-netizen/cmspushDominio commerciale[cmspush.com](http://cmspush.com) (da collegare al repo)Repo demo/test clientecialdecompatibili-netizen/cialdecompatibili-netizen.github.ioFile CMS admincms/admin/index.htmlFile versioneversion.jsonChangelog[CHANGELOG.md](http://CHANGELOG.md)
 
 ---
+## Modello di vendita
+
+- Repo `cmspush` resta **pubblica** (stesso modello di wallscript.9lessons.info)
+- Vendita manuale: cliente paga €19 → Mirco invia zip preconfigurato via email
+- La repo pubblica non è un problema: chi paga riceve un prodotto pronto, supporto e aggiornamenti
+- **Motivo strategia manuale**: prima si valida se il prodotto vende, poi si automatizza. 1 progetto su 10 funziona, meglio non investire in automazioni prima di avere conferma del mercato.
+- Quando/se si automatizza: Gumroad o Lemon Squeezy → zip automatico al pagamento
+
+---
 
 ## Struttura progetto
 
 ```
 cmspush/
+```
 ├── admin/
 │   └── index.html           ← CMS completo (~1000 righe, tutto in 1 file)
 ├── _config.yml              ← Jekyll + Minimal Mistakes (baseurl: "/cmspush" sul sito vetrina)
@@ -23,9 +32,7 @@ cmspush/
 ├── _includes/
 │   └── home-content.html    ← Landing page di vendita (hero, features, comparativa, download)
 ├── _layouts/home.html       ← Layout home
-├── _pages/                  ← Pagine sito (about, blog, novita, 404...)
-├── \_posts/ ← Articoli ├── [CHANGELOG.md](http://CHANGELOG.md) ← Storico versioni (visualizzato su /novita/) ├── version.json ← {"version":"x.x.x","changelog":"..."} — fonte aggiornamenti clienti ├── index.html ← Stub home (layout: home) ├── [CLAUDE.md](http://CLAUDE.md) ← questo file └── [README.md](http://README.md)
-
+├── \_pages/ ← Pagine sito (about, blog, novita, 404...) ├── \_posts/ ← Articoli ├── [CHANGELOG.md](http://CHANGELOG.md) ← Storico versioni (visualizzato su /novita/) ├── version.json ← {"version":"x.x.x","changelog":"..."} — fonte aggiornamenti clienti ├── index.html ← Stub home (layout: home) ├── [CLAUDE.md](http://CLAUDE.md) ← questo file └── [README.md](http://README.md)
 ```
 
 ---
@@ -58,6 +65,7 @@ Il file `_includes/home-content.html` è la landing page del sito vetrina cmspus
 - **Tabella comparativa v1.x vs v2.x** — v1 disponibile €19, v2 in sviluppo
 - **Sezione download** — CTA finale con link alla repo
 
+```
 Stile: bianco, minimale, solo testo. Grafica da definire in futuro. Il bottone download punta a: `https://github.com/cialdecompatibili-netizen/cmspush`Il prezzo attuale è: **€19 pagamento unico**.
 
 ---
@@ -69,11 +77,12 @@ Stile: bianco, minimale, solo testo. Grafica da definire in futuro. Il bottone d
 - Seleziona skin Minimal Mistakes (9 skin disponibili)
 - Modifica minimal_mistakes_skin in \_config.yml via GitHub API
 - Live in \~60s dopo deploy
-
 ```
 
 ### 📋 Tab Changelog
+
 ```
+
 - Legge [CHANGELOG.md](http://CHANGELOG.md) dal repo del CLIENTE (non dal sorgente)
 - Render markdown minimale (titoli, liste, grassetto)
 - Bottone ↻ per ricaricare
@@ -225,11 +234,10 @@ Prima del push, controlla sempre con:
 ```powershell
 Select-String -Path "_pages\*.md","_layouts\*.html","_includes\*.html" -Pattern 'href="/'
 ```
+
 Se escono risultati con path interni → vanno corretti con `relative_url`.
 
 ---
-
-
 
 - Il **sito vetrina cmspush** (repo di sviluppo) ha `baseurl: "/cmspush"` nel `_config.yml` perché gira su `cialdecompatibili-netizen.github.io/cmspush`
 - Il **template da vendere ai clienti** deve avere `baseurl: ""` perché i clienti usano `nomecliente.github.io` (root)
@@ -245,6 +253,10 @@ Alla ripresa leggi in ordine:
 2. version.json (versione attuale)
 3. [CHANGELOG.md](http://CHANGELOG.md) (ultime modifiche)
 4. cms/admin/index.html righe finali (ultimi 80 righe) per vedere lo stato JS Poi chiedi a Mirco cosa fare — non assumere, non riscrivere.
+
+```
+```iscrivere.
+```
 
 ```
 ```
