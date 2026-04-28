@@ -5,7 +5,5 @@ permalink: /novita/
 author_profile: false
 ---
 
-{% capture changelog %}
-{% include_relative CHANGELOG.md %}
-{% endcapture %}
-{{ changelog | markdownify }}
+{% capture changelog_content %}{% include changelog.md %}{% endcapture %}
+{{ changelog_content | markdownify }}

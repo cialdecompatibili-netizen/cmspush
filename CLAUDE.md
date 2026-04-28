@@ -127,9 +127,7 @@ git push
 
 Non servono credenziali aggiuntive — il token è già nel remote URL.
 
----
-
-## REGOLA: TOKEN SCARSI — MODIFICHE MIRATE
+\---## REGOLA: TOKEN SCARSI — MODIFICHE MIRATE
 
 - Claude ha token limitati per sessione. Ogni operazione deve essere chirurgica.
 - Prima di creare un file: verifica se esiste già o può essere COPIATO/SPOSTATO da altrove.
@@ -149,12 +147,10 @@ cmspush/
 ├── _includes/home-content.html ← Contenuto home (slider + sezioni)
 ├── _layouts/home.html          ← Layout home con slider CSS
 ├── _layouts/blog-custom.html   ← Layout blog lista articoli
-├── _pages/novita.md            ← Pagina Novità → legge CHANGELOG.md automaticamente
-├── _pages/ (about, blog, 404, archivi...)
-├── _posts/                     ← Articoli
-├── version.json                ← {"version":"x.x.x","changelog":"..."} — fonte aggiornamenti clienti
-├── CHANGELOG.md                ← Storico versioni (visualizzato su /novita/)
-└── index.html                  ← Stub home (layout: home)
+```
+
+├── \_pages/novita.md ← Pagina Novità → legge [CHANGELOG.md](http://CHANGELOG.md) automaticamente ├── \_pages/ (about, blog, 404, archivi...) ├── \_posts/ ← Articoli ├── version.json ← {"version":"x.x.x","changelog":"..."} — fonte aggiornamenti clienti ├── [CHANGELOG.md](http://CHANGELOG.md) ← Storico versioni (visualizzato su /novita/) └── index.html ← Stub home (layout: home)
+
 ```
 
 ## Sistema aggiornamenti clienti
@@ -189,3 +185,4 @@ Alla ripresa leggi in ordine:
 2. version.json (versione attuale)
 3. [CHANGELOG.md](http://CHANGELOG.md) (ultime modifiche)
 4. cms/admin/index.html righe finali (ultimi 80 righe) per vedere lo stato JS Poi chiedi a Mirco cosa fare — non assumere, non riscrivere.
+```
