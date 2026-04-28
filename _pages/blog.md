@@ -1,4 +1,4 @@
----
+﻿---
 layout: blog-custom
 title: Blog
 permalink: /articoli/
@@ -219,12 +219,12 @@ classes: wide
       {% if post.categories.size > 0 %}
       <div class="blog-cats">
         {% for cat in post.categories limit:2 %}
-        <a href="/categories/#{{ cat | slugify }}" class="blog-cat">{{ cat }}</a>
+        <a href="{{ cat | slugify | prepend: '/categories/#' | prepend: site.baseurl }}" class="blog-cat">{{ cat }}</a>
         {% endfor %}
       </div>
       {% endif %}
 
-      <a href="{{ post.url }}" class="blog-title">{{ post.title }}</a>
+      <a href="{{ post.url | relative_url }}" class="blog-title">{{ post.title }}</a>
       <div class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</div>
 
       <div class="blog-meta">
@@ -236,11 +236,11 @@ classes: wide
         {% if post.tags.size > 0 %}
         <div class="blog-tags">
           {% for tag in post.tags limit:3 %}
-          <a href="/tags/#{{ tag | slugify }}" class="blog-tag"># {{ tag }}</a>
+          <a href="{{ tag | slugify | prepend: '/tags/#' | prepend: site.baseurl }}" class="blog-tag"># {{ tag }}</a>
           {% endfor %}
         </div>
         {% endif %}
-        <a href="{{ post.url }}" class="blog-readmore">Leggi tutto &rarr;</a>
+        <a href="{{ post.url | relative_url }}" class="blog-readmore">Leggi tutto &rarr;</a>
       </div>
     </div>
 
