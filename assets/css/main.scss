@@ -204,3 +204,17 @@ blockquote {
 .page__footer-copyright a { color: #888 !important; }
 .page__footer-follow ul li a:hover,
 .page__footer-copyright a:hover { color: #111 !important; text-decoration: none; }
+
+/* ============================================================
+   WIDE PAGE — larghezza identica alla navbar (da logo a lente)
+   MM usa .wide sul body quando classes: wide nel front matter
+   ============================================================ */
+.wide #main > article.page,
+.wide #main > article.page .page__inner-wrap,
+.wide #main > article.page .page__content {
+  max-width: 100% !important;
+  width: 100% !important;
+  float: none !important;
+  padding-right: 0 !important;
+}
+
