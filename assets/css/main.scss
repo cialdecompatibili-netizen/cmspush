@@ -198,19 +198,16 @@ blockquote {
 
 /* ============================================================
    SIDEBAR A DESTRA — soluzione definitiva
-   MM usa float nativo: .sidebar float-left 200px, .page float-right calc(100% - 200px)
-   Basta invertire: sidebar va a destra, page occupa il resto a sinistra
-   Zero grid, zero flex, zero rotture su altre pagine
+   direction:rtl inverte i float senza toccare DOM o larghezze MM
+   direction:ltr dentro per non rompere il testo
    ============================================================ */
 @media (min-width: 64em) {
-  /* Sidebar: da sinistra a destra */
-  #main > .sidebar {
-    float: right !important;
-    margin-inline-start: 0 !important;
-    margin-inline-end: 0 !important;
+  #main:has(> .sidebar) {
+    direction: rtl !important;
   }
-  /* Articolo: rimane float-right di MM ma ora la sidebar è a destra */
-  /* MM fa già width: calc(100% - 200px) su .page — non toccare */
+  #main:has(> .sidebar) > * {
+    direction: ltr !important;
+  }
 }
 
 /* ============================================================
