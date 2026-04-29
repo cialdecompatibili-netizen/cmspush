@@ -1,7 +1,7 @@
 ﻿---
 layout: blog-custom
 title: Blog
-permalink: /articoli/
+permalink: /blog/
 author_profile: false
 classes: wide
 ---
@@ -199,7 +199,7 @@ classes: wide
 <div class="blog-wrap">
 
 <div class="blog-header">
-  <h1>Articoli</h1>
+  <h1>Blog</h1>
   <p>Idee, storie e riflessioni</p>
 </div>
 
