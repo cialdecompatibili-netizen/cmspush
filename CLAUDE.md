@@ -1,4 +1,4 @@
-# [CLAUDE.md](http://CLAUDE.md) — Memoria di progetto cmspush## Cos'è questo progetto
+﻿# [CLAUDE.md](http://CLAUDE.md) — Memoria di progetto cmspush## Cos'è questo progetto
 
 cmspush è un CMS commerciale basato su Jekyll + GitHub Pages. Mirco lo vende ai clienti come prodotto finito. Il cliente riceve il proprio repo GitHub con Jekyll + il CMS admin già integrato. Mirco gestisce gli aggiornamenti centralmente dal repo sorgente.
 
@@ -289,6 +289,8 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-29 | REPO dinamico detectRepo() da URL — zero hardcoded | admin/index.html, cms/admin/index.html | ef7b2cf |
 | 2026-04-29 | Link topbar "Vai al sito" e "Admin" — ora JS dinamico | admin/index.html, cms/admin/index.html | ef7b2cf |
 | 2026-04-29 | Tab Aggiornamenti: fallback fetch relativo + messaggio chiaro in locale | admin/index.html, cms/admin/index.html | b65b27d |
+| 2026-04-29 | Rimossa doppia navbar Tailwind da home-content.html (restava solo masthead MM) | _includes/home-content.html | 898774a |
+| 2026-04-29 | Critical CSS inline: footer + navbar in _includes/head/custom.html — zero FOUC | _includes/head/custom.html (nuovo), assets/css/main.scss | f9aad34 |
 
 ---
 
