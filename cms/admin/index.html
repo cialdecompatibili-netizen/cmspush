@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -61,11 +61,42 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 .vis-toolbar button:hover{background:#6c63ff;color:white;border-color:#6c63ff}
 .vis-toolbar select{padding:4px 7px;font-size:12px;border:1.5px solid #ddd;border-radius:5px;background:white;cursor:pointer}
 #vis-editor{min-height:260px;border:1.5px solid #e8e8e8;border-radius:0 0 7px 7px;padding:12px 14px;font-size:14px;line-height:1.8;outline:none;background:white;overflow-y:auto}
-</style>
+
+.onboarding-overlay{position:fixed;inset:0;background:#f5f6fa;z-index:9999;display:none;align-items:center;justify-content:center;padding:24px}
+.onboarding-box{background:white;border-radius:16px;padding:40px 36px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.10);text-align:center}
+.onboarding-logo{font-size:36px;margin-bottom:8px}
+.onboarding-title{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.onboarding-sub{font-size:14px;color:#888;margin-bottom:24px;line-height:1.6}
+.onboarding-steps{text-align:left;background:#f8f8ff;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#555;line-height:1.9}
+.onboarding-input-wrap{position:relative;margin-bottom:10px}
+.onboarding-input-wrap input{width:100%;padding:12px 44px 12px 14px;border:1.5px solid #e8e8e8;border-radius:9px;font-size:14px;font-family:inherit;background:#fafafa;color:#222}
+.onboarding-input-wrap input:focus{outline:none;border-color:#6c63ff;background:#fff}
+.onboarding-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#aaa}
+.onboarding-link{font-size:12px;color:#6c63ff;text-decoration:none;display:inline-block;margin-bottom:20px}</style>
 </head>
 <body>
 
-<div class="topbar">
+<div id="onboarding-overlay" class="onboarding-overlay">
+  <div class="onboarding-box">
+    <div class="onboarding-logo">&#9997;</div>
+    <div class="onboarding-title">Benvenuto in cmspush</div>
+    <div class="onboarding-sub">Per iniziare hai bisogno di un <strong>token GitHub</strong>.<br>Ti serve solo la prima volta.</div>
+    <div class="onboarding-steps">
+      <strong>Come crearlo:</strong><br>
+      1. Clicca il link qui sotto<br>
+      2. Dai un nome tipo <em>cmspush</em><br>
+      3. Spunta <strong>repo</strong> &rarr; clicca <strong>Generate token</strong><br>
+      4. Copia e incolla qui sotto
+    </div>
+    <a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=cmspush" target="_blank" class="onboarding-link">&#128273; Crea il tuo token GitHub &nearr;</a>
+    <div class="onboarding-input-wrap">
+      <input type="password" id="onboarding-token" placeholder="Incolla qui il token (ghp_...)">
+      <button class="onboarding-eye" onclick="var i=document.getElementById('onboarding-token');i.type=i.type=='password'?'text':'password'">&#128065;</button>
+    </div>
+    <div class="msg" id="msg-onboarding" style="margin-bottom:12px"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="salvaTokenOnboarding()">Inizia a usare il CMS</button>
+  </div>
+</div><div class="topbar">
   <a id="topbar-admin-link" href="#" target="_blank" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ cmspush Admin</a>
   <a id="topbar-site-link" href="#" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
 </div>
@@ -1004,10 +1035,18 @@ async function eseguiAggiornamento(){
   setTimeout(()=>location.reload(),3000);
 }
 
-window.onload=function(){
+function salvaTokenOnboarding(){
+  var t=document.getElementById('onboarding-token').value.trim();
+  if(!t||!t.startsWith('ghp_'))return showMsg('msg-onboarding','Incolla un token valido (inizia con ghp_)','err');
+  localStorage.setItem('gh_token',t);
+  document.getElementById('onboarding-overlay').style.display='none';
+  document.getElementById('token-input').value=t;
+  caricaCategorie();caricaLista();caricaPagine();caricaMenu();caricaTema();caricaImpostazioni();controllaAggiornamenti();
+}window.onload=function(){
   document.getElementById('data').value=new Date().toISOString().split('T')[0];
   document.getElementById('quill-box').style.display='block';
   document.getElementById('corpo').style.display='none';
+  if(!tok()){document.getElementById('onboarding-overlay').style.display='flex';}
   if(tok()){
     document.getElementById('token-input').value=tok();
     document.getElementById('token-input').placeholder='✅ Token presente';
