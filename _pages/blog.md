@@ -10,6 +10,7 @@ classes: wide
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 .blog-wrap {
+  max-width: 1280px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
   background: #fff;
