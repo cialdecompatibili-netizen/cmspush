@@ -1,6 +1,7 @@
 ﻿---
 layout: single
 title: "Changelog"
+
 permalink: /novita/
 author_profile: false
 ---

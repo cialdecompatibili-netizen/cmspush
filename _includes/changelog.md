@@ -1,10 +1,27 @@
-# CHANGELOG — CMSPush
-
-Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude per sapere cosa c'è in ogni versione.
+# Changelog
 
 ---
 
-## \[1.0.0\] — 2026-04-28
+## [1.1.1] — 2026-04-30
+
+### Fix layout articolo
+
+- Testo articolo ora occupa tutta la larghezza disponibile accanto alla sidebar (fix CSS Grid con override completo width/float/padding di Minimal Mistakes)
+
+---
+
+## [1.1.0] — 2026-04-30
+
+### Miglioramenti layout e admin
+
+- Sidebar autore spostata a destra sugli articoli (soluzione CSS definitiva, zero rotture)
+- "You May Also Enjoy" — card affiancate corrette (2 colonne tablet, 4 colonne desktop)
+- Bottone 🚀 Deploy nella topbar admin — link diretto a GitHub Actions, dinamico per ogni cliente
+- Link "Admin" nella topbar ora apre nella stessa finestra invece di aprirne una nuova
+
+---
+
+## [1.0.0] — 2026-04-28
 
 ### Prima versione pubblica
 
