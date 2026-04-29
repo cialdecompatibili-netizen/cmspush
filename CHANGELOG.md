@@ -4,6 +4,17 @@ Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude pe
 
 ---
 
+## \[1.1.0\] — 2026-04-30
+
+### Miglioramenti layout e admin
+
+- Sidebar autore spostata a destra sugli articoli (soluzione CSS definitiva, zero rotture)
+- "You May Also Enjoy" — card affiancate corrette (2 colonne tablet, 4 colonne desktop)
+- Bottone 🚀 Deploy nella topbar admin — link diretto a GitHub Actions, dinamico per ogni cliente
+- Link "Admin" nella topbar ora apre nella stessa finestra invece di aprirne una nuova
+
+---
+
 ## \[1.0.0\] — 2026-04-28
 
 ### Prima versione pubblica
