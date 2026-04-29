@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "date": "2026-04-30",
-  "changelog": "Sidebar autore a destra, You May Also Enjoy card corrette, bottone Deploy in topbar admin."
+  "changelog": "Fix layout articolo: testo occupa tutta la larghezza disponibile accanto alla sidebar."
 }

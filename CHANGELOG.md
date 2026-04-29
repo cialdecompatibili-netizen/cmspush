@@ -4,7 +4,15 @@ Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude pe
 
 ---
 
-## \[1.1.0\] — 2026-04-30
+## [1.1.1] — 2026-04-30
+
+### Fix layout articolo
+
+- Testo articolo ora occupa tutta la larghezza disponibile accanto alla sidebar (fix CSS Grid con override completo width/float/padding di Minimal Mistakes)
+
+---
+
+## [1.1.0] — 2026-04-30
 
 ### Miglioramenti layout e admin
 
@@ -15,7 +23,7 @@ Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude pe
 
 ---
 
-## \[1.0.0\] — 2026-04-28
+## [1.0.0] — 2026-04-28
 
 ### Prima versione pubblica
 

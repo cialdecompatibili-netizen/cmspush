@@ -302,18 +302,50 @@ Usare **CSS Grid** su `#main` solo quando ha la sidebar. Non usare float (rompe 
 - `position: absolute` sulla sidebar → sovrappone il contenuto
 - `#main:has(.sidebar)` senza `>` → seleziona anche sidebar dentro l'articolo (TOC)
 - Modificare il layout spostando sidebar nel DOM (single.html custom) → complica l'ordine del page__related
-- CSS Grid su `#main` → rompe `.page__content` che si schiaccia a sinistra perché `max-width: 68ch` agisce sulla colonna grid stretta invece che sulla larghezza reale
+- CSS Grid su `#main` SENZA override completo → `.page__content` si schiaccia perché MM applica `width: calc(100% - 200px)` sull'articolo. Serve `min-width: 0 + box-sizing: border-box + width: 100%` per annullarlo
+- `direction: rtl` su `#main` → sposta il testo a sinistra perché agisce anche sui discendenti profondi, non solo sui figli diretti
 
-**Soluzione definitiva che funziona (una riga di CSS):**
+**Soluzione definitiva che funziona (CSS Grid + override completo MM):**
 
 ```scss
 @media (min-width: 64em) {
-  #main:has(> .sidebar) { direction: rtl !important; }
-  #main:has(> .sidebar) > * { direction: ltr !important; }
+  #main:has(> .sidebar) {
+    display: grid !important;
+    grid-template-columns: 1fr 200px !important;
+    grid-template-rows: auto auto !important;
+    align-items: start !important;
+    gap: 0 2em !important;
+  }
+  #main:has(> .sidebar) > .sidebar {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: auto !important;
+    float: none !important;
+    margin: 0 !important;
+  }
+  /* CRITICO: override completo width/float/padding che MM imposta su .page */
+  #main:has(> .sidebar) > article.page {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #main:has(> .sidebar) > .page__related {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    clear: none !important;
+  }
 }
 ```
 
-`direction: rtl` inverte automaticamente tutti i float MM senza toccare DOM, larghezze, o niente altro. La sidebar che MM mette a float-left finisce visivamente a destra. `direction: ltr` sui figli ripristina il testo normale. Zero side effects su altre pagine perché il selettore `:has(> .sidebar)` colpisce solo articoli con sidebar.
+Il trucco chiave: `min-width: 0` + `box-sizing: border-box` su `article.page` annulla il `width: calc(100% - 200px)` che MM imposta nativamente — senza questo l'articolo si restringeva a sinistra nonostante il grid.
 
 **Fix "You May Also Enjoy" card affiancate:**
 MM applica il float delle card `.grid__item` solo dentro `.archive` — ma `.page__related` non è `.archive`. Serve replicare il comportamento:
@@ -447,9 +479,10 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-29 | Fix navbar riga: border su .masthead (non .greedy-nav), override in main.scss globale | assets/css/main.scss, _includes/head/custom.html | 4f08179 |
 | 2026-04-29 | Permalink blog /articoli/ → /blog/ + titolo H1 "Blog" | _pages/blog.md, _data/navigation.yml | cecbc81 |
 | 2026-04-29 | CLAUDE.md aggiornato con Windows-MCP:PowerShell — Claude pusha autonomamente | CLAUDE.md | — |
-| 2026-04-30 | Fix sidebar destra: direction rtl su #main, ltr su figli | assets/css/main.scss | 624dd67 |
+| 2026-04-30 | Fix sidebar destra: CSS Grid con override completo width/float/padding MM | assets/css/main.scss | 1e93878 |
 | 2026-04-30 | Fix You May Also Enjoy: clear both + float card replica MM | assets/css/main.scss | 5ad79aa |
 | 2026-04-30 | Bottone Deploy topbar (link dinamico GitHub Actions) + Admin stessa finestra | admin/index.html, cms/admin/index.html | 3ba29e7 |
+| 2026-04-30 | Release v1.1.1 — fix testo articolo a tutta larghezza | assets/css/main.scss, version.json, CHANGELOG.md | 1e93878 |
 
 ---
 
