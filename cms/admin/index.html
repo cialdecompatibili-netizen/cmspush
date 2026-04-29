@@ -66,8 +66,8 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 <body>
 
 <div class="topbar">
-  <a href="https://cialdecompatibili-netizen.github.io/admin/" target="_blank" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ Admin v2</a>
-  <a href="https://cialdecompatibili-netizen.github.io/" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
+  <a id="topbar-admin-link" href="#" target="_blank" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ cmspush Admin</a>
+  <a id="topbar-site-link" href="#" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
 </div>
 
 <div class="layout">
@@ -82,8 +82,7 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <button class="nav-item" onclick="showPage('tema',this)"><span class="icon">🎨</span>Tema</button>
     <button class="nav-item" onclick="showPage('impostazioni',this)"><span class="icon">⚙️</span>Impostazioni</button>
     <div class="nav-label">Sistema</div>
-    <button class="nav-item" onclick="showPage('changelog',this)"><span class="icon">📋</span>Changelog</button>
-    <button class="nav-item" onclick="showPage('aggiornamento',this);controllaAggiornamento()"><span class="icon">🔄</span>Aggiornamento</button>
+    <button class="nav-item" id="nav-aggiornamenti" onclick="showPage('aggiornamenti',this)"><span class="icon">🔄</span>Aggiornamenti<span id="update-badge" style="display:none;margin-left:auto;background:#e74c3c;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">!</span></button>
   </nav>
 
   <main class="main">
@@ -283,6 +282,11 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
           <div class="field"><label>Email</label><input type="text" id="cfg-email" placeholder="tu@email.com"></div>
         </div>
         <div class="field"><label>Descrizione</label><input type="text" id="cfg-description" placeholder="Una breve descrizione del sito..."></div>
+        <div class="field">
+          <label>Base URL</label>
+          <input type="text" id="cfg-baseurl" placeholder='Lascia vuoto per sito principale (es. nome.github.io) — oppure /nome-repo per sottocartella'>
+          <div class="hint" style="display:block;margin-top:3px">⚠️ Se il sito è su <strong>nome.github.io</strong> lascia vuoto. Se è su <strong>nome.github.io/repo</strong> scrivi <code>/repo</code>.</div>
+        </div>
       </div>
 
       <div class="card">
@@ -319,32 +323,25 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
       <div class="msg" id="msg-cfg"></div>
     </div>
 
-    <!-- CHANGELOG -->
-    <div class="page" id="page-changelog">
-      <div class="page-title">📋 Changelog</div>
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between">
-          Cronologia versioni
-          <button class="btn btn-secondary btn-sm" onclick="caricaChangelog()">↻ Aggiorna</button>
+    <!-- AGGIORNAMENTI -->
+    <div class="page" id="page-aggiornamenti">
+      <div class="page-title">🔄 Aggiornamenti</div>
+      <div class="card" id="update-card-check">
+        <div class="card-title">Versione CMS</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-size:13px;color:#555">Versione installata: <strong id="ver-locale">–</strong></div>
+            <div style="font-size:13px;color:#555;margin-top:4px">Versione disponibile: <strong id="ver-remota">–</strong></div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="controllaAggiornamenti()">↻ Controlla</button>
         </div>
-        <div id="changelog-content"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+        <div class="msg" id="msg-update" style="margin-top:12px"></div>
       </div>
-    </div>
-
-    <!-- AGGIORNAMENTO -->
-    <div class="page" id="page-aggiornamento">
-      <div class="page-title">🔄 Aggiornamento CMS</div>
-      <div class="card">
-        <div class="card-title">Versione installata</div>
-        <div id="agg-versione-box" style="font-size:28px;font-weight:800;color:#6c63ff;margin-bottom:6px">—</div>
-        <div id="agg-stato" style="font-size:13px;color:#888;margin-bottom:18px">In controllo...</div>
-        <div id="agg-note" style="font-size:13px;color:#555;background:#f8f8ff;border-radius:8px;padding:12px;margin-bottom:16px;display:none"></div>
-        <div class="btn-group">
-          <button class="btn btn-primary" id="btn-aggiorna" onclick="eseguiAggiornamento()" style="display:none">⬆️ Aggiorna ora</button>
-          <button class="btn btn-secondary" onclick="controllaAggiornamento()">🔍 Controlla ora</button>
-        </div>
-        <div class="msg" id="msg-agg"></div>
-        <div style="margin-top:16px;font-size:11px;color:#bbb">L'aggiornamento sostituisce questo file (cms/admin/index.html) con l'ultima versione dal repository sorgente. Il tuo token e le impostazioni del sito non vengono toccate.</div>
+      <div class="card" id="update-card-new" style="display:none;border:2px solid #6c63ff">
+        <div class="card-title" style="color:#6c63ff">✨ Aggiornamento disponibile</div>
+        <div id="update-notes" style="font-size:13px;color:#444;line-height:1.7;margin-bottom:16px"></div>
+        <button class="btn btn-primary" onclick="eseguiAggiornamento()" id="btn-aggiorna">⬆️ Aggiorna ora</button>
+        <div class="msg" id="msg-update2" style="margin-top:12px"></div>
       </div>
     </div>
 
@@ -352,7 +349,27 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 </div>
 
 <script>
-const REPO='cialdecompatibili-netizen/cialdecompatibili-netizen.github.io';
+// Rileva REPO dinamicamente dall'URL della pagina (funziona su qualsiasi repo cliente)
+// URL formato: https://USERNAME.github.io/REPO/admin/ oppure https://USERNAME.github.io/admin/
+function detectRepo(){
+  const h=location.hostname; // es. pippo.github.io
+  const p=location.pathname; // es. /miosito/admin/index.html
+  const match=h.match(/^([^.]+)\.github\.io$/);
+  if(!match)return localStorage.getItem('cms_repo')||'';
+  const user=match[1];
+  const parts=p.split('/').filter(Boolean); // ['miosito','admin','index.html']
+  // Se il primo segmento NON è 'admin' è il nome del repo
+  const repo=(parts.length>1 && parts[0]!=='admin')?parts[0]:'';
+  return repo?`${user}/${repo}`:`${user}/${user}.github.io`;
+}
+const REPO=detectRepo();
+
+// Link topbar dinamici basati sul REPO rilevato
+(function(){
+  const base=location.origin+location.pathname.replace(/\/admin\/?.*$/,'/');
+  document.getElementById('topbar-site-link').href=base;
+  document.getElementById('topbar-admin-link').href=base+'admin/';
+})();
 let _categorie=[];let _catSha=null;
 let _menuVoci=[];let _menuSha=null;
 let _paginaPath='';let _paginaSha='';
@@ -802,6 +819,7 @@ async function caricaImpostazioni(){
   const get=(k,def='')=>{const m=y.match(new RegExp(`^${k}:\\s*(.+)$`,'m'));return m?m[1].trim().replace(/^["']|["']$/g,''):def;};
   document.getElementById('cfg-title').value=get('title');
   document.getElementById('cfg-email').value=get('email');
+  document.getElementById('cfg-baseurl').value=get('baseurl');
   // descrizione multiriga
   const descM=y.match(/description:\s*>-\s*\n\s*(.+)/);
   document.getElementById('cfg-description').value=descM?descM[1].trim():get('description');
@@ -845,9 +863,12 @@ async function salvaImpostazioni(){
   const d=await res.json();_configShaImp=d.sha;
   let y=dec(d.content);
 
-  // titolo, email
+  // titolo, email, baseurl
   y=y.replace(/^title:.*$/m,`title: ${document.getElementById('cfg-title').value.trim()}`);
   y=y.replace(/^email:.*$/m,`email: ${document.getElementById('cfg-email').value.trim()}`);
+  const buVal=document.getElementById('cfg-baseurl').value.trim();
+  if(y.match(/^baseurl:/m)) y=y.replace(/^baseurl:.*$/m,`baseurl: "${buVal}"`);
+  else y=`baseurl: "${buVal}"\n`+y;
 
   // descrizione
   const desc=document.getElementById('cfg-description').value.trim();
@@ -905,99 +926,73 @@ async function aggiornaIndexHome(pagePath){
   }catch(e){}
 }
 
-// ——— CHANGELOG ———
-async function caricaChangelog(){
-  const el=document.getElementById('changelog-content');
-  el.innerHTML='<span style="color:#bbb;font-size:13px">⏳ Caricamento...</span>';
-  // Legge CHANGELOG.md dal repo del cliente (REPO)
-  const res=await ghGet('CHANGELOG.md');
-  if(!res.ok){el.innerHTML='<span style="color:#e74c3c;font-size:13px">❌ CHANGELOG.md non trovato nel repo.</span>';return;}
-  const d=await res.json();
-  const md=dec(d.content);
-  // Render minimale del markdown: titoli e lista
-  const html=md
-    .replace(/^## (.+)$/gm,'<h3 style="font-size:15px;font-weight:700;color:#1a1a2e;margin:18px 0 6px;padding-top:14px;border-top:1px solid #f0f0f0">$1</h3>')
-    .replace(/^### (.+)$/gm,'<h4 style="font-size:13px;font-weight:700;color:#6c63ff;margin:10px 0 4px">$1</h4>')
-    .replace(/^# (.+)$/gm,'<h2 style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:16px">$1</h2>')
-    .replace(/^- (.+)$/gm,'<div style="font-size:13px;padding:3px 0 3px 12px;border-left:2px solid #e8e8e8;margin:3px 0;color:#444">$1</div>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\n\n/g,'<br>');
-  el.innerHTML=html||'<span style="color:#bbb">Nessuna voce.</span>';
-}
+// AGGIORNAMENTI
+const CMS_SOURCE_REPO='cialdecompatibili-netizen/cmspush';
+const CMS_SOURCE_PATH='admin/index.html';
+const CMS_VERSION_PATH='version.json';
 
-// ——— AGGIORNAMENTO ———
-// Repo sorgente da cui scaricare l'aggiornamento del CMS
-const CMS_SOURCE_REPO='cialdecompatibili-netizen/cmspush'; // repo sorgente ufficiale cmspush
-const CMS_SOURCE_PATH='cms/admin/index.html';
-const CMS_VERSION_PATH='version.json'; // nel repo sorgente
+async function controllaAggiornamenti(){
+  showMsg('msg-update','⏳ Controllo in corso...','');
+  // Legge version.json locale (questo repo cliente)
+  const resL=await ghGet(CMS_VERSION_PATH);
+  if(!resL.ok)return showMsg('msg-update','❌ Impossibile leggere version.json locale.','err');
+  const dL=await resL.json();
+  const verLocale=JSON.parse(dec(dL.content));
+  document.getElementById('ver-locale').textContent=verLocale.version||'–';
 
-let _nuovaVersione=null;
-let _nuovoContenuto=null;
+  // Legge version.json dal repo sorgente (senza token, è pubblico)
+  const resR=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_VERSION_PATH}`);
+  if(!resR.ok)return showMsg('msg-update','❌ Impossibile raggiungere il server di aggiornamento.','err');
+  const dR=await resR.json();
+  const verRemota=JSON.parse(dec(dR.content));
+  document.getElementById('ver-remota').textContent=verRemota.version||'–';
 
-async function controllaAggiornamento(){
-  document.getElementById('agg-stato').textContent='⏳ Controllo in corso...';
-  document.getElementById('btn-aggiorna').style.display='none';
-  document.getElementById('agg-note').style.display='none';
-  showMsg('msg-agg','','');
-
-  // Versione locale
-  let verLocale='—';
-  try{
-    const resV=await fetch('../../version.json');
-    if(resV.ok){const j=await resV.json();verLocale=j.version||'—';}
-  }catch(e){}
-  document.getElementById('agg-versione-box').textContent=verLocale;
-
-  // Versione remota (repo sorgente, senza token — pubblico)
-  try{
-    const resR=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_VERSION_PATH}`);
-    if(!resR.ok)throw new Error('version.json non trovato nel repo sorgente');
-    const dr=await resR.json();
-    const remoto=JSON.parse(dec(dr.content));
-    _nuovaVersione=remoto.version||'?';
-    const note=remoto.notes||'';
-
-    if(_nuovaVersione===verLocale){
-      document.getElementById('agg-stato').textContent=`✅ Sei aggiornato — versione ${verLocale}`;
-    } else {
-      document.getElementById('agg-stato').innerHTML=`🆕 Nuova versione disponibile: <strong style="color:#6c63ff">${_nuovaVersione}</strong>`;
-      if(note){
-        document.getElementById('agg-note').innerHTML='<strong>Novità:</strong> '+note;
-        document.getElementById('agg-note').style.display='block';
-      }
-      // Scarica subito il nuovo file per averlo pronto
-      const resF=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_SOURCE_PATH}`);
-      if(resF.ok){const df=await resF.json();_nuovoContenuto=dec(df.content);}
-      document.getElementById('btn-aggiorna').style.display='inline-flex';
-    }
-  }catch(e){
-    document.getElementById('agg-stato').textContent='⚠️ Impossibile contattare il repo sorgente: '+e.message;
+  if(verRemota.version===verLocale.version){
+    showMsg('msg-update','✅ Sei già alla versione più recente!','ok');
+    document.getElementById('update-card-new').style.display='none';
+    document.getElementById('update-badge').style.display='none';
+  } else {
+    showMsg('msg-update','','');
+    document.getElementById('update-notes').innerHTML=`<strong>Cosa c'è di nuovo:</strong><br>${verRemota.changelog||verRemota.notes||'Miglioramenti generali.'}`;
+    document.getElementById('update-card-new').style.display='block';
+    document.getElementById('update-badge').style.display='inline-block';
   }
 }
 
 async function eseguiAggiornamento(){
-  if(!tok())return showMsg('msg-agg','⚠️ Token mancante — inseriscilo nella tab Token.','err');
-  if(!_nuovoContenuto)return showMsg('msg-agg','❌ Contenuto aggiornamento non disponibile. Riprova.','err');
-  showMsg('msg-agg','⏳ Aggiornamento in corso...','');
-  // Legge SHA del file corrente nel repo del cliente
-  const resCur=await ghGet('cms/admin/index.html');
-  if(!resCur.ok)return showMsg('msg-agg','❌ Impossibile leggere il file corrente.','err');
-  const cur=await resCur.json();
-  // Scrive la nuova versione
-  const res=await ghPut('cms/admin/index.html',`Aggiorna CMS alla v${_nuovaVersione}`,_nuovoContenuto,cur.sha);
-  const j=await res.json();
-  if(res.ok){
-    showMsg('msg-agg',`✅ CMS aggiornato alla v${_nuovaVersione}! La pagina si ricaricherà tra 3 secondi.`,'ok');
-    document.getElementById('btn-aggiorna').style.display='none';
-    setTimeout(()=>location.reload(),3000);
-  } else {
-    showMsg('msg-agg','❌ '+j.message,'err');
-  }
+  if(!tok())return showMsg('msg-update2','⚠️ Token mancante!','err');
+  document.getElementById('btn-aggiorna').disabled=true;
+  showMsg('msg-update2','⏳ Download aggiornamento...','');
+
+  // Legge il nuovo admin/index.html dal repo sorgente
+  const resSrc=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_SOURCE_PATH}`);
+  if(!resSrc.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore download.','err');}
+  const dSrc=await resSrc.json();
+  const nuovoContenuto=dec(dSrc.content);
+
+  // Legge sha del file locale da sovrascrivere
+  const resLoc=await ghGet(CMS_SOURCE_PATH);
+  if(!resLoc.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore lettura file locale.','err');}
+  const dLoc=await resLoc.json();
+
+  // Sovrascrive admin/index.html nel repo cliente
+  showMsg('msg-update2','⏳ Installazione...','');
+  const resPut=await ghPut(CMS_SOURCE_PATH,'Aggiornamento CMS',nuovoContenuto,dLoc.sha);
+  if(!resPut.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore installazione.','err');}
+
+  // Aggiorna anche version.json locale
+  const resVer=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_VERSION_PATH}`);
+  const dVer=await resVer.json();
+  const resVerLoc=await ghGet(CMS_VERSION_PATH);
+  const dVerLoc=await resVerLoc.json();
+  await ghPut(CMS_VERSION_PATH,'Aggiorna versione CMS',dec(dVer.content),dVerLoc.sha);
+
+  showMsg('msg-update2','✅ Aggiornato! La pagina si ricarica in 3 secondi...','ok');
+  setTimeout(()=>location.reload(),3000);
 }
 
 window.onload=function(){
   document.getElementById('data').value=new Date().toISOString().split('T')[0];
-  // editor visuale attivo di default
   document.getElementById('quill-box').style.display='block';
   document.getElementById('corpo').style.display='none';
   if(tok()){
@@ -1009,6 +1004,7 @@ window.onload=function(){
     caricaMenu();
     caricaTema();
     caricaImpostazioni();
+    controllaAggiornamenti(); // controlla update automaticamente all'avvio
   }
 };
 </script>

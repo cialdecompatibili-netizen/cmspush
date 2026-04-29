@@ -66,8 +66,8 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 <body>
 
 <div class="topbar">
-  <a href="https://cialdecompatibili-netizen.github.io/admin/" target="_blank" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ Admin v2</a>
-  <a href="https://cialdecompatibili-netizen.github.io/" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
+  <a id="topbar-admin-link" href="#" target="_blank" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ cmspush Admin</a>
+  <a id="topbar-site-link" href="#" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
 </div>
 
 <div class="layout">
@@ -349,7 +349,27 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 </div>
 
 <script>
-const REPO='cialdecompatibili-netizen/cialdecompatibili-netizen.github.io';
+// Rileva REPO dinamicamente dall'URL della pagina (funziona su qualsiasi repo cliente)
+// URL formato: https://USERNAME.github.io/REPO/admin/ oppure https://USERNAME.github.io/admin/
+function detectRepo(){
+  const h=location.hostname; // es. pippo.github.io
+  const p=location.pathname; // es. /miosito/admin/index.html
+  const match=h.match(/^([^.]+)\.github\.io$/);
+  if(!match)return localStorage.getItem('cms_repo')||'';
+  const user=match[1];
+  const parts=p.split('/').filter(Boolean); // ['miosito','admin','index.html']
+  // Se il primo segmento NON è 'admin' è il nome del repo
+  const repo=(parts.length>1 && parts[0]!=='admin')?parts[0]:'';
+  return repo?`${user}/${repo}`:`${user}/${user}.github.io`;
+}
+const REPO=detectRepo();
+
+// Link topbar dinamici basati sul REPO rilevato
+(function(){
+  const base=location.origin+location.pathname.replace(/\/admin\/?.*$/,'/');
+  document.getElementById('topbar-site-link').href=base;
+  document.getElementById('topbar-admin-link').href=base+'admin/';
+})();
 let _categorie=[];let _catSha=null;
 let _menuVoci=[];let _menuSha=null;
 let _paginaPath='';let _paginaSha='';
