@@ -76,22 +76,19 @@ body {
   margin-bottom: 1.4em;
 }
 
-/* --- LARGHEZZA RIGA IDEALE (60-75 caratteri) --- */
-/* Solo su pagine SENZA sidebar (about, blog, ecc.) */
-/* Sugli articoli con sidebar la colonna è già stretta — non limitare */
-
+/* --- LARGHEZZA RIGA IDEALE ---
+   Solo su pagine SENZA sidebar (about, blog, ecc.)
+   Sugli articoli CON sidebar non limitare: la colonna grid e gia stretta */
 #main:not(:has(> .sidebar)) .page__content {
   max-width: 68ch;
 }
 
 /* --- SPAZIATURA TITOLO/PARAGRAFO --- */
-/* Il titolo deve "appartenere" al paragrafo che segue, non a quello prima */
-
 .page__content h2,
 .page__content h3,
 .page__content h4 {
-  margin-top: 2.2em;   /* molto spazio SOPRA */
-  margin-bottom: 0.5em; /* poco spazio SOTTO - lega al paragrafo seguente */
+  margin-top: 2.2em;
+  margin-bottom: 0.5em;
 }
 
 /* --- SIDEBAR AUTORE --- */
