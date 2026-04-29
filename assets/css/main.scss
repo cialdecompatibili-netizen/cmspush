@@ -196,4 +196,28 @@ blockquote {
   margin-left: 0;
 }
 
-/* FOOTER e NAVBAR: stili critici spostati in _includes/head/custom.html (inline nel <head>) */
+
+
+/* FOOTER: override globale MM — vale su tutte le pagine */
+.page__footer,
+.page__footer footer,
+.page__footer-follow,
+.page__footer-copyright {
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+.page__footer {
+  border-top: 1px solid #e8e8e8 !important;
+  margin-top: 0;
+}
+.page__footer-follow ul li,
+.page__footer-follow ul li a,
+.page__footer-copyright,
+.page__footer-copyright a {
+  color: #888 !important;
+}
+.page__footer-follow ul li a:hover,
+.page__footer-copyright a:hover {
+  color: #111 !important;
+  text-decoration: none;
+}
