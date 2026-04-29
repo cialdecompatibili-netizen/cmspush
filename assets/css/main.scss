@@ -228,6 +228,13 @@ blockquote {
   }
 }
 
+/* PAGINE SENZA SIDEBAR — centra il contenuto */
+#main:not(:has(.sidebar)) {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5em;
+}
+
 /* FOOTER: override globale MM â€” vale su tutte le pagine */
 .page__footer,
 .page__footer footer,
