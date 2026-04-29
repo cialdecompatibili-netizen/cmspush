@@ -470,7 +470,10 @@ function renderCategorie(){
         <input type="text" value="${c.nome}" onchange="_categorie[${i}].nome=this.value;renderSelect()" style="font-weight:600;flex:1">
         <button class="btn btn-danger btn-sm" onclick="_categorie.splice(${i},1);renderCategorie();renderSelect()">🗑</button>
       </div>
-      <input type="text" value="${c.descrizione||''}" placeholder="Descrizione..." onchange="_categorie[${i}].descrizione=this.value" style="font-size:12px">
+      <div style="font-size:11px;color:#aaa;margin-bottom:4px">Descrizione (supporta HTML)</div>
+      <div contenteditable="true" data-cat-idx="${i}"
+        onblur="_categorie[this.dataset.catIdx].descrizione=this.innerHTML"
+        style="min-height:48px;border:1px solid #e0e0e0;border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.6;background:#fafafa;outline:none">${c.descrizione||''}</div>
     </div>`).join('');
 }
 function renderSelect(){
