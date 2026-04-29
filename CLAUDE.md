@@ -243,6 +243,91 @@ cmspush/
 
 ---
 
+## ⚠️ LEZIONE APPRESA: Struttura DOM Minimal Mistakes (single layout)
+
+Questa è la struttura DOM **reale** di MM su pagine articolo (layout single):
+
+```html
+<div id="main">
+  <div class="sidebar sticky">   ← PRIMA la sidebar (div, non aside)
+  <article class="page">         ← POI l'articolo
+</div>
+<!-- page__related sta FUORI da article, dentro #main -->
+<div class="page__related">      ← "You May Also Enjoy" è fratello di article
+```
+
+**Regole chiave:**
+- La sidebar è `div.sidebar.sticky`, NON `aside.sidebar` o `.sidebar__right`
+- Su pagine SENZA `author_profile: true` la `.sidebar` NON esiste nel DOM (nessun tag vuoto)
+- `.page__related` è fratello diretto di `article.page` dentro `#main`, non dentro l'articolo
+- `#main:has(> .sidebar)` funziona correttamente per selezionare solo le pagine con sidebar
+
+**Soluzione sidebar destra (quella che funziona):**
+
+Usare **CSS Grid** su `#main` solo quando ha la sidebar. Non usare float (rompe page__related) né position:absolute (sovrappone contenuto).
+
+```scss
+/* Solo su articoli con sidebar */
+#main:has(> .sidebar) {
+  display: grid !important;
+  grid-template-columns: 1fr 220px !important;
+  grid-template-rows: auto auto !important;
+  gap: 0 2em !important;
+  align-items: start !important;
+}
+/* Sidebar: colonna 2, riga 1 */
+#main:has(> .sidebar) > .sidebar {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+}
+/* Articolo: colonna 1, riga 1 */
+#main:has(> .sidebar) > article.page {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+/* You May Also Enjoy: tutta la larghezza, riga 2 */
+#main:has(> .sidebar) > .page__related {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+}
+/* Mobile */
+@media (max-width: 900px) {
+  #main:has(> .sidebar) { display: block !important; }
+}
+```
+
+**Cose che NON funzionano (non riprovarle):**
+- `float: right` sulla sidebar → rompe `.page__related` che finisce in posizione sbagliata
+- `display: flex` su `#main` sempre → rompe tutte le pagine senza sidebar (about, blog, ecc.)
+- `position: absolute` sulla sidebar → sovrappone il contenuto
+- `#main:has(.sidebar)` senza `>` → seleziona anche sidebar dentro l'articolo (TOC)
+- Modificare il layout spostando sidebar nel DOM (single.html custom) → complica l'ordine del page__related
+
+**File custom necessario:** `_layouts/single.html` (copiato da MM gem e messo in repo).
+Riga critica: non spostare `{% include sidebar.html %}` — tenerlo nella posizione originale (prima dell'articolo). Il CSS Grid gestisce visivamente la posizione senza toccare il DOM.
+
+---
+
+## ⚠️ LEZIONE APPRESA: Topbar admin — link dinamici
+
+Nella topbar dell'admin ci sono 3 link, tutti costruiti dinamicamente da JS usando la costante `REPO` (già disponibile globalmente via `detectRepo()`):
+
+```javascript
+// Questi 3 vengono settati in un IIFE subito dopo la definizione di REPO
+const base = location.origin + location.pathname.replace(/\/admin\/?.*$/, '/');
+document.getElementById('topbar-site-link').href = base;                          // nuova finestra
+document.getElementById('topbar-admin-link').href = base + 'admin/';              // stessa finestra
+document.getElementById('topbar-deploy-link').href = `https://github.com/${REPO}/actions`; // nuova finestra
+```
+
+- **Admin link** (`target="_self"`) — deve aprire nella **stessa finestra**, non nuova tab
+- **Sito link** (`target="_blank"`) — nuova finestra
+- **Deploy link** (`target="_blank"`) — nuova finestra, punta a GitHub Actions del repo cliente
+
+Il Deploy link è **universale**: funziona su qualsiasi repo cliente perché usa `REPO` che è già rilevato dinamicamente dall'URL.
+
+---
+
 
 
 cmspush è un prodotto in vendita. Deve funzionare su **qualsiasi repo GitHub Pages** senza modifiche manuali, sia in root (`nomecliente.github.io`) che in sottocartella (`nomecliente.github.io/repo`).
@@ -333,6 +418,8 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-29 | Fix navbar riga: border su .masthead (non .greedy-nav), override in main.scss globale | assets/css/main.scss, _includes/head/custom.html | 4f08179 |
 | 2026-04-29 | Permalink blog /articoli/ → /blog/ + titolo H1 "Blog" | _pages/blog.md, _data/navigation.yml | cecbc81 |
 | 2026-04-29 | CLAUDE.md aggiornato con Windows-MCP:PowerShell — Claude pusha autonomamente | CLAUDE.md | — |
+| 2026-04-30 | Sidebar a destra con CSS Grid + single.html custom | _layouts/single.html (nuovo), assets/css/main.scss | 88f9668 |
+| 2026-04-30 | Bottone Deploy topbar (link dinamico GitHub Actions) + Admin stessa finestra | admin/index.html, cms/admin/index.html | 3ba29e7 |
 
 ---
 
