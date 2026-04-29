@@ -139,33 +139,7 @@ body {
   font-weight: 400;
 }
 
-/* Navbar bianca — override skin default */
-.masthead {
-  background: #ffffff !important;
-  border-bottom: 1px solid #e8e8e8 !important;
-  box-shadow: none !important;
-}
-
-.masthead__inner-wrap {
-  background: #ffffff !important;
-}
-
-.greedy-nav {
-  background: #ffffff !important;
-}
-
-.greedy-nav .visible-links a {
-  color: #111 !important;
-}
-
-.greedy-nav .visible-links a:hover {
-  color: #555 !important;
-}
-
-.greedy-nav button.greedy-nav__toggle {
-  background: #ffffff !important;
-  color: #111 !important;
-}
+/* NAVBAR: stili critici spostati in _includes/head/custom.html (inline nel <head>) */
 
 /* --- META INFO (data, tempo lettura) --- */
 
@@ -209,34 +183,4 @@ blockquote {
   margin-left: 0;
 }
 
-/* --- FOOTER — minimal, bianco, come la navbar --- */
-
-.page__footer {
-  background: #ffffff !important;
-  border-top: 1px solid #e8e8e8 !important;
-  box-shadow: none !important;
-  margin-top: 0;
-}
-
-.page__footer footer {
-  background: #ffffff !important;
-}
-
-.page__footer-follow,
-.page__footer-copyright {
-  background: #ffffff !important;
-  color: #888 !important;
-}
-
-.page__footer-follow ul li,
-.page__footer-follow ul li a,
-.page__footer-copyright a,
-.page__footer-copyright {
-  color: #888 !important;
-}
-
-.page__footer-follow ul li a:hover,
-.page__footer-copyright a:hover {
-  color: #111 !important;
-  text-decoration: none;
-}
+/* FOOTER e NAVBAR: stili critici spostati in _includes/head/custom.html (inline nel <head>) */
