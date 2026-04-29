@@ -77,10 +77,10 @@ body {
 }
 
 /* --- LARGHEZZA RIGA IDEALE ---
-   Solo su pagine SENZA sidebar (about, blog, ecc.)
-   Sugli articoli CON sidebar non limitare: la colonna grid e gia stretta */
+   Solo sulle pagine senza sidebar (about, blog, ecc.)
+   Sugli articoli MM gestisce già la larghezza con float */
 #main:not(:has(> .sidebar)) .page__content {
-  max-width: 68ch;
+  max-width: 72ch;
 }
 
 /* --- SPAZIATURA TITOLO/PARAGRAFO --- */
@@ -197,51 +197,26 @@ blockquote {
 
 
 /* ============================================================
-   SIDEBAR A DESTRA con CSS Grid
-   DOM originale MM: sidebar | article | page__related
-   Grid: mettiamo sidebar in colonna 2, articolo in colonna 1,
-   page__related occupa entrambe le colonne in fondo
+   SIDEBAR A DESTRA — soluzione definitiva
+   MM usa float nativo: .sidebar float-left 200px, .page float-right calc(100% - 200px)
+   Basta invertire: sidebar va a destra, page occupa il resto a sinistra
+   Zero grid, zero flex, zero rotture su altre pagine
    ============================================================ */
-
-/* Solo su articoli con sidebar */
-#main:has(> .sidebar) {
-  display: grid !important;
-  grid-template-columns: 1fr 220px !important;
-  grid-template-rows: auto auto !important;
-  gap: 0 2em !important;
-  align-items: start !important;
-}
-
-/* Sidebar: colonna 2, riga 1 */
-#main:has(> .sidebar) > .sidebar {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
-}
-
-/* Articolo: colonna 1, riga 1 */
-#main:has(> .sidebar) > article.page {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-}
-
-/* You May Also Enjoy: occupa entrambe le colonne, riga 2 */
-#main:has(> .sidebar) > .page__related {
-  grid-column: 1 / -1 !important;
-  grid-row: 2 !important;
-}
-
-/* Mobile: una colonna sola */
-@media (max-width: 900px) {
-  #main:has(> .sidebar) {
-    display: block !important;
+@media (min-width: 64em) {
+  /* Sidebar: da sinistra a destra */
+  #main > .sidebar {
+    float: right !important;
+    margin-inline-start: 0 !important;
+    margin-inline-end: 0 !important;
   }
+  /* Articolo: rimane float-right di MM ma ora la sidebar è a destra */
+  /* MM fa già width: calc(100% - 200px) su .page — non toccare */
 }
 
 /* ============================================================
-   YOU MAY ALSO ENJOY — fix card layout
-   MM applica .grid__item float solo dentro .archive
-   page__related non è dentro .archive → le card si impilano
-   Replica il comportamento MM delle grid card
+   YOU MAY ALSO ENJOY — card affiancate
+   MM applica il float delle card solo dentro .archive
+   page__related non è .archive → replica il comportamento
    ============================================================ */
 .page__related .grid__wrapper::after {
   content: "";
@@ -249,34 +224,23 @@ blockquote {
   clear: both;
 }
 @media (min-width: 37.5em) {
-  .page__related .grid__wrapper .grid__item {
+  .page__related .grid__item {
     float: left !important;
     width: 48.9795918367% !important;
     margin-bottom: 2em !important;
   }
-  .page__related .grid__wrapper .grid__item:nth-child(2n+1) {
-    clear: both !important;
-    margin-left: 0 !important;
-  }
-  .page__related .grid__wrapper .grid__item:nth-child(2n+2) {
-    clear: none !important;
-    margin-left: 2.0408163265% !important;
-  }
+  .page__related .grid__item:nth-child(2n+1) { clear: both !important; margin-left: 0 !important; }
+  .page__related .grid__item:nth-child(2n+2) { clear: none !important; margin-left: 2.0408163265% !important; }
 }
 @media (min-width: 48em) {
-  .page__related .grid__wrapper .grid__item {
+  .page__related .grid__item {
     width: 23.7288135593% !important;
     margin-left: 2.0408163265% !important;
   }
-  .page__related .grid__wrapper .grid__item:nth-child(4n+1) {
-    clear: both !important;
-    margin-left: 0 !important;
-  }
-  .page__related .grid__wrapper .grid__item:nth-child(4n+2),
-  .page__related .grid__wrapper .grid__item:nth-child(4n+3),
-  .page__related .grid__wrapper .grid__item:nth-child(4n+4) {
-    clear: none !important;
-  }
+  .page__related .grid__item:nth-child(4n+1) { clear: both !important; margin-left: 0 !important; }
+  .page__related .grid__item:nth-child(4n+2),
+  .page__related .grid__item:nth-child(4n+3),
+  .page__related .grid__item:nth-child(4n+4) { clear: none !important; }
 }
 
 /* FOOTER: override globale MM - vale su tutte le pagine */
