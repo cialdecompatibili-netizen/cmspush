@@ -7,15 +7,11 @@
 
 /* ============================================================
    TIPOGRAFIA FLUIDA - versione definitiva
-   Principio: clamp(minimo-mobile, fluido-vw, massimo-desktop)
-   Nessun breakpoint manuale, si adatta da 320px a 1600px
    ============================================================ */
-
-/* --- TITOLI --- */
 
 h1,
 .page__title {
-  font-size: clamp(2rem, 5vw, 3.5rem);  /* 32px - 56px */
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 300;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -23,7 +19,7 @@ h1,
 }
 
 h2 {
-  font-size: clamp(1.4rem, 3vw, 2.2rem);  /* 22px - 35px */
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -32,7 +28,7 @@ h2 {
 }
 
 h3 {
-  font-size: clamp(1.1rem, 2.2vw, 1.55rem);  /* 18px - 25px */
+  font-size: clamp(1.1rem, 2.2vw, 1.55rem);
   font-weight: 500;
   line-height: 1.3;
   margin-top: 1.6em;
@@ -45,10 +41,8 @@ h4, h5, h6 {
   line-height: 1.4;
 }
 
-/* --- CORPO TESTO --- */
-
 body {
-  font-size: clamp(1rem, 1.6vw, 1.15rem);  /* 16px - 18px */
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
   line-height: 1.9;
   color: #3a3a3a;
   -webkit-font-smoothing: antialiased;
@@ -67,7 +61,6 @@ body {
   background: #ffffff !important;
 }
 
-/* Paragrafi e liste nei contenuti */
 .page__content p,
 .page__content li {
   font-size: clamp(1rem, 1.6vw, 1.15rem);
@@ -76,15 +69,12 @@ body {
   margin-bottom: 1.4em;
 }
 
-/* --- SPAZIATURA TITOLO/PARAGRAFO --- */
 .page__content h2,
 .page__content h3,
 .page__content h4 {
   margin-top: 2.2em;
   margin-bottom: 0.5em;
 }
-
-/* --- SIDEBAR AUTORE --- */
 
 .author__name {
   font-size: clamp(1rem, 1.8vw, 1.25rem);
@@ -97,8 +87,6 @@ body {
   line-height: 1.75;
   color: #555;
 }
-
-/* --- ARCHIVIO / BLOG (lista post) --- */
 
 .archive__item-title {
   font-size: clamp(1.05rem, 2vw, 1.35rem);
@@ -113,7 +101,6 @@ body {
   color: #555;
 }
 
-/* Titolo sezione archivio (es. "Posts") */
 .archive__subtitle {
   font-size: clamp(0.75rem, 1.2vw, 0.85rem);
   letter-spacing: 0.18em;
@@ -122,15 +109,12 @@ body {
   font-weight: 400;
 }
 
-/* --- NAVIGAZIONE --- */
-
 .greedy-nav a {
   font-size: clamp(0.82rem, 1.3vw, 0.93rem);
   letter-spacing: 0.05em;
   font-weight: 400;
 }
 
-/* NAVBAR: override globale MM - vale su tutte le pagine */
 .masthead {
   border-bottom: 1px solid #e8e8e8 !important;
   box-shadow: none !important;
@@ -145,8 +129,6 @@ body {
 .greedy-nav .visible-links a:hover { color: #555 !important; }
 .greedy-nav button { background: transparent !important; color: #111 !important; }
 
-/* --- META INFO (data, tempo lettura) --- */
-
 .page__meta,
 .page__meta-sep,
 .breadcrumbs {
@@ -154,28 +136,22 @@ body {
   color: #888;
 }
 
-/* --- LEGGIBILITA' GLOBALE --- */
-
-/* Anti-aliasing su tutto il sito per caratteri piu nitidi */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Immagini responsive sempre */
 img {
   max-width: 100%;
   height: auto;
 }
 
-/* Link nel contenuto - piu leggibili */
 .page__content a {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
-/* Blockquote - elegante */
 blockquote {
   font-size: clamp(1.05rem, 1.8vw, 1.25rem);
   font-style: italic;
@@ -187,34 +163,30 @@ blockquote {
   margin-left: 0;
 }
 
-
-
 /* ============================================================
-   SIDEBAR A DESTRA — soluzione definitiva
-   direction:rtl inverte i float senza toccare DOM o larghezze MM
-   direction:ltr dentro per non rompere il testo
+   SIDEBAR A DESTRA — direction:rtl inverte i float MM
+   direction:ltr su tutto il contenuto per non rompere il testo
    ============================================================ */
 @media (min-width: 64em) {
   #main:has(> .sidebar) {
     direction: rtl !important;
   }
-  #main:has(> .sidebar) > * {
+  #main:has(> .sidebar) > *,
+  #main:has(> .sidebar) article,
+  #main:has(> .sidebar) article *,
+  #main:has(> .sidebar) .page__related,
+  #main:has(> .sidebar) .page__related * {
     direction: ltr !important;
   }
 }
 
 /* ============================================================
    YOU MAY ALSO ENJOY — clearfix + card affiancate
-   clear:both serve perche sidebar e article sono floattati */
+   ============================================================ */
 .page__related {
   clear: both !important;
 }
 
-/* ============================================================
-   YOU MAY ALSO ENJOY — card affiancate
-   MM applica il float delle card solo dentro .archive
-   page__related non è .archive → replica il comportamento
-   ============================================================ */
 .page__related .grid__wrapper::after {
   content: "";
   display: table;
@@ -240,7 +212,7 @@ blockquote {
   .page__related .grid__item:nth-child(4n+4) { clear: none !important; }
 }
 
-/* FOOTER: override globale MM - vale su tutte le pagine */
+/* FOOTER */
 .page__footer,
 .page__footer footer,
 .page__footer-follow,
