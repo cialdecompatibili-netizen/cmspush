@@ -198,23 +198,29 @@ blockquote {
 
 
 
-/* SIDEBAR AUTORE A DESTRA â€” override grid MM */
-#main {
-  display: grid !important;
-  grid-template-columns: 1fr 200px !important;
-  grid-template-areas: "content sidebar" !important;
-  align-items: start;
+/* SIDEBAR AUTORE A DESTRA — solo quando sidebar presente */
+.page:has(.sidebar) {
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  align-items: flex-start !important;
+  gap: 2em;
 }
-#main .page {
-  grid-area: content;
+.page:has(.sidebar) .sidebar {
+  flex: 0 0 200px !important;
+  max-width: 200px !important;
 }
-#main .sidebar {
-  grid-area: sidebar;
+.page:has(.sidebar) .page__inner-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
 }
 @media (max-width: 768px) {
-  #main {
-    grid-template-columns: 1fr !important;
-    grid-template-areas: "sidebar" "content" !important;
+  .page:has(.sidebar) {
+    flex-direction: column !important;
+  }
+  .page:has(.sidebar) .sidebar {
+    flex: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
 }
 
