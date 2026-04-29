@@ -518,12 +518,15 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 .wide #main > article.page,
 .wide #main > article.page .page__inner-wrap,
 .wide #main > article.page .page__content {
-  max-width: 100% !important;
+  max-width: 1280px !important;
   width: 100% !important;
   float: none !important;
   padding-right: 0 !important;
 }
 ```
+
+**⚠️ REGOLA LARGHEZZA:** NON usare `max-width: 100%` — diventa troppo largo su schermi grandi.
+Usare `max-width: 1280px` che corrisponde esattamente alla larghezza del `.masthead__inner-wrap` di MM (da logo CMSPush a lente ricerca). Questo è lo standard universale del progetto.
 
 **Pagine che usano wide:**
 - `_pages/novita.md` (changelog) ✅
