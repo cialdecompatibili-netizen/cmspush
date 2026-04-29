@@ -302,6 +302,35 @@ Usare **CSS Grid** su `#main` solo quando ha la sidebar. Non usare float (rompe 
 - `position: absolute` sulla sidebar → sovrappone il contenuto
 - `#main:has(.sidebar)` senza `>` → seleziona anche sidebar dentro l'articolo (TOC)
 - Modificare il layout spostando sidebar nel DOM (single.html custom) → complica l'ordine del page__related
+- CSS Grid su `#main` → rompe `.page__content` che si schiaccia a sinistra perché `max-width: 68ch` agisce sulla colonna grid stretta invece che sulla larghezza reale
+
+**Soluzione definitiva che funziona (una riga di CSS):**
+
+```scss
+@media (min-width: 64em) {
+  #main:has(> .sidebar) { direction: rtl !important; }
+  #main:has(> .sidebar) > * { direction: ltr !important; }
+}
+```
+
+`direction: rtl` inverte automaticamente tutti i float MM senza toccare DOM, larghezze, o niente altro. La sidebar che MM mette a float-left finisce visivamente a destra. `direction: ltr` sui figli ripristina il testo normale. Zero side effects su altre pagine perché il selettore `:has(> .sidebar)` colpisce solo articoli con sidebar.
+
+**Fix "You May Also Enjoy" card affiancate:**
+MM applica il float delle card `.grid__item` solo dentro `.archive` — ma `.page__related` non è `.archive`. Serve replicare il comportamento:
+
+```scss
+.page__related { clear: both !important; } /* clearfix dopo i float sidebar+article */
+.page__related .grid__wrapper::after { content: ""; display: table; clear: both; }
+@media (min-width: 37.5em) {
+  .page__related .grid__item { float: left !important; width: 48.9795918367% !important; }
+  .page__related .grid__item:nth-child(2n+1) { clear: both !important; margin-left: 0 !important; }
+  .page__related .grid__item:nth-child(2n+2) { clear: none !important; margin-left: 2.0408163265% !important; }
+}
+@media (min-width: 48em) {
+  .page__related .grid__item { width: 23.7288135593% !important; margin-left: 2.0408163265% !important; }
+  .page__related .grid__item:nth-child(4n+1) { clear: both !important; margin-left: 0 !important; }
+}
+```
 
 **File custom necessario:** `_layouts/single.html` (copiato da MM gem e messo in repo).
 Riga critica: non spostare `{% include sidebar.html %}` — tenerlo nella posizione originale (prima dell'articolo). Il CSS Grid gestisce visivamente la posizione senza toccare il DOM.
@@ -418,7 +447,8 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-29 | Fix navbar riga: border su .masthead (non .greedy-nav), override in main.scss globale | assets/css/main.scss, _includes/head/custom.html | 4f08179 |
 | 2026-04-29 | Permalink blog /articoli/ → /blog/ + titolo H1 "Blog" | _pages/blog.md, _data/navigation.yml | cecbc81 |
 | 2026-04-29 | CLAUDE.md aggiornato con Windows-MCP:PowerShell — Claude pusha autonomamente | CLAUDE.md | — |
-| 2026-04-30 | Sidebar a destra con CSS Grid + single.html custom | _layouts/single.html (nuovo), assets/css/main.scss | 88f9668 |
+| 2026-04-30 | Fix sidebar destra: direction rtl su #main, ltr su figli | assets/css/main.scss | 624dd67 |
+| 2026-04-30 | Fix You May Also Enjoy: clear both + float card replica MM | assets/css/main.scss | 5ad79aa |
 | 2026-04-30 | Bottone Deploy topbar (link dinamico GitHub Actions) + Admin stessa finestra | admin/index.html, cms/admin/index.html | 3ba29e7 |
 
 ---
