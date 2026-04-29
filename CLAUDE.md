@@ -149,6 +149,26 @@ cd "C:\Users\mirco\Desktop\cmspush"; git add .; git commit -m "Release v1.x.x - 
 
 **Regola:** dopo ogni modifica, Claude pusha autonomamente senza aspettare che Mirco lo chieda. Non servono credenziali aggiuntive — il token è già nel remote URL.
 
+**Regola deploy:** dopo ogni push, Claude fa polling GitHub Actions API ogni 10s e scrive il risultato reale:
+- `✅ Deploy completato! Live ora → [url]`
+- `❌ Deploy fallito`
+
+Script polling da usare dopo ogni push:
+```powershell
+$repo = "cialdecompatibili-netizen/cmspush"
+$maxTentativi = 18; $intervallo = 10
+Start-Sleep -Seconds 5
+for ($i = 1; $i -le $maxTentativi; $i++) {
+    $run = (Invoke-RestMethod "https://api.github.com/repos/$repo/actions/runs?per_page=1").workflow_runs[0]
+    if ($run.status -eq "completed") {
+        if ($run.conclusion -eq "success") { Write-Host "✅ Deploy completato! Live ora → https://cialdecompatibili-netizen.github.io/cmspush/" }
+        else { Write-Host "❌ Deploy fallito ($($run.conclusion))" }
+        break
+    }
+    Write-Host "⏳ Build in corso... ($($i * $intervallo)s)"; Start-Sleep -Seconds $intervallo
+}
+```
+
 ## Strumenti disponibili per Claude
 
 | Strumento | Cosa fa |
