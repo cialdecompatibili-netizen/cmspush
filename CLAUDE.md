@@ -204,7 +204,19 @@ cmspush/
 - Sito live: <https://cialdecompatibili-netizen.github.io/cmspush/>
 - CMS admin (solo Mirco): <https://cialdecompatibili-netizen.github.io/cmspush/admin/>
 
-## ⚠️ REGOLA CRITICA: Portabilità link — zero link hardcoded
+## ⚠️ LEZIONE APPRESA: Override CSS su Minimal Mistakes
+
+**Problema cronico:** `_includes/head/custom.html` viene iniettato SOLO sulle pagine che usano layout con `{% include head/custom.html %}`. Le pagine MM standard (categories, tags, archive, single) potrebbero non riceverlo o riceverlo dopo il CSS della gem.
+
+**Regola fissa:** Gli override globali di MM (navbar, footer, colori) vanno in `assets/css/main.scss` — viene compilato e servito come `main.css` su **tutte** le pagine senza eccezioni. Il critical CSS inline in `head/custom.html` serve solo per eliminare il FOUC (flash prima del caricamento del CSS esterno), non come unico punto di override.
+
+**Schema corretto:**
+- `assets/css/main.scss` → override globali, valgono ovunque
+- `_includes/head/custom.html` → solo stili critici per zero FOUC (duplica i più importanti da main.scss)
+
+---
+
+
 
 cmspush è un prodotto in vendita. Deve funzionare su **qualsiasi repo GitHub Pages** senza modifiche manuali, sia in root (`nomecliente.github.io`) che in sottocartella (`nomecliente.github.io/repo`).
 
@@ -291,6 +303,7 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-29 | Tab Aggiornamenti: fallback fetch relativo + messaggio chiaro in locale | admin/index.html, cms/admin/index.html | b65b27d |
 | 2026-04-29 | Rimossa doppia navbar Tailwind da home-content.html (restava solo masthead MM) | _includes/home-content.html | 898774a |
 | 2026-04-29 | Critical CSS inline: footer + navbar in _includes/head/custom.html — zero FOUC | _includes/head/custom.html (nuovo), assets/css/main.scss | f9aad34 |
+| 2026-04-29 | Fix navbar riga: border su .masthead (non .greedy-nav), override in main.scss globale | assets/css/main.scss, _includes/head/custom.html | 4f08179 |
 
 ---
 
