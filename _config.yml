@@ -6,7 +6,7 @@ description: >-
   Un sito Jekyll con CMS integrato, gestito da CMSPush.
 twitter_username: username
 github_username: username
-minimal_mistakes_skin: air
+minimal_mistakes_skin: default
 search: true
 
 markdown: kramdown
