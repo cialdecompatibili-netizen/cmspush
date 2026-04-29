@@ -1,4 +1,4 @@
-﻿---
+---
 # Front matter vuoto obbligatorio per Jekyll
 ---
 
@@ -228,11 +228,20 @@ blockquote {
   }
 }
 
-/* PAGINE SENZA SIDEBAR - centra il contenuto */
-#main:not(:has(.sidebar)) {
-  max-width: 900px;
+/* LAYOUT GLOBALE - #main sempre centrato, sidebar a destra quando presente */
+#main {
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5em;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* Con sidebar: flex, sidebar a destra */
+#main:has(.sidebar) {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 2em;
 }
 
 /* FOOTER: override globale MM - vale su tutte le pagine */
