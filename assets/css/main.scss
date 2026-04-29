@@ -77,10 +77,11 @@ body {
 }
 
 /* --- LARGHEZZA RIGA IDEALE (60-75 caratteri) --- */
-/* Evita righe lunghissime che stancano l'occhio */
+/* Solo su pagine SENZA sidebar (about, blog, ecc.) */
+/* Sugli articoli con sidebar la colonna è già stretta — non limitare */
 
-.page__content {
-  max-width: 68ch;  /* ch = larghezza del carattere "0", 68ch = ~70 caratteri */
+#main:not(:has(> .sidebar)) .page__content {
+  max-width: 68ch;
 }
 
 /* --- SPAZIATURA TITOLO/PARAGRAFO --- */
