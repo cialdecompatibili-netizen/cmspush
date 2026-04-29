@@ -135,24 +135,31 @@ Stile: bianco, minimale, solo testo. Grafica da definire in futuro. Il bottone d
 
 ## Come pushare su GitHub
 
-Il repo è già configurato con token nel remote. Aprire PowerShell o terminale nella cartella cmspush ed eseguire:
+Claude può pushare direttamente usando Windows-MCP:PowerShell — NON serve che Mirco apra il terminale.
 
+Comando push standard:
 ```powershell
-cd "C:\Users\mirco\Desktop\cmspush"
-git add .
-git commit -m "descrizione modifica"
-git push
+cd "C:\Users\mirco\Desktop\cmspush"; git add .; git commit -m "descrizione modifica"; git push
 ```
 
-Oppure con messaggio specifico per rilascio versione:
-
+Comando push release:
 ```powershell
-git add .
-git commit -m "Release v1.x.x - descrizione novità"
-git push
+cd "C:\Users\mirco\Desktop\cmspush"; git add .; git commit -m "Release v1.x.x - descrizione novità"; git push
 ```
 
-Non servono credenziali aggiuntive — il token è già nel remote URL.
+**Regola:** dopo ogni modifica, Claude pusha autonomamente senza aspettare che Mirco lo chieda. Non servono credenziali aggiuntive — il token è già nel remote URL.
+
+## Strumenti disponibili per Claude
+
+| Strumento | Cosa fa |
+|---|---|
+| `Filesystem:read_multiple_files` | Legge file dal PC di Mirco |
+| `Filesystem:list_directory` | Elenca cartelle dal PC di Mirco |
+| `Desktop Commander:read_file` | Legge file con offset/length (file lunghi) |
+| `Desktop Commander:edit_block` | Modifica chirurgica con old_string/new_string |
+| `Windows-MCP:PowerShell` | Esegue comandi PowerShell/git sul PC di Mirco |
+
+Claude usa Windows-MCP:PowerShell per git add/commit/push autonomamente.
 
 \---## REGOLA: TOKEN SCARSI — MODIFICHE MIRATE
 
@@ -304,6 +311,8 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-29 | Rimossa doppia navbar Tailwind da home-content.html (restava solo masthead MM) | _includes/home-content.html | 898774a |
 | 2026-04-29 | Critical CSS inline: footer + navbar in _includes/head/custom.html — zero FOUC | _includes/head/custom.html (nuovo), assets/css/main.scss | f9aad34 |
 | 2026-04-29 | Fix navbar riga: border su .masthead (non .greedy-nav), override in main.scss globale | assets/css/main.scss, _includes/head/custom.html | 4f08179 |
+| 2026-04-29 | Permalink blog /articoli/ → /blog/ + titolo H1 "Blog" | _pages/blog.md, _data/navigation.yml | cecbc81 |
+| 2026-04-29 | CLAUDE.md aggiornato con Windows-MCP:PowerShell — Claude pusha autonomamente | CLAUDE.md | — |
 
 ---
 
