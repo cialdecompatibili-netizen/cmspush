@@ -76,13 +76,6 @@ body {
   margin-bottom: 1.4em;
 }
 
-/* --- LARGHEZZA RIGA IDEALE ---
-   Solo sulle pagine senza sidebar (about, blog, ecc.)
-   Sugli articoli MM gestisce già la larghezza con float */
-#main:not(:has(> .sidebar)) .page__content {
-  max-width: 72ch;
-}
-
 /* --- SPAZIATURA TITOLO/PARAGRAFO --- */
 .page__content h2,
 .page__content h3,
