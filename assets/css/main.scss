@@ -199,10 +199,14 @@ blockquote {
 
 
 /* ============================================================
-   LAYOUT PRINCIPALE - sidebar destra + centraggio globale
+   LAYOUT PRINCIPALE - centraggio + sidebar a destra
+   Struttura reale MM:
+     #main
+       div.sidebar.sticky   (presente solo su articoli con author_profile)
+       article.page
    ============================================================ */
 
-/* 1. Centra sempre #main */
+/* 1. Centra sempre #main nella pagina */
 #main {
   max-width: 1200px !important;
   margin-left: auto !important;
@@ -212,7 +216,8 @@ blockquote {
   box-sizing: border-box !important;
 }
 
-/* 2. Pagine senza sidebar: il contenuto e' centrato con max-width leggibile */
+/* 2. Pagine SENZA sidebar (blog, about, novita, categorie):
+   inner-wrap centrato con larghezza leggibile */
 .page__inner-wrap {
   max-width: 860px;
   margin: 0 auto;
@@ -220,51 +225,54 @@ blockquote {
   box-sizing: border-box;
 }
 
-/* 3. Pagine CON sidebar: layout flex, sidebar a DESTRA
-   MM mette .sidebar come figlio diretto di #main sugli articoli con author_profile: true */
-#main > .sidebar {
-  order: 2;
-  flex: 0 0 220px !important;
-  max-width: 220px !important;
-  min-width: 0;
-}
-
-#main > article.page,
-#main > div.page {
-  order: 1;
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-}
-
-/* Quando c'e' la sidebar, #main diventa flex */
-#main:has(> .sidebar) {
+/* 3. Pagine CON sidebar (articoli con author_profile: true):
+   #main diventa flex, sidebar va a DESTRA con order */
+#main {
   display: flex !important;
-  flex-direction: row !important;
+  flex-wrap: wrap !important;
   align-items: flex-start !important;
   gap: 2em;
 }
 
-/* Con sidebar, inner-wrap non deve limitare la larghezza */
+/* L'articolo occupa tutto lo spazio, sidebar e' piccola a destra */
+#main > article.page {
+  flex: 1 1 600px !important;
+  min-width: 0 !important;
+  order: 1;
+}
+
+/* La sidebar: fissa 220px, va a DESTRA (order 2) */
+#main > .sidebar {
+  flex: 0 0 220px !important;
+  max-width: 220px !important;
+  min-width: 0;
+  order: 2;
+}
+
+/* Con sidebar presente: inner-wrap torna fluido (non limita larghezza) */
 #main:has(> .sidebar) .page__inner-wrap {
   max-width: none !important;
   margin: 0 !important;
 }
 
-/* 4. Mobile: tutto in colonna */
-@media (max-width: 900px) {
-  #main:has(> .sidebar) {
-    flex-direction: column !important;
+/* Senza sidebar: inner-wrap centra il contenuto */
+#main:not(:has(> .sidebar)) .page__inner-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* 4. Mobile */
+@media (max-width: 768px) {
+  #main {
+    padding: 0 1em !important;
+    gap: 1em;
   }
-  #main > .sidebar,
   #main > article.page,
-  #main > div.page {
-    order: unset !important;
+  #main > .sidebar {
     flex: none !important;
     max-width: 100% !important;
     width: 100% !important;
-  }
-  #main {
-    padding: 0 1em !important;
+    order: unset !important;
   }
 }
 
