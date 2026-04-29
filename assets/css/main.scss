@@ -239,6 +239,48 @@ blockquote {
   }
 }
 
+/* ============================================================
+   YOU MAY ALSO ENJOY — fix card layout
+   MM applica .grid__item float solo dentro .archive
+   page__related non è dentro .archive → le card si impilano
+   Replica il comportamento MM delle grid card
+   ============================================================ */
+.page__related .grid__wrapper::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+@media (min-width: 37.5em) {
+  .page__related .grid__wrapper .grid__item {
+    float: left !important;
+    width: 48.9795918367% !important;
+    margin-bottom: 2em !important;
+  }
+  .page__related .grid__wrapper .grid__item:nth-child(2n+1) {
+    clear: both !important;
+    margin-left: 0 !important;
+  }
+  .page__related .grid__wrapper .grid__item:nth-child(2n+2) {
+    clear: none !important;
+    margin-left: 2.0408163265% !important;
+  }
+}
+@media (min-width: 48em) {
+  .page__related .grid__wrapper .grid__item {
+    width: 23.7288135593% !important;
+    margin-left: 2.0408163265% !important;
+  }
+  .page__related .grid__wrapper .grid__item:nth-child(4n+1) {
+    clear: both !important;
+    margin-left: 0 !important;
+  }
+  .page__related .grid__wrapper .grid__item:nth-child(4n+2),
+  .page__related .grid__wrapper .grid__item:nth-child(4n+3),
+  .page__related .grid__wrapper .grid__item:nth-child(4n+4) {
+    clear: none !important;
+  }
+}
+
 /* FOOTER: override globale MM - vale su tutte le pagine */
 .page__footer,
 .page__footer footer,
