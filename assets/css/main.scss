@@ -208,3 +208,35 @@ blockquote {
   padding-left: 1.5em;
   margin-left: 0;
 }
+
+/* --- FOOTER — minimal, bianco, come la navbar --- */
+
+.page__footer {
+  background: #ffffff !important;
+  border-top: 1px solid #e8e8e8 !important;
+  box-shadow: none !important;
+  margin-top: 0;
+}
+
+.page__footer footer {
+  background: #ffffff !important;
+}
+
+.page__footer-follow,
+.page__footer-copyright {
+  background: #ffffff !important;
+  color: #888 !important;
+}
+
+.page__footer-follow ul li,
+.page__footer-follow ul li a,
+.page__footer-copyright a,
+.page__footer-copyright {
+  color: #888 !important;
+}
+
+.page__footer-follow ul li a:hover,
+.page__footer-copyright a:hover {
+  color: #111 !important;
+  text-decoration: none;
+}
