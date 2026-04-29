@@ -228,20 +228,31 @@ blockquote {
   }
 }
 
-/* LAYOUT GLOBALE - #main sempre centrato, sidebar a destra quando presente */
+/* LAYOUT GLOBALE -- centra tutto il contenuto */
 #main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5em;
-  width: 100%;
-  box-sizing: border-box;
+  max-width: 1200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 0 2em !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
-/* Con sidebar: flex, sidebar a destra */
+/* Pagine senza sidebar: inner-wrap occupa tutta la larghezza centrata */
+.page__inner-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+/* Con sidebar: flex, sidebar a destra, inner-wrap torna fluido */
 #main:has(.sidebar) {
   display: flex !important;
   flex-direction: row !important;
   align-items: flex-start !important;
   gap: 2em;
+}
+#main:has(.sidebar) .page__inner-wrap {
+  max-width: none;
+  margin: 0;
 }
 
 /* FOOTER: override globale MM - vale su tutte le pagine */
