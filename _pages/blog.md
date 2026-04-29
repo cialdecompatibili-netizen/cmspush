@@ -214,27 +214,28 @@ classes: wide
         <div class="blog-img-empty">✦</div>
       {% endif %}
     </div>
+```
+<div class="blog-body">
+  {% if post.categories.size > 0 %}
+  <div class="blog-cats">
+    {% for cat in post.categories limit:2 %}
+    <a href="{{ cat | slugify | prepend: '/categories/#' | prepend: site.baseurl }}" class="blog-cat">{{ cat }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
 
-    <div class="blog-body">
-      {% if post.categories.size > 0 %}
-      <div class="blog-cats">
-        {% for cat in post.categories limit:2 %}
-        <a href="{{ cat | slugify | prepend: '/categories/#' | prepend: site.baseurl }}" class="blog-cat">{{ cat }}</a>
-        {% endfor %}
-      </div>
-      {% endif %}
+  <a href="{{ post.url | relative_url }}" class="blog-title">{{ post.title }}</a>
+  <div class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</div>
 
-      <a href="{{ post.url | relative_url }}" class="blog-title">{{ post.title }}</a>
-      <div class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</div>
+  <div class="blog-meta">
+    <time>{{ post.date | date: "%d %b %Y" }}</time>
+    {% if post.author %}<span class="blog-meta-sep">·</span><span>{{ post.author }}</span>{% endif %}
+  </div>
 
-      <div class="blog-meta">
-        <time>{{ post.date | date: "%d %b %Y" }}</time>
-        {% if post.author %}<span class="blog-meta-sep">·</span><span>{{ post.author }}</span>{% endif %}
-      </div>
-
-      <div class="blog-footer">
-        {% if post.tags.size > 0 %}
-        <div class="blog-tags">
+  <div class="blog-footer">
+    {% if post.tags.size > 0 %}
+    <div class="blog-tags">
+```
           {% for tag in post.tags limit:3 %}
           <a href="{{ tag | slugify | prepend: '/tags/#' | prepend: site.baseurl }}" class="blog-tag"># {{ tag }}</a>
           {% endfor %}

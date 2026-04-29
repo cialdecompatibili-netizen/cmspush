@@ -1,160 +1,212 @@
-﻿<!-- HERO VENDITA -->
-<div class="cms-hero">
-  <p class="cms-hero-eyebrow">Jekyll + GitHub Pages CMS</p>
-  <h1 class="cms-hero-title">cmspush</h1>
-  <p class="cms-hero-sub">Il CMS per siti Jekyll su GitHub Pages.<br>Nessun server, nessun database. Solo il tuo repo GitHub.</p>
-  <div class="cms-hero-btns">
-    <a href="#download" class="cms-btn-primary">⬇ Scarica v1.x — €19</a>
-    <a href="#compare" class="cms-btn-secondary">Confronta versioni</a>
+<!-- Tailwind -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+
+<!-- NAVBAR -->
+<section class="w-full px-6 antialiased bg-white select-none">
+  <div class="mx-auto max-w-7xl">
+    <nav class="relative z-50 h-24" x-data="{ showMenu: false }">
+      <div class="container relative flex flex-wrap items-center justify-between h-24 mx-auto font-medium border-b border-gray-200 lg:justify-center sm:px-4 md:px-2">
+        <a href="{{ '/' | relative_url }}" class="w-1/4 py-4 pr-4 md:py-0">
+          <span class="text-2xl font-black leading-none text-gray-900 select-none">cmspush<span class="text-indigo-600">.</span></span>
+        </a>
+        <div class="top-0 left-0 items-start hidden w-full h-full p-4 text-sm bg-gray-900 bg-opacity-50 md:w-3/4 md:absolute lg:text-base md:h-auto md:bg-transparent md:p-0 md:relative md:flex"
+          :class="{'flex fixed': showMenu, 'hidden': !showMenu }">
+          <div class="flex-col w-full h-auto overflow-hidden bg-white rounded-lg select-none md:bg-transparent md:rounded-none md:relative md:flex md:flex-row md:overflow-auto">
+            <div class="flex flex-col items-start justify-center w-full text-center md:w-2/3 md:mt-0 md:flex-row md:items-center">
+              <a href="#whatis" class="inline-block w-full px-6 py-2 mx-0 font-medium text-left text-indigo-600 md:w-auto md:px-0 md:mx-2 lg:mx-3 md:text-center">Cos'è</a>
+              <a href="#stack" class="inline-block w-full px-6 py-2 mx-0 font-medium text-left text-gray-700 md:w-auto md:px-0 md:mx-2 hover:text-indigo-600 lg:mx-3 md:text-center">Stack</a>
+              <a href="#features" class="inline-block w-full px-6 py-2 mx-0 font-medium text-left text-gray-700 md:w-auto md:px-0 md:mx-2 hover:text-indigo-600 lg:mx-3 md:text-center">Features</a>
+              <a href="#pricing" class="inline-block w-full px-6 py-2 mx-0 font-medium text-left text-gray-700 md:w-auto md:px-0 md:mx-2 hover:text-indigo-600 lg:mx-3 md:text-center">Prezzi</a>
+              <a href="{{ '/novita/' | relative_url }}" class="inline-block w-full px-6 py-2 mx-0 font-medium text-left text-gray-700 md:w-auto md:px-0 md:mx-2 hover:text-indigo-600 lg:mx-3 md:text-center">Changelog</a>
+            </div>
+            <div class="flex flex-col items-start justify-end w-full pt-4 md:items-center md:w-1/3 md:flex-row md:py-0">
+              <span class="inline-flex w-full shadow-sm md:rounded-full md:w-auto">
+                <a href="#pricing" class="inline-flex items-center w-full px-6 py-3 text-sm font-medium leading-4 text-white bg-indigo-600 border border-transparent md:px-3 md:w-auto md:rounded-full lg:px-5 hover:bg-indigo-500 focus:outline-none">
+                  Acquista
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div @click="showMenu = !showMenu" class="absolute right-0 flex flex-col items-center justify-center w-10 h-10 rounded-full cursor-pointer md:hidden hover:bg-gray-100">
+          <svg class="w-6 h-6 text-gray-700" x-show="!showMenu" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg class="w-6 h-6 text-gray-700" x-show="showMenu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="container max-w-lg px-4 py-24 mx-auto text-left md:max-w-none md:text-center">
+      <h1 class="text-5xl font-extrabold tracking-tight text-left text-gray-900 md:text-center sm:leading-none md:text-6xl lg:text-7xl">
+        <span class="inline md:block">Il CMS per Jekyll</span>
+        <span class="relative mt-2 text-transparent md:inline-block bg-clip-text bg-gradient-to-br from-purple-600 to-indigo-500" style="font-size:0.75em">su GitHub Pages.</span>
+      </h1>
+      <div class="mx-auto mt-5 text-gray-500 md:mt-12 md:max-w-lg md:text-center lg:text-lg">
+        Scrivi articoli, cambia tema e gestisci il sito direttamente dal browser — senza toccare il codice.
+      </div>
+      <div class="flex flex-col items-center mt-6 text-center">
+        <span class="relative inline-flex w-full md:w-auto" style="gap:12px">
+          <a href="{{ '/admin/' | relative_url }}"
+            class="inline-flex items-center justify-center w-full px-8 py-4 text-base font-bold text-white bg-indigo-600 border border-transparent rounded-full md:w-auto hover:bg-indigo-500">
+            Guarda il CMS
+          </a>
+          <a href="#pricing"
+            class="inline-flex items-center justify-center w-full px-8 py-4 text-base font-bold text-indigo-600 bg-white border border-indigo-600 rounded-full md:w-auto hover:bg-indigo-50">
+            Acquista — €19
+          </a>
+        </span>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- WHAT IS -->
-<div class="cms-what">
-  <div class="cms-what-inner">
-    <p class="cms-what-label">Cos'è cmspush</p>
-    <h2 class="cms-what-title">Un CMS visuale per Jekyll<br>che salva direttamente su GitHub.</h2>
-    <p class="cms-what-text">cmspush è un pannello di amministrazione in un singolo file HTML. Nessuna installazione, nessun backend, nessun hosting aggiuntivo. Si integra nel tuo repo Jekyll e pubblica articoli, pagine e impostazioni via GitHub API. Aggiornamenti automatici con un click, come WordPress — ma su GitHub Pages.</p>
-  </div>
-</div>
-
-<!-- FEATURES 3 STEP -->
-<div class="lx-steps">
-  <div class="lx-step">
-    <p class="lx-step-num">01</p>
-    <div class="lx-step-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+<section class="px-2 py-32 bg-gray-100 md:px-0" id="whatis">
+  <div class="container items-center max-w-6xl px-8 mx-auto xl:px-5">
+    <div class="flex flex-wrap items-center sm:-mx-3">
+      <div class="w-full md:w-1/2 md:px-3">
+        <div class="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
+          <h2 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
+            <span class="block xl:inline">Cos'è</span>
+            <span class="block text-indigo-600 xl:inline">cmspush?</span>
+          </h2>
+          <p class="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
+            cmspush è un pannello CMS in un singolo file HTML. Si integra in qualsiasi repo Jekyll su GitHub Pages — nessun server, nessun database, nessuna installazione.
+          </p>
+          <ul class="p-0 m-0 leading-6 border-0 border-gray-300">
+            <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+              <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> Zero server, zero database, zero hosting
+            </li>
+            <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+              <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> Tutto in 1 file HTML, nessuna dipendenza
+            </li>
+            <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+              <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> Aggiornamenti automatici con 1 click
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2">
+        <div class="w-full h-auto overflow-hidden rounded-md shadow-xl sm:rounded-xl bg-gray-800 p-4" style="min-height:280px">
+          <div style="background:#1e2130;border-radius:8px;overflow:hidden">
+            <div style="background:#151824;padding:10px 14px;display:flex;gap:6px">
+              <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:inline-block"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:inline-block"></span>
+            </div>
+            <div style="display:flex;height:240px">
+              <div style="width:130px;background:#1a1d2e;padding:12px 8px;display:flex;flex-direction:column;gap:4px">
+                <div style="font-size:10px;color:#a89fff;padding:6px 8px;border-radius:5px;background:rgba(108,99,255,.25)">📝 Articoli</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.4);padding:6px 8px">📄 Pagine</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.4);padding:6px 8px">🎨 Tema</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.4);padding:6px 8px">⚙️ Impostazioni</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.4);padding:6px 8px">🔄 Aggiornamenti</div>
+              </div>
+              <div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div style="height:10px;background:rgba(255,255,255,.15);border-radius:3px;width:55%"></div>
+                <div style="height:8px;background:rgba(255,255,255,.08);border-radius:3px"></div>
+                <div style="height:8px;background:rgba(255,255,255,.08);border-radius:3px;width:40%"></div>
+                <div style="flex:1;background:rgba(255,255,255,.05);border-radius:5px"></div>
+                <div style="height:24px;background:rgba(108,99,255,.5);border-radius:5px;width:90px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <h3 class="lx-step-title">Scrivi e pubblica</h3>
-    <p class="lx-step-desc">Editor visuale per articoli e pagine. Salva direttamente nel repo GitHub via API. Nessun terminale.</p>
   </div>
-  <div class="lx-step">
-    <p class="lx-step-num">02</p>
-    <div class="lx-step-icon">
-      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
-    </div>
-    <h3 class="lx-step-title">Cambia tema</h3>
-    <p class="lx-step-desc">9 skin Minimal Mistakes selezionabili dal pannello. Il sito si aggiorna in 60 secondi.</p>
-  </div>
-  <div class="lx-step">
-    <p class="lx-step-num">03</p>
-    <div class="lx-step-icon">
-      <svg viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-    </div>
-    <h3 class="lx-step-title">Aggiornamenti automatici</h3>
-    <p class="lx-step-desc">Bottone di aggiornamento nel pannello. Nuove versioni disponibili con un click, senza toccare il codice.</p>
-  </div>
-</div>
+</section>
 
-<!-- TABELLA COMPARATIVA -->
-<div class="cms-compare" id="compare">
-  <h2 class="cms-compare-title">Confronta le versioni</h2>
-  <div class="cms-compare-grid">
-
-    <div class="cms-plan cms-plan-current">
-      <div class="cms-plan-badge">Disponibile ora</div>
-      <h3 class="cms-plan-name">v1.x</h3>
-      <p class="cms-plan-price">€19</p>
-      <p class="cms-plan-sub">Pagamento unico</p>
-      <ul class="cms-plan-list">
-        <li>✅ CMS in 1 file HTML</li>
-        <li>✅ Editor articoli e pagine</li>
-        <li>✅ 9 skin Minimal Mistakes</li>
-        <li>✅ Gestione menu e categorie</li>
-        <li>✅ Aggiornamenti automatici</li>
-        <li>✅ GitHub API nativa</li>
-        <li>✅ Zero server, zero hosting</li>
-        <li>✅ Changelog integrato</li>
+<!-- STACK -->
+<section class="w-full bg-white pt-7 pb-7 md:pt-20 md:pb-24" id="stack">
+  <div class="box-border flex flex-col items-center content-center px-8 mx-auto leading-6 text-black border-0 border-gray-300 md:flex-row max-w-7xl lg:px-16">
+    <div class="box-border w-full text-black border-solid md:w-1/2 md:pl-6 xl:pl-32">
+      <h2 class="m-0 text-xl font-semibold leading-tight border-0 lg:text-3xl md:text-2xl">Stack tecnologico</h2>
+      <p class="pt-4 pb-8 m-0 leading-7 text-gray-700 border-0 sm:pr-10 lg:text-lg">
+        Leggero, sicuro e senza dipendenze. Funziona con le API native di GitHub — nessun backend da mantenere.
+      </p>
+      <ul class="p-0 m-0 leading-6 border-0 border-gray-300">
+        <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+          <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> Jekyll + GitHub Pages
+        </li>
+        <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+          <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> GitHub REST API v3
+        </li>
+        <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+          <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> Minimal Mistakes Theme (9 skin)
+        </li>
+        <li class="box-border relative py-1 pl-0 text-left text-gray-500 border-solid">
+          <span class="inline-flex items-center justify-center w-6 h-6 mr-2 text-white bg-yellow-300 rounded-full"><span class="text-sm font-bold">✓</span></span> HTML + CSS + JS puro — zero dipendenze
+        </li>
       </ul>
-      <a href="#download" class="cms-btn-primary">Scarica ora</a>
     </div>
-
-    <div class="cms-plan cms-plan-next">
-      <div class="cms-plan-badge cms-plan-badge-wip">🚧 In sviluppo</div>
-      <h3 class="cms-plan-name">v2.x</h3>
-      <p class="cms-plan-price">—</p>
-      <p class="cms-plan-sub">Prossimamente</p>
-      <ul class="cms-plan-list">
-        <li>✅ Tutto di v1.x</li>
-        <li>🔜 Multi-repo support</li>
-        <li>🔜 Media manager (immagini)</li>
-        <li>🔜 SEO manager integrato</li>
-        <li>🔜 Form builder</li>
-        <li>🔜 Statistiche visite</li>
-        <li>🔜 Collaboratori multipli</li>
-        <li>🔜 Template marketplace</li>
-      </ul>
-      <button class="cms-btn-ghost" disabled>Lavori in corso</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- DOWNLOAD -->
-<div class="cms-download" id="download">
-  <p class="cms-download-label">Download</p>
-  <h2 class="cms-download-title">Inizia subito con cmspush v1.x</h2>
-  <p class="cms-download-text">€19 · Pagamento unico · Aggiornamenti inclusi · Nessun abbonamento</p>
-  <a href="https://github.com/cialdecompatibili-netizen/cmspush" class="cms-btn-primary cms-btn-lg">⬇ Scarica cmspush v1.x</a>
-  <p class="cms-download-note">Hai domande? <a href="mailto:info@cmspush.com">Scrivici</a></p>
-</div>
-
-<!-- CSS LANDING -->
-<style>
-.cms-hero { text-align:center; padding: 80px 24px 60px; background:#fff; }
-.cms-hero-eyebrow { font-size:.8rem; letter-spacing:.15em; text-transform:uppercase; color:#888; margin-bottom:12px; }
-.cms-hero-title { font-size:clamp(2.8rem,8vw,5rem); font-weight:800; letter-spacing:-.03em; color:#111; margin:0 0 16px; }
-.cms-hero-sub { font-size:1.1rem; color:#555; max-width:520px; margin:0 auto 36px; line-height:1.6; }
-.cms-hero-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-
-.cms-btn-primary { background:#111; color:#fff; padding:14px 30px; border-radius:6px; font-weight:700; font-size:.95rem; text-decoration:none; transition:background .2s; }
-.cms-btn-primary:hover { background:#333; color:#fff; }
-.cms-btn-secondary { background:transparent; color:#111; border:2px solid #111; padding:12px 28px; border-radius:6px; font-weight:700; font-size:.95rem; text-decoration:none; transition:all .2s; }
-.cms-btn-secondary:hover { background:#111; color:#fff; }
-.cms-btn-ghost { background:transparent; color:#aaa; border:2px solid #ddd; padding:12px 28px; border-radius:6px; font-weight:700; font-size:.95rem; cursor:not-allowed; width:100%; }
-.cms-btn-lg { font-size:1.1rem; padding:18px 40px; }
-
-.cms-what { padding:60px 24px; background:#f9f9f9; }
-.cms-what-inner { max-width:680px; margin:0 auto; }
-.cms-what-label { font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:#888; margin-bottom:10px; }
-.cms-what-title { font-size:clamp(1.5rem,4vw,2.2rem); font-weight:800; color:#111; margin:0 0 18px; line-height:1.25; }
-.cms-what-text { color:#555; font-size:1.05rem; line-height:1.7; }
-
-.cms-compare { padding:70px 24px; background:#fff; text-align:center; }
-.cms-compare-title { font-size:clamp(1.6rem,4vw,2.2rem); font-weight:800; color:#111; margin-bottom:40px; }
-.cms-compare-grid { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; }
-.cms-plan { background:#fff; border:2px solid #eee; border-radius:12px; padding:36px 32px; width:300px; text-align:left; position:relative; }
-.cms-plan-current { border-color:#111; }
-.cms-plan-badge { display:inline-block; background:#111; color:#fff; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:20px; margin-bottom:16px; }
-.cms-plan-badge-wip { background:#f0a500; }
-.cms-plan-name { font-size:1.8rem; font-weight:800; color:#111; margin:0 0 8px; }
-.cms-plan-price { font-size:2.5rem; font-weight:800; color:#111; margin:0 0 4px; }
-.cms-plan-sub { font-size:.85rem; color:#888; margin:0 0 24px; }
-.cms-plan-list { list-style:none; padding:0; margin:0 0 28px; }
-.cms-plan-list li { padding:7px 0; font-size:.95rem; color:#444; border-bottom:1px solid #f0f0f0; }
-.cms-plan-list li:last-child { border-bottom:none; }
-
-.cms-download { padding:80px 24px; background:#f9f9f9; text-align:center; }
-.cms-download-label { font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:#888; margin-bottom:10px; }
-.cms-download-title { font-size:clamp(1.6rem,4vw,2.2rem); font-weight:800; color:#111; margin:0 0 12px; }
-.cms-download-text { color:#555; font-size:1rem; margin:0 0 32px; }
-.cms-download-note { margin-top:20px; font-size:.9rem; color:#888; }
-.cms-download-note a { color:#111; }
-</style>
-
-<!-- SLIDER RIMOSSO — sostituito da hero vendita -->
-<div style="display:none" id="lx-slider-disabled">
-<div class="lx-slider" id="lx-slider">
-
-  <div class="lx-slide active">
-    <div class="lx-slide-bg" style="background-color:#f0ede8;"></div>
-    <div class="lx-slide-overlay"></div>
-    <div class="lx-slide-content">
-      <p class="lx-slide-eyebrow">Benvenuto</p>
-      <h1 class="lx-slide-title">Idee mazinga, guide<br>e <em>riflessioni</em></h1>
-      <p class="lx-slide-sub">Un blog su tech, web e cultura digitale</p>
-      <a href="{{ '/blog/' | relative_url }}" class="lx-slide-cta">Leggi il blog &nbsp;&rarr;</a>
+    <div class="box-border relative w-full max-w-md px-4 mt-10 mb-4 text-center bg-no-repeat bg-contain border-solid md:mt-0 md:max-w-none lg:mb-0 md:w-1/2">
+      <div class="bg-gray-100 rounded-xl p-8 text-left">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white rounded-lg p-4 shadow-sm"><p class="font-bold text-gray-800 text-sm">Jekyll</p><p class="text-xs text-gray-500 mt-1">Generatore statico</p></div>
+          <div class="bg-white rounded-lg p-4 shadow-sm"><p class="font-bold text-gray-800 text-sm">GitHub Pages</p><p class="text-xs text-gray-500 mt-1">Hosting gratuito</p></div>
+          <div class="bg-white rounded-lg p-4 shadow-sm"><p class="font-bold text-gray-800 text-sm">GitHub API</p><p class="text-xs text-gray-500 mt-1">Salvataggio file</p></div>
+          <div class="bg-white rounded-lg p-4 shadow-sm"><p class="font-bold text-gray-800 text-sm">HTML / JS / CSS</p><p class="text-xs text-gray-500 mt-1">Zero dipendenze</p></div>
+        </div>
+      </div>
     </div>
   </div>
-</div></div><!-- fine slider nascosto -->
+</section>
 
+<!-- FEATURES -->
+<section class="py-20 bg-white" id="features">
+  <div class="container max-w-6xl mx-auto">
+    <h2 class="text-4xl font-bold tracking-tight text-center">Features principali</h2>
+    <p class="mt-2 text-lg text-center text-gray-600">Tutto quello che ti serve per gestire un sito Jekyll.</p>
+    <div class="grid grid-cols-4 gap-8 mt-10 sm:grid-cols-8 lg:grid-cols-12 sm:px-8 xl:px-0">
+
+      <div class="relative flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 bg-gray-100 sm:rounded-xl">
+        <div class="p-3 text-white bg-indigo-500 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </div>
+        <h4 class="text-xl font-medium text-gray-700">Editor articoli</h4>
+      </div>
+
+      <div class="flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 bg-gray-100 sm:rounded-xl">
+        <div class="p-3 text-white bg-indigo-500 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h4 class="text-xl font-medium text-gray-700">Gestione pagine</h4>
+      </div>
+
+      <div class="flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 bg-gray-100 sm:rounded-xl">
+        <div class="p-3 text-white bg-indigo-500 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+        </div>
+        <h4 class="text-xl font-medium text-gray-700">9 skin Minimal Mistakes</h4>
+      </div>
+
+      <div class="flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 bg-gray-100 sm:rounded-xl">
+        <div class="p-3 text-white bg-indigo-500 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+        </div>
+        <h4 class="text-xl font-medium text-gray-700">Menu e categorie</h4>
+      </div>
+
+      <div class="flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 bg-gray-100 sm:rounded-xl">
+        <div class="p-3 text-white bg-indigo-500 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </div>
+        <h4 class="text-xl font-medium text-gray-700">Auto-update con 1 click</h4>
+      </div>
+
+      <div class="flex flex-col items-center justify-between col-span-4 px-8 py-12 space-y-4 bg-gray-100 sm:rounded-xl">
+        <div class="p-3 text-white bg-indigo-500 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h4 class="text-xl font-medium text-gray-700">Impostazioni sito complete</h4>
+      </div>
+
+    </div>
+  </div>
+</section>

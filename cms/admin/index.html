@@ -933,11 +933,21 @@ const CMS_VERSION_PATH='version.json';
 
 async function controllaAggiornamenti(){
   showMsg('msg-update','⏳ Controllo in corso...','');
-  // Legge version.json locale (questo repo cliente)
+  // Legge version.json locale — prima via GitHub API (repo cliente), poi via fetch relativo (GitHub Pages)
+  let verLocale=null;
   const resL=await ghGet(CMS_VERSION_PATH);
-  if(!resL.ok)return showMsg('msg-update','❌ Impossibile leggere version.json locale.','err');
-  const dL=await resL.json();
-  const verLocale=JSON.parse(dec(dL.content));
+  if(resL.ok){
+    const dL=await resL.json();
+    verLocale=JSON.parse(dec(dL.content));
+  } else {
+    // Fallback: fetch relativo (funziona su GitHub Pages, non in file://)
+    try{
+      const base=location.href.replace(/\/admin\/.*$/,'/');
+      const resF=await fetch(base+'version.json?_='+Date.now());
+      if(resF.ok) verLocale=await resF.json();
+    }catch(e){}
+  }
+  if(!verLocale)return showMsg('msg-update','⚠️ Apri il CMS dal tuo sito GitHub Pages per controllare gli aggiornamenti.','err');
   document.getElementById('ver-locale').textContent=verLocale.version||'–';
 
   // Legge version.json dal repo sorgente (senza token, è pubblico)
