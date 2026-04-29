@@ -2,7 +2,7 @@
 layout: single
 title: "Changelog"
 
-permalink: /novita/
+permalink: /changelog/
 author_profile: false
 ---
 
