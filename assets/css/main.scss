@@ -199,25 +199,42 @@ blockquote {
 
 
 /* ============================================================
-   SIDEBAR A DESTRA - intervento minimo, non rompe MM
-   MM gestisce tutto il layout, noi spostiamo solo la sidebar
+   SIDEBAR A DESTRA
+   La sidebar e' spostata DOPO l'articolo nel DOM (single.html custom)
+   cosi il float non rompe niente: sidebar appare a destra dell'articolo
+   e "You May Also Enjoy" resta dentro l'articolo sopra.
    ============================================================ */
 
-/* Solo su pagine con sidebar: sidebar va a DESTRA */
+/* Articolo: lascia spazio a destra per la sidebar */
+#main > article.page {
+  margin-right: 260px !important;
+}
+
+/* Sidebar: posizione assoluta a destra */
+#main {
+  position: relative;
+}
+
 #main > .sidebar {
-  float: right !important;
-  clear: right !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
   width: 220px !important;
-  margin-left: 2em !important;
+}
+
+/* Se non c'e' sidebar (pagine senza author_profile): articolo occupa tutto */
+#main:not(:has(> .sidebar)) > article.page {
   margin-right: 0 !important;
 }
 
-/* Su mobile: sidebar torna normale */
-@media (max-width: 768px) {
+/* Su mobile: tutto normale */
+@media (max-width: 900px) {
+  #main > article.page {
+    margin-right: 0 !important;
+  }
   #main > .sidebar {
-    float: none !important;
+    position: static !important;
     width: 100% !important;
-    margin-left: 0 !important;
   }
 }
 
