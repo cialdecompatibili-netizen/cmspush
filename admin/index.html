@@ -97,8 +97,11 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="salvaTokenOnboarding()">Inizia a usare il CMS</button>
   </div>
 </div><div class="topbar">
-  <a id="topbar-admin-link" href="#" target="_blank" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ cmspush Admin</a>
-  <a id="topbar-site-link" href="#" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
+  <a id="topbar-admin-link" href="#" target="_self" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ cmspush Admin</a>
+  <div style="display:flex;align-items:center;gap:14px">
+    <a id="topbar-deploy-link" href="#" target="_blank" class="topbar-link" title="Vedi deploy su GitHub Actions">🚀 Deploy ↗</a>
+    <a id="topbar-site-link" href="#" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
+  </div>
 </div>
 
 <div class="layout">
@@ -400,6 +403,7 @@ const REPO=detectRepo();
   const base=location.origin+location.pathname.replace(/\/admin\/?.*$/,'/');
   document.getElementById('topbar-site-link').href=base;
   document.getElementById('topbar-admin-link').href=base+'admin/';
+  document.getElementById('topbar-deploy-link').href=`https://github.com/${REPO}/actions`;
 })();
 let _categorie=[];let _catSha=null;
 let _menuVoci=[];let _menuSha=null;
