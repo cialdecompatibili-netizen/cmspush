@@ -214,6 +214,13 @@ blockquote {
 }
 
 /* ============================================================
+   YOU MAY ALSO ENJOY — clearfix + card affiancate
+   clear:both serve perche sidebar e article sono floattati */
+.page__related {
+  clear: both !important;
+}
+
+/* ============================================================
    YOU MAY ALSO ENJOY — card affiancate
    MM applica il float delle card solo dentro .archive
    page__related non è .archive → replica il comportamento
