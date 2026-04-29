@@ -260,3 +260,55 @@ Alla ripresa leggi in ordine:
 
 ```
 ```
+
+---
+
+## Ripresa sessione — AUTO-ISTRUZIONE OBBLIGATORIA
+
+**REGOLA ASSOLUTA:** All'inizio di OGNI nuova sessione Claude si auto-istruisce PRIMA di fare qualsiasi cosa. Nessuna domanda a Mirco finché non hai letto tutto.
+
+### Sequenza di boot (eseguila tutta, in ordine, senza chiedere):
+
+1. Leggi `CLAUDE.md` (questo file)
+2. Leggi `version.json` — versione attuale
+3. Leggi `CHANGELOG.md` — ultime modifiche
+4. Leggi ultime 80 righe di `admin/index.html` — stato JS
+5. Leggi prime 30 righe di `_includes/home-content.html` — stato landing
+
+Poi rispondi con uno **spizzato di 5 righe max** e chiedi a Mirco cosa vuole fare. Veloce, chirurgico.
+
+---
+
+## Fix applicati — log storico
+
+Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
+
+| Data | Fix | File | Commit |
+|------|-----|------|--------|
+| 2026-04-28 | Prima versione pubblica v1.0.0 | admin/index.html, version.json | Release v1.0.0 |
+| 2026-04-29 | REPO dinamico detectRepo() da URL — zero hardcoded | admin/index.html, cms/admin/index.html | ef7b2cf |
+| 2026-04-29 | Link topbar "Vai al sito" e "Admin" — ora JS dinamico | admin/index.html, cms/admin/index.html | ef7b2cf |
+| 2026-04-29 | Tab Aggiornamenti: fallback fetch relativo + messaggio chiaro in locale | admin/index.html, cms/admin/index.html | b65b27d |
+
+---
+
+## Regole operative veloci
+
+- **Sincronizza sempre le 2 copie:** modifica `admin/index.html` → copia su `cms/admin/index.html` → push
+- **Push rapido:** `cd "C:\Users\mirco\Desktop\cmspush"; git add .; git commit -m "msg"; git push`
+- **Verifica push:** `git log --oneline -3`
+- **MAI riscrivere file interi** — solo edit_block mirate con old_string+new_string
+- **Nuove funzioni JS:** inseriscile PRIMA di `window.onload`
+- **Nuova tab CMS:** 2 edit_block separati — voce nav + HTML pagina
+- **Audit link:** `Select-String -Path "_pages\*.md","_layouts\*.html","_includes\*.html" -Pattern 'href="/'`
+
+---
+
+## Backlog (prossimi step possibili)
+
+- [ ] Sezione pricing + one-click install sulla landing (verificare stato)
+- [ ] Bozze articoli (published: false)
+- [ ] Upload immagini drag & drop
+- [ ] Dashboard mini contatore articoli/bozze
+- [ ] Slug auto-generato dal titolo
+- [ ] Pagina /demo/ CMS in sola lettura
