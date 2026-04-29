@@ -139,7 +139,20 @@ body {
   font-weight: 400;
 }
 
-/* NAVBAR: stili critici spostati in _includes/head/custom.html (inline nel <head>) */
+/* NAVBAR: override globale MM — vale su tutte le pagine */
+.masthead {
+  border-bottom: 1px solid #e8e8e8 !important;
+  box-shadow: none !important;
+}
+.greedy-nav {
+  background: #fff !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+.greedy-nav a.site-title,
+.greedy-nav .visible-links a { color: #111 !important; }
+.greedy-nav .visible-links a:hover { color: #555 !important; }
+.greedy-nav button { background: transparent !important; color: #111 !important; }
 
 /* --- META INFO (data, tempo lettura) --- */
 
