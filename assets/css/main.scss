@@ -198,20 +198,24 @@ blockquote {
 
 
 
-/* SIDEBAR AUTORE A DESTRA — row-reverse sul wrapper #main */
+/* SIDEBAR AUTORE A DESTRA — override grid MM */
 #main {
-  display: flex !important;
-  flex-direction: row-reverse !important;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  display: grid !important;
+  grid-template-columns: 1fr 200px !important;
+  grid-template-areas: "content sidebar" !important;
+  align-items: start;
 }
 #main .page {
-  order: 1;
-  flex: 1 1 auto;
-  min-width: 0;
+  grid-area: content;
 }
 #main .sidebar {
-  order: 2;
+  grid-area: sidebar;
+}
+@media (max-width: 768px) {
+  #main {
+    grid-template-columns: 1fr !important;
+    grid-template-areas: "sidebar" "content" !important;
+  }
 }
 
 /* FOOTER: override globale MM — vale su tutte le pagine */
