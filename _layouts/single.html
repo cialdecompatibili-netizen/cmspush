@@ -20,6 +20,7 @@ layout: default
 {% endif %}
 
 <div id="main" role="main">
+  {% include sidebar.html locale=locale %}
 
   <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork"{% if page.locale %} lang="{{ page.locale }}"{% endif %}>
     {% if page.title %}<meta itemprop="headline" content="{{ page.title | replace: '|', '&#124;' | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
@@ -74,13 +75,8 @@ layout: default
     {% endif %}
   </article>
 
-  {% comment %}<!-- sidebar DOPO l'articolo: cosi nel DOM viene dopo e il float:right la porta visivamente a destra senza rompere il flusso -->{% endcomment %}
-  {% include sidebar.html locale=locale %}
-
-  {% comment %}<!-- only show related on a post page when `related: true` -->{% endcomment %}
   {% if page.id and page.related and site.related_posts.size > 0 %}
     {% include page__related.html locale=locale posts=site.related_posts %}
-  {% comment %}<!-- otherwise show recent posts if no related when `related: true` -->{% endcomment %}
   {% elsif page.id and page.related %}
     {% include page__related.html locale=locale posts=site.posts %}
   {% endif %}
