@@ -218,3 +218,6 @@ blockquote {
   padding-right: 0 !important;
 }
 
+
+/* Blog: nasconde il page__title di MM (già mostrato nel blog-header) */
+.page--blog #page-title { display: none !important; }
