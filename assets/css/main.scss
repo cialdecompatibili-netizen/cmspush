@@ -126,7 +126,7 @@ blockquote {
 
 /* ============================================================
    SIDEBAR A DESTRA — CSS Grid
-   Sidebar col 2, articolo col 1, You May Also Enjoy riga 2
+   Override completo dei float/width MM su tutti i breakpoint
    ============================================================ */
 @media (min-width: 64em) {
   #main:has(> .sidebar) {
@@ -141,18 +141,26 @@ blockquote {
     grid-row: 1 !important;
     width: auto !important;
     float: none !important;
+    margin: 0 !important;
   }
   #main:has(> .sidebar) > article.page {
     grid-column: 1 !important;
     grid-row: 1 !important;
     width: 100% !important;
-    float: none !important;
+    min-width: 0 !important;
     max-width: none !important;
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+    -webkit-box-sizing: border-box !important;
+    box-sizing: border-box !important;
   }
   #main:has(> .sidebar) > .page__related {
     grid-column: 1 / -1 !important;
     grid-row: 2 !important;
     width: 100% !important;
+    clear: none !important;
   }
 }
 
