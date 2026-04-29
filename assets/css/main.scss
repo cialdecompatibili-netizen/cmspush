@@ -198,37 +198,11 @@ blockquote {
 
 
 
-/* SIDEBAR AUTORE A DESTRA - #main flex, sidebar a destra con order */
-#main:has(.sidebar) {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: flex-start !important;
-  gap: 2em;
-}
-#main:has(.sidebar) .sidebar {
-  order: 2;
-  flex: 0 0 220px !important;
-  max-width: 220px !important;
-}
-#main:has(.sidebar) .page {
-  order: 1;
-  flex: 1 !important;
-  min-width: 0 !important;
-}
-@media (max-width: 900px) {
-  #main:has(.sidebar) {
-    flex-direction: column !important;
-  }
-  #main:has(.sidebar) .sidebar,
-  #main:has(.sidebar) .page {
-    order: unset !important;
-    flex: none !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-}
+/* ============================================================
+   LAYOUT PRINCIPALE - sidebar destra + centraggio globale
+   ============================================================ */
 
-/* LAYOUT GLOBALE -- centra tutto il contenuto */
+/* 1. Centra sempre #main */
 #main {
   max-width: 1200px !important;
   margin-left: auto !important;
@@ -237,22 +211,61 @@ blockquote {
   width: 100% !important;
   box-sizing: border-box !important;
 }
-/* Pagine senza sidebar: inner-wrap occupa tutta la larghezza centrata */
+
+/* 2. Pagine senza sidebar: il contenuto e' centrato con max-width leggibile */
 .page__inner-wrap {
   max-width: 860px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
-/* Con sidebar: flex, sidebar a destra, inner-wrap torna fluido */
-#main:has(.sidebar) {
+
+/* 3. Pagine CON sidebar: layout flex, sidebar a DESTRA
+   MM mette .sidebar come figlio diretto di #main sugli articoli con author_profile: true */
+#main > .sidebar {
+  order: 2;
+  flex: 0 0 220px !important;
+  max-width: 220px !important;
+  min-width: 0;
+}
+
+#main > article.page,
+#main > div.page {
+  order: 1;
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+
+/* Quando c'e' la sidebar, #main diventa flex */
+#main:has(> .sidebar) {
   display: flex !important;
   flex-direction: row !important;
   align-items: flex-start !important;
   gap: 2em;
 }
-#main:has(.sidebar) .page__inner-wrap {
-  max-width: none;
-  margin: 0;
+
+/* Con sidebar, inner-wrap non deve limitare la larghezza */
+#main:has(> .sidebar) .page__inner-wrap {
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+/* 4. Mobile: tutto in colonna */
+@media (max-width: 900px) {
+  #main:has(> .sidebar) {
+    flex-direction: column !important;
+  }
+  #main > .sidebar,
+  #main > article.page,
+  #main > div.page {
+    order: unset !important;
+    flex: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  #main {
+    padding: 0 1em !important;
+  }
 }
 
 /* FOOTER: override globale MM - vale su tutte le pagine */
