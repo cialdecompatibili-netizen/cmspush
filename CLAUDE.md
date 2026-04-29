@@ -483,6 +483,7 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-30 | Fix You May Also Enjoy: clear both + float card replica MM | assets/css/main.scss | 5ad79aa |
 | 2026-04-30 | Bottone Deploy topbar (link dinamico GitHub Actions) + Admin stessa finestra | admin/index.html, cms/admin/index.html | 3ba29e7 |
 | 2026-04-30 | Release v1.1.1 — fix testo articolo a tutta larghezza | assets/css/main.scss, version.json, CHANGELOG.md | 1e93878 |
+| 2026-04-30 | Wide layout universale: .wide + pagine senza sidebar a larghezza navbar | assets/css/main.scss | c9fd95d |
 
 ---
 
@@ -506,3 +507,28 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 - [ ] Dashboard mini contatore articoli/bozze
 - [ ] Slug auto-generato dal titolo
 - [ ] Pagina /demo/ CMS in sola lettura
+
+
+## ⚠️ STANDARD LARGHEZZA UNIVERSALE
+
+**Regola:** tutte le pagine senza sidebar usano `classes: wide` nel front matter. Il CSS in `main.scss` gestisce tutto da un punto solo — basta aggiungere `classes: wide` alla pagina.
+
+**CSS in main.scss (già presente, non toccare):**
+```scss
+.wide #main > article.page,
+.wide #main > article.page .page__inner-wrap,
+.wide #main > article.page .page__content {
+  max-width: 100% !important;
+  width: 100% !important;
+  float: none !important;
+  padding-right: 0 !important;
+}
+```
+
+**Pagine che usano wide:**
+- `_pages/novita.md` (changelog) ✅
+- `_pages/blog.md` ✅
+- `_pages/about.md` → valutare
+
+**Per aggiungere wide a una nuova pagina:** solo `classes: wide` nel front matter. Zero CSS da aggiungere.
+
