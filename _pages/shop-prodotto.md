@@ -312,14 +312,46 @@ function changeQty(delta) {
   inp.value = Math.max(1, v);
 }
 
+function getCart() {
+  try { return JSON.parse(sessionStorage.getItem('cmspush_cart') || '[]'); } catch(e){ return []; }
+}
+function saveCart(cart) {
+  sessionStorage.setItem('cmspush_cart', JSON.stringify(cart));
+}
+
 function addToCart() {
-  const size = document.querySelector('.sp-opt[data-group="size"].selected');
-  const color = document.querySelector('.sp-opt[data-group="color"].selected');
-  const qty = document.getElementById('sp-qty')?.value || 1;
-  let msg = `🛒 Aggiunto al carrello — Qtà: ${qty}`;
-  if (color) msg += ` | Colore: ${color.textContent}`;
-  if (size)  msg += ` | Taglia: ${size.textContent}`;
+  const sizeEl  = document.querySelector('.sp-opt[data-group="size"].selected');
+  const colorEl = document.querySelector('.sp-opt[data-group="color"].selected');
+  const qtyEl   = document.getElementById('sp-qty');
+  const qty     = parseInt(qtyEl?.value || 1);
+  const slug    = new URLSearchParams(window.location.search).get('slug');
+
+  // Recupera dati dal DOM già renderizzato
+  const title = document.querySelector('.sp-title')?.textContent || slug;
+  const price = document.querySelector('.sp-price')?.textContent?.replace('€','').trim() || '0';
+  const imgSrc = document.getElementById('sp-main-img')?.src || '';
+
+  const item = {
+    slug, title, price,
+    image: imgSrc,
+    color: colorEl?.textContent || '',
+    size:  sizeEl?.textContent  || '',
+    qty
+  };
+
+  const cart = getCart();
+  const existing = cart.find(i => i.slug === item.slug && i.color === item.color && i.size === item.size);
+  if (existing) { existing.qty = (existing.qty||1) + qty; }
+  else { cart.push(item); }
+  saveCart(cart);
+
+  let msg = `✅ Aggiunto! Qtà: ${qty}`;
+  if (item.color) msg += ` | ${item.color}`;
+  if (item.size)  msg += ` | ${item.size}`;
   showToast(msg);
+
+  // Dopo 1.5s vai al carrello
+  setTimeout(() => { window.location.href = BASE + '/shop/carrello/'; }, 1600);
 }
 
 function addWish() {
