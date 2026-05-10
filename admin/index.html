@@ -1107,9 +1107,17 @@ let _shopcatSha=null;
 let _shopcats=[];
 
 async function caricaCatShop(){
-  const res=await ghGet('_data/shop-categorie.json');
   const el=document.getElementById('lista-cat-shop');
   const sel=document.getElementById('prod-categoria');
+  if(!tok()){
+    el.innerHTML='<em style="color:#bbb;font-size:13px">Token mancante — vai in Token per configurarlo.</em>';
+    return;
+  }
+  let res;
+  try{ res=await ghGet('_data/shop-categorie.json'); }
+  catch(e){
+    el.innerHTML='<em style="color:#bbb;font-size:13px">Errore di rete.</em>';return;
+  }
   if(!res.ok){
     _shopcats=[];_shopcatSha=null;
     el.innerHTML='<em style="color:#bbb;font-size:13px">Nessuna categoria. Aggiungine una.</em>';
@@ -1171,9 +1179,12 @@ function nuovoProdotto(){
 }
 
 async function caricaProdotti(){
-  const res=await ghGet('_products');
   const el=document.getElementById('lista-prodotti');
-  if(!res.ok){el.innerHTML='<em style="color:#bbb;font-size:13px">Nessun prodotto trovato.</em>';return;}
+  if(!tok()){el.innerHTML='<em style="color:#bbb;font-size:13px">Token mancante.</em>';return;}
+  let res;
+  try{ res=await ghGet('_products'); }
+  catch(e){el.innerHTML='<em style="color:#bbb;font-size:13px">Errore di rete.</em>';return;}
+  if(!res.ok){el.innerHTML='<em style="color:#bbb;font-size:13px">Cartella _products non trovata.</em>';return;}
   const files=await res.json();
   const prods=files.filter(f=>f.name.endsWith('.md'));
   if(!prods.length){el.innerHTML='<em style="color:#bbb;font-size:13px">Nessun prodotto ancora.</em>';return;}

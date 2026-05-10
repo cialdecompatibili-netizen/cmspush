@@ -552,7 +552,11 @@ function renderCategorie(){
   const el=document.getElementById('lista-categorie');
   el.innerHTML=_categorie.map((c,i)=>`
     <div class="cat-row">
-      <div style="display:flex;gap:8px;margin-bottom:6px">
+      <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <button class="btn btn-secondary btn-sm" style="padding:1px 7px;font-size:11px;line-height:1" onclick="catSu(${i})" ${i===0?"disabled":""}>▲</button>
+          <button class="btn btn-secondary btn-sm" style="padding:1px 7px;font-size:11px;line-height:1" onclick="catGiu(${i})" ${i===_categorie.length-1?"disabled":""}>▼</button>
+        </div>
         <input type="text" value="${c.nome}" onchange="_categorie[${i}].nome=this.value;renderSelect()" style="font-weight:600;flex:1">
         <button class="btn btn-danger btn-sm" onclick="_categorie.splice(${i},1);renderCategorie();renderSelect()">🗑</button>
       </div>
@@ -599,11 +603,19 @@ async function caricaMenu(){
 function renderMenu(){
   document.getElementById('lista-menu').innerHTML=_menuVoci.map((v,i)=>`
     <div class="menu-row">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <button class="btn btn-secondary btn-sm" style="padding:1px 7px;font-size:11px;line-height:1" onclick="menuSu(${i})" ${i===0?'disabled':''}>▲</button>
+        <button class="btn btn-secondary btn-sm" style="padding:1px 7px;font-size:11px;line-height:1" onclick="menuGiu(${i})" ${i===_menuVoci.length-1?'disabled':''}>▼</button>
+      </div>
       <input type="text" value="${v.title}" onchange="_menuVoci[${i}].title=this.value" placeholder="Nome">
       <input type="text" value="${v.url}" onchange="_menuVoci[${i}].url=this.value" placeholder="/url/" style="font-size:12px;color:#555">
       <button class="btn btn-danger btn-sm" onclick="_menuVoci.splice(${i},1);renderMenu()">🗑</button>
     </div>`).join('');
 }
+function menuSu(i){if(i===0)return;var t=_menuVoci.splice(i,1)[0];_menuVoci.splice(i-1,0,t);renderMenu();}
+function menuGiu(i){if(i===_menuVoci.length-1)return;var t=_menuVoci.splice(i,1)[0];_menuVoci.splice(i+1,0,t);renderMenu();}
+function catSu(i){if(i===0)return;var t=_categorie.splice(i,1)[0];_categorie.splice(i-1,0,t);renderCategorie();renderSelect();}
+function catGiu(i){if(i===_categorie.length-1)return;var t=_categorie.splice(i,1)[0];_categorie.splice(i+1,0,t);renderCategorie();renderSelect();}
 function aggiungiVoce(){
   const t=document.getElementById('menu-nome').value.trim();
   const u=document.getElementById('menu-url').value.trim();
@@ -1095,9 +1107,17 @@ let _shopcatSha=null;
 let _shopcats=[];
 
 async function caricaCatShop(){
-  const res=await ghGet('_data/shop-categorie.json');
   const el=document.getElementById('lista-cat-shop');
   const sel=document.getElementById('prod-categoria');
+  if(!tok()){
+    el.innerHTML='<em style="color:#bbb;font-size:13px">Token mancante — vai in Token per configurarlo.</em>';
+    return;
+  }
+  let res;
+  try{ res=await ghGet('_data/shop-categorie.json'); }
+  catch(e){
+    el.innerHTML='<em style="color:#bbb;font-size:13px">Errore di rete.</em>';return;
+  }
   if(!res.ok){
     _shopcats=[];_shopcatSha=null;
     el.innerHTML='<em style="color:#bbb;font-size:13px">Nessuna categoria. Aggiungine una.</em>';
@@ -1159,9 +1179,12 @@ function nuovoProdotto(){
 }
 
 async function caricaProdotti(){
-  const res=await ghGet('_products');
   const el=document.getElementById('lista-prodotti');
-  if(!res.ok){el.innerHTML='<em style="color:#bbb;font-size:13px">Nessun prodotto trovato.</em>';return;}
+  if(!tok()){el.innerHTML='<em style="color:#bbb;font-size:13px">Token mancante.</em>';return;}
+  let res;
+  try{ res=await ghGet('_products'); }
+  catch(e){el.innerHTML='<em style="color:#bbb;font-size:13px">Errore di rete.</em>';return;}
+  if(!res.ok){el.innerHTML='<em style="color:#bbb;font-size:13px">Cartella _products non trovata.</em>';return;}
   const files=await res.json();
   const prods=files.filter(f=>f.name.endsWith('.md'));
   if(!prods.length){el.innerHTML='<em style="color:#bbb;font-size:13px">Nessun prodotto ancora.</em>';return;}
