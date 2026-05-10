@@ -547,3 +547,99 @@ Usare `max-width: 1280px` che corrisponde esattamente alla larghezza del `.masth
 
 **Per aggiungere wide a una nuova pagina:** solo `classes: wide` nel front matter. Zero CSS da aggiungere.
 
+---
+
+## 🛒 MODULO E-COMMERCE — Stato attuale (maggio 2026)
+
+### Architettura
+
+Prodotti = file `.md` in `_products/` con frontmatter YAML.
+**ATTENZIONE:** Jekyll su GitHub Pages NON processa `site.products` in Liquid — la collection `_products` è dichiarata in `_config.yml` ma le pagine shop leggono i dati via **GitHub API** (stesso pattern dell'admin), non via Liquid.
+
+### File coinvolti
+
+| File | Scopo |
+|------|-------|
+| `_products/*.md` | Prodotti (frontmatter YAML) |
+| `_data/shop-categorie.json` | Categorie shop `[{nome, slug}]` |
+| `_pages/shop.md` | `/shop/` — lista categorie + tutti i prodotti (via GitHub API) |
+| `_pages/shop-prodotto.md` | `/shop/prodotto/?slug=nome` — scheda prodotto singola |
+| `_pages/shop-cat-abbigliamento.md` | `/shop/categoria/abbigliamento/` — prodotti per categoria |
+| `_pages/shop-carrello.md` | `/shop/carrello/` — carrello (sessionStorage) |
+| `_layouts/product.html` | Layout prodotto (solo `layout: single` + content) |
+| `_includes/head/custom.html` | Icona 🛒 navbar con badge + CSS override bottoni |
+
+### Frontmatter prodotto `.md`
+
+```yaml
+---
+title: "Nome prodotto"
+price: 19.90
+price_original: 34.90   # opzionale, mostra prezzo barrato + % sconto
+stock: 50
+sku: "COD-001"
+category: "slug-categoria"
+badge: "Bestseller"     # opzionale, badge viola
+rating: 4.8             # opzionale
+reviews: 127            # opzionale
+colors: "Bianco, Nero"  # opzionale, genera selettore
+sizes: "S, M, L, XL"   # opzionale, genera selettore
+shipping: "Spedizione gratuita sopra 35 euro"
+image: "https://..."    # URL immagine principale
+layout: product
+---
+Descrizione in markdown...
+```
+
+⚠️ **YAML ATTENZIONE:** Non usare `&` o `?` nei valori YAML — rompono il parser Jekyll. Riscrivere in testo semplice (es. `sopra 35 euro` non `sopra €35`). Le gallery multiple vanno gestite solo via JS nella pagina prodotto, non nel frontmatter.
+
+### Pagina prodotto singolo — funzionalità
+
+- Gallery foto principale (da `image:` nel frontmatter)
+- Badge Bestseller, rating stelle, prezzo barrato con % sconto
+- Selettore colore + taglia (bottoni interattivi)
+- Quantità con + e −
+- **Bottone "Aggiungi al carrello"** → usa tag `<a>` non `<button>` (MM blocca i button con CSS globale)
+- Wishlist ♡
+- Tab: Descrizione / Recensioni (demo hardcodate) / Spedizione & Resi
+- Breadcrumb Shop → Categoria → Prodotto
+
+### Carrello (sessionStorage)
+
+- Storage: `sessionStorage.getItem('cmspush_cart')` → array JSON
+- Aggiunta prodotto: slug + title + price + image + color + size + qty
+- Carrello: modifica quantità, rimuovi, codice sconto demo (`DENTE10` = -10%)
+- Icona 🛒 in navbar con badge rosso numerico — si aggiorna ogni 2s via `setInterval`
+
+### ⚠️ LEZIONE: bottoni invisibili in MM
+
+Minimal Mistakes applica CSS globale che può nascondere/resettare i `<button>` dentro `.page__content`. **Soluzione:** usare tag `<a href="javascript:void(0)">` al posto di `<button>` per i CTA principali (Aggiungi al carrello, Wishlist). I bottoni qty (+ e −) funzionano perché sono dentro `.sp-qty` con override `!important`.
+
+### ⚠️ LEZIONE: YAML e caratteri speciali
+
+I valori frontmatter con `&`, `?`, `[`, `]` rompono il parser Jekyll e causano build failure su GitHub Pages. Sempre usare testo semplice nei frontmatter. Le URL con parametri (`?w=800&q=80`) vanno tenute SOLO nel JS, mai nel frontmatter YAML.
+
+### Aggiunta nuova categoria
+
+1. Aggiungere `{nome: "Nome", slug: "slug"}` in `_data/shop-categorie.json`
+2. Creare `_pages/shop-cat-SLUG.md` copiando `shop-cat-abbigliamento.md` e cambiando `permalink`, `shop_category`, `shop_category_name`
+3. Aggiungere voce nel dropdown Shop in `_data/navigation.yml`
+
+### Link shop
+
+- 🛍️ Shop: `https://cialdecompatibili-netizen.github.io/cmspush/shop/`
+- 📦 Prodotto demo: `https://cialdecompatibili-netizen.github.io/cmspush/shop/prodotto/?slug=maglietta-dr-sorriso`
+- 🛒 Carrello: `https://cialdecompatibili-netizen.github.io/cmspush/shop/carrello/`
+- 🔧 Admin shop: tab Prodotti e Categorie Shop in `https://cialdecompatibili-netizen.github.io/cmspush/admin/`
+
+### Fix log e-commerce
+
+| Data | Fix | Commit |
+|------|-----|--------|
+| 2026-05-10 | E-commerce integrato nell'admin (tab Prodotti + Categorie Shop) | a48be99 |
+| 2026-05-10 | Shop frontend via GitHub API (shop.md, shop-prodotto.md, shop-cat) | 0dca834 |
+| 2026-05-10 | Fix build: rimosso gallery YAML con & che rompeva Jekyll | 9560525 |
+| 2026-05-10 | Carrello (sessionStorage) + icona 🛒 navbar con badge | 729ecaa |
+| 2026-05-10 | Pagina prodotto demo completa (gallery, varianti, recensioni, tabs) | b38992a |
+| 2026-05-10 | Fix bottone carrello: `<a>` invece di `<button>` per evitare reset CSS MM | 13aaad7 |
+
