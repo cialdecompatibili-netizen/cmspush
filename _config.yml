@@ -19,6 +19,11 @@ permalink: /:categories/:title/
 
 timezone:
 
+collections:
+  products:
+    output: true
+    permalink: /shop/:name/
+
 include:
   - _pages
 
@@ -77,6 +82,12 @@ defaults:
       layout: single
       author_profile: true
 
+  - scope:
+      path: "_products"
+      type: products
+    values:
+      layout: product
+      classes: wide
 category_archive:
   type: liquid
   path: /categories/
