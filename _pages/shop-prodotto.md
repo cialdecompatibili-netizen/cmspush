@@ -49,10 +49,12 @@ author_profile: false
 .sp-qty button{width:36px;height:40px;border:none;background:#fff;font-size:1.2em;cursor:pointer;color:#333;transition:background .15s}
 .sp-qty button:hover{background:#f5f5f5}
 .sp-qty input{width:44px;height:40px;border:none;border-left:1.5px solid #ddd;border-right:1.5px solid #ddd;text-align:center;font-size:15px;font-weight:700;color:#1a1a2e;outline:none}
-.sp-btn-cart{flex:1;padding:12px 20px;background:#6c63ff;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;letter-spacing:.3px}
-.sp-btn-cart:hover{background:#5a52e0}
-.sp-btn-wish{width:46px;height:46px;border:1.5px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;font-size:1.3em;color:#e74c3c;transition:all .2s}
-.sp-btn-wish:hover{border-color:#e74c3c;background:#fff5f5}
+.sp-btn-cart{flex:1;padding:12px 20px;background:#6c63ff !important;color:#fff !important;border:none !important;border-radius:10px !important;font-size:15px !important;font-weight:700 !important;cursor:pointer !important;transition:background .2s;letter-spacing:.3px;display:inline-block !important;visibility:visible !important;opacity:1 !important;line-height:1.4 !important;text-decoration:none !important;box-shadow:none !important}
+.sp-btn-cart:hover{background:#5a52e0 !important;color:#fff !important}
+.sp-btn-wish{width:46px !important;height:46px !important;border:1.5px solid #ddd !important;border-radius:10px !important;background:#fff !important;cursor:pointer !important;font-size:1.3em !important;color:#e74c3c !important;transition:all .2s;display:inline-flex !important;align-items:center;justify-content:center;visibility:visible !important}
+.sp-btn-wish:hover{border-color:#e74c3c !important;background:#fff5f5 !important}
+.sp-qty-row{display:flex !important;align-items:center !important;gap:1em !important;margin-bottom:1.2em !important;visibility:visible !important}
+.sp-qty button{width:36px !important;height:40px !important;border:none !important;background:#fff !important;font-size:1.2em !important;cursor:pointer !important;color:#333 !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;visibility:visible !important}
 
 .sp-stock{font-size:13px;color:#27ae60;margin-bottom:.8em}
 .sp-stock.low{color:#e67e22}
