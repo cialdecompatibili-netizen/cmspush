@@ -513,6 +513,7 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 
 ## Backlog (prossimi step possibili)
 
+- [ ] **Portare modulo e-commerce su cmspush-launcher** (`C:\Users\mirco\Desktop\cmspush-launcher`) — copiare i file shop + find-and-replace OWNER/REPO nel JS. Vedi sezione 🛒 per la lista file completa. Script PowerShell da scrivere al momento.
 - [ ] Sezione pricing + one-click install sulla landing (verificare stato)
 - [ ] Bozze articoli (published: false)
 - [ ] Upload immagini drag & drop
