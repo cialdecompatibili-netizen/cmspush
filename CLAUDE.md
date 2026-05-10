@@ -499,6 +499,18 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 
 ---
 
+## 💡 IDEE FUTURE
+
+### Page Builder visuale (stile Elementor) — sessione 2026-05-06
+- Integrare **GrapesJS** (vanilla JS, MIT, CDN — 2 righe) come tab "🏠 Home" nell'admin
+- Drag & drop blocchi, sposta sezioni, modifica testi inline
+- Prima rimuovere i 2 Liquid tags dalla landing → HTML puro (link assoluti)
+- Salva → GrapesJS esporta HTML → GitHub API → Jekyll rebuilda
+- **Stima:** 2-3 sessioni — giustificato a €49+, non a €19
+- Alternativa leggera: `contenteditable` inline (click sul testo → modifica → salva) — 1 sessione
+
+---
+
 ## Backlog (prossimi step possibili)
 
 - [ ] Sezione pricing + one-click install sulla landing (verificare stato)
