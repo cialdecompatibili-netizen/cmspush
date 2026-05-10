@@ -1,4 +1,4 @@
-﻿main:
+main:
   - title: "Home"
     url: /
   - title: "Blog"
@@ -7,7 +7,7 @@
     url: /categories/
   - title: "Tags"
     url: /tags/
-  - title: "About"
-    url: /about/
   - title: "Changelog"
     url: /changelog/
+  - title: "About"
+    url: /about/
