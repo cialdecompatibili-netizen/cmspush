@@ -501,7 +501,11 @@ function renderCategorie(){
   const el=document.getElementById('lista-categorie');
   el.innerHTML=_categorie.map((c,i)=>`
     <div class="cat-row">
-      <div style="display:flex;gap:8px;margin-bottom:6px">
+      <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <button class="btn btn-secondary btn-sm" style="padding:1px 7px;font-size:11px;line-height:1" onclick="catSu(${i})" ${i===0?"disabled":""}>▲</button>
+          <button class="btn btn-secondary btn-sm" style="padding:1px 7px;font-size:11px;line-height:1" onclick="catGiu(${i})" ${i===_categorie.length-1?"disabled":""}>▼</button>
+        </div>
         <input type="text" value="${c.nome}" onchange="_categorie[${i}].nome=this.value;renderSelect()" style="font-weight:600;flex:1">
         <button class="btn btn-danger btn-sm" onclick="_categorie.splice(${i},1);renderCategorie();renderSelect()">🗑</button>
       </div>
@@ -559,6 +563,8 @@ function renderMenu(){
 }
 function menuSu(i){if(i===0)return;var t=_menuVoci.splice(i,1)[0];_menuVoci.splice(i-1,0,t);renderMenu();}
 function menuGiu(i){if(i===_menuVoci.length-1)return;var t=_menuVoci.splice(i,1)[0];_menuVoci.splice(i+1,0,t);renderMenu();}
+function catSu(i){if(i===0)return;var t=_categorie.splice(i,1)[0];_categorie.splice(i-1,0,t);renderCategorie();renderSelect();}
+function catGiu(i){if(i===_categorie.length-1)return;var t=_categorie.splice(i,1)[0];_categorie.splice(i+1,0,t);renderCategorie();renderSelect();}
 function aggiungiVoce(){
   const t=document.getElementById('menu-nome').value.trim();
   const u=document.getElementById('menu-url').value.trim();
