@@ -266,8 +266,8 @@ async function loadProduct() {
               <input type="number" id="sp-qty" value="1" min="1" max="${stockN||99}">
               <button onclick="changeQty(1)">+</button>
             </div>
-            <button class="sp-btn-cart" onclick="addToCart()">🛒 Aggiungi al carrello</button>
-            <button class="sp-btn-wish" title="Wishlist" onclick="addWish()">♡</button>
+            <a href="javascript:void(0)" class="sp-btn-cart" onclick="addToCart()">🛒 Aggiungi al carrello</a>
+            <a href="javascript:void(0)" class="sp-btn-wish" title="Wishlist" onclick="addWish()">♡</a>
           </div>
           <hr class="sp-divider">
           <div class="sp-sku">SKU: ${p.sku||'—'} &nbsp;|&nbsp; Categoria: <a href="${BASE}/shop/categoria/${p.category}/" style="color:#6c63ff">${p.category||'—'}</a></div>
