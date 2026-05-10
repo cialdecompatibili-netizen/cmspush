@@ -42,7 +42,7 @@
         },
         "slide1_title": {
           "file": "_pages/home.md",
-          "regex": "(<div class=\"lx-slide active\">[\\s\\S]*?)<h1 class=\"lx-slide-title\">[^<]*</h1>",
+          "regex": "(<div class=\"lx-slide active\">[\\s\\S]*?)<h1 class=\"lx-slide-title\">[\\s\\S]*?</h1>",
           "replace": "$1<h1 class=\"lx-slide-title\">{{value}}</h1>"
         },
         "slide1_sub": {
@@ -59,7 +59,7 @@
         "slide2_title": {
           "file": "_pages/home.md",
           "nth": 2,
-          "regex": "<h1 class=\"lx-slide-title\">[^<]*</h1>",
+          "regex": "<h1 class=\"lx-slide-title\">[\\s\\S]*?</h1>",
           "replace": "<h1 class=\"lx-slide-title\">{{value}}</h1>"
         },
         "slide2_sub": {
@@ -77,7 +77,7 @@
         "slide3_title": {
           "file": "_pages/home.md",
           "nth": 3,
-          "regex": "<h1 class=\"lx-slide-title\">[^<]*</h1>",
+          "regex": "<h1 class=\"lx-slide-title\">[\\s\\S]*?</h1>",
           "replace": "<h1 class=\"lx-slide-title\">{{value}}</h1>"
         },
         "slide3_sub": {
@@ -98,7 +98,7 @@
         },
         "title": {
           "file": "_pages/home.md",
-          "regex": "<h2 class=\"lx-desc-title\">[^<]*</h2>",
+          "regex": "<h2 class=\"lx-desc-title\">[\\s\\S]*?</h2>",
           "replace": "<h2 class=\"lx-desc-title\">{{value}}</h2>"
         },
         "text": {
