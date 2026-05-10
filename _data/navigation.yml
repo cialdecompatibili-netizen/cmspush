@@ -12,7 +12,7 @@ main:
         url: /shop/categoria/abbigliamento/
       - title: "---"
       - title: "Maglietta Dr. Sorriso (demo)"
-        url: /shop/maglietta-dr-sorriso/
+        url: /shop/prodotto/?slug=maglietta-dr-sorriso
   - title: "Categories"
     url: /categories/
   - title: "Tags"

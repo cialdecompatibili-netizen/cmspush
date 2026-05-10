@@ -19,16 +19,64 @@ shop_category_name: Abbigliamento
 <p style="margin-bottom:.5em"><a href="{{ '/shop/' | relative_url }}" style="color:#6c63ff;font-size:13px;text-decoration:none">← Torna allo Shop</a></p>
 <p style="color:#666;font-size:14px">Prodotti nella categoria <strong>{{ page.shop_category_name }}</strong></p>
 
-<div class="shop-grid">
-{% assign cat_products = site.products | where: "category", page.shop_category %}
-{% for product in cat_products %}
-  <a class="prod-card" href="{{ product.url | relative_url }}">
-    {% if product.image %}<img src="{{ product.image }}" alt="{{ product.title }}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:.8em">{% endif %}
-    <h3>{{ product.title }}</h3>
-    <div class="price">€ {{ product.price }}</div>
-    {% if product.stock %}<div style="font-size:12px;color:#27ae60;margin-top:.3em">✅ {{ product.stock }} pz</div>{% endif %}
-  </a>
-{% else %}
-  <p style="color:#bbb">Nessun prodotto in questa categoria.</p>
-{% endfor %}
-</div>
+<div id="prods-loading" style="color:#aaa;font-size:14px">Caricamento prodotti...</div>
+<div class="shop-grid" id="prods-grid"></div>
+
+<script>
+const OWNER = 'cialdecompatibili-netizen';
+const REPO  = 'cmspush';
+const BASE  = 'https://cialdecompatibili-netizen.github.io/cmspush';
+const FILTER_CAT = '{{ page.shop_category }}';
+
+function parseFrontmatter(text) {
+  const m = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!m) return {};
+  const obj = {};
+  m[1].split('\n').forEach(line => {
+    const i = line.indexOf(':');
+    if (i < 0) return;
+    const k = line.slice(0,i).trim();
+    let v = line.slice(i+1).trim().replace(/^["']|["']$/g,'');
+    obj[k] = v;
+  });
+  return obj;
+}
+
+async function loadCat() {
+  const pGrid = document.getElementById('prods-grid');
+  const loading = document.getElementById('prods-loading');
+  try {
+    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/_products`);
+    if (!r.ok) throw new Error();
+    const files = await r.json();
+    const mdFiles = files.filter(f => f.name.endsWith('.md'));
+    const products = [];
+    for (const f of mdFiles) {
+      const fr = await fetch(f.download_url);
+      const text = await fr.text();
+      const meta = parseFrontmatter(text);
+      meta._slug = f.name.replace('.md','');
+      if (meta.category === FILTER_CAT) products.push(meta);
+    }
+    loading.style.display = 'none';
+    if (products.length === 0) {
+      pGrid.innerHTML = '<p style="color:#bbb">Nessun prodotto in questa categoria.</p>';
+    } else {
+      products.forEach(p => {
+        const card = document.createElement('a');
+        card.className = 'prod-card';
+        card.href = BASE + '/shop/prodotto/?slug=' + p._slug;
+        card.innerHTML = `
+          ${p.image ? `<img src="${p.image}" alt="${p.title}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:.8em">` : ''}
+          <h3>${p.title||p._slug}</h3>
+          <div class="price">€ ${p.price||'—'}</div>
+          ${p.stock ? `<div style="font-size:12px;color:#27ae60;margin-top:.3em">✅ ${p.stock} pz</div>` : ''}`;
+        pGrid.appendChild(card);
+      });
+    }
+  } catch(e) {
+    loading.innerHTML = '<p style="color:#e74c3c">Errore caricamento prodotti.</p>';
+  }
+}
+loadCat();
+</script>
