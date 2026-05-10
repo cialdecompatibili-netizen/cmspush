@@ -521,6 +521,36 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 - [ ] Slug auto-generato dal titolo
 - [ ] Pagina /demo/ CMS in sola lettura
 
+## ⚡ OTTIMIZZAZIONE PERFORMANCE SHOP — Piano futuro
+
+**Problema attuale:** pagina prodotto fa fetch GitHub API al caricamento → 0.5-1s di ritardo + SEO zero (Google vede solo "Caricamento...").
+
+**Obiettivo:** caricamento istantaneo (50-100ms) + SEO completa — identico a Shopify/WooCommerce.
+
+### Le 3 ottimizzazioni da fare in ordine:
+
+**1. GitHub Actions pre-genera HTML (priorità alta — risolve SEO)**
+- Ad ogni push su `_products/*.md` → Action genera pagine HTML statiche con contenuto già dentro
+- Zero fetch JS al caricamento, Google indicizza tutto
+- Stima: 1 sessione
+
+**2. Prerender dati nel frontmatter (alternativa più semplice alla 1)**
+- Titolo, prezzo, descrizione scritti direttamente nella pagina Jekyll
+- JS serve solo per parti interattive (carrello, varianti, gallery)
+- Contro: serve una pagina `.md` per ogni prodotto (non più pagina unica con ?slug=)
+- Stima: mezza sessione
+
+**3. CDN Cloudflare davanti a GitHub Pages**
+- File statici serviti dal nodo geograficamente più vicino
+- Riduce latenza residua a ~50ms
+- Stima: configurazione DNS, 30 minuti
+
+### Risultato finale con tutte e 3:
+- ⚡ 50-100ms caricamento percepito
+- 🔍 SEO completa (Google indicizza titolo, prezzo, descrizione)
+- 🆓 Tutto gratis (GitHub Pages + Cloudflare free tier)
+
+
 
 ## ⚠️ STANDARD LARGHEZZA UNIVERSALE
 
