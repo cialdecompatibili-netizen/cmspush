@@ -736,13 +736,14 @@ async function salvaPagina(){
 }
 function anteprimaPagina(){
   // Mappa il path al permalink live corrispondente
+  const base=location.origin+location.pathname.replace(/\/admin\/?.*$/,'/');
   const urlMap={
-    '_includes/home-content.html':'https://cialdecompatibili-netizen.github.io/',
-    '_pages/about.md':'https://cialdecompatibili-netizen.github.io/about/',
-    '_pages/blog.md':'https://cialdecompatibili-netizen.github.io/blog/',
+    '_includes/home-content.html':base,
+    '_pages/about.md':base+'about/',
+    '_pages/blog.md':base+'blog/',
   };
   const slug=_paginaPath.split('/').pop().replace('.md','');
-  const url=urlMap[_paginaPath]||`https://cialdecompatibili-netizen.github.io/${slug}/`;
+  const url=urlMap[_paginaPath]||`${base}${slug}/`;
   const box=document.getElementById('preview-pagina-box');
   document.getElementById('preview-pagina-frame').src=url;
   box.style.display='block';
