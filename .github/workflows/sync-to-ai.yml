@@ -65,11 +65,17 @@ jobs:
             fi
 
             # Scrivi su cmspush-ai
-            RESULT=$(curl -sf -X PUT \
+            RESULT=$(curl -s -w "\n%{http_code}" -X PUT \
               -H "Authorization: Bearer $GH_TOKEN" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/$OWNER/$DST/contents/$FILE" \
               -d "$BODY")
 
-            echo "  OK: $FILE sincronizzato"
+            HTTP_CODE=$(echo "$RESULT" | tail -1)
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
+              echo "  OK ($HTTP_CODE): $FILE sincronizzato"
+            else
+              echo "  ERRORE ($HTTP_CODE): $FILE — $(echo "$RESULT" | head -1)"
+              exit 1
+            fi
           done
