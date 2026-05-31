@@ -1,0 +1,82 @@
+name: Sync to cmspush-ai
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'admin/index.html'
+      - 'assets/css/main.scss'
+      - '_layouts/**'
+      - '_includes/head/**'
+      - '_includes/changelog.md'
+      - 'Gemfile'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout cmspush
+        uses: actions/checkout@v4
+
+      - name: Sync files to cmspush-ai
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
+          OWNER: cialdecompatibili-netizen
+          SRC: cmspush
+          DST: cmspush-ai
+        run: |
+          FILES=(
+            "admin/index.html"
+            "assets/css/main.scss"
+            "_layouts/single.html"
+            "_layouts/home.html"
+            "_layouts/blog-custom.html"
+            "_layouts/categories.html"
+            "_layouts/product.html"
+            "_includes/head/custom.html"
+            "_includes/changelog.md"
+            "Gemfile"
+          )
+
+          for FILE in "${FILES[@]}"; do
+            echo "Syncing $FILE..."
+
+            # Leggi contenuto da cmspush (base64)
+            CONTENT=$(curl -sf \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$OWNER/$SRC/contents/$FILE" \
+              | jq -r '.content' | tr -d '\n')
+
+            if [ -z "$CONTENT" ]; then
+              echo "  SKIP: $FILE non trovato in sorgente"
+              continue
+            fi
+
+            # Leggi SHA destinazione (cmspush-ai)
+            SHA=$(curl -sf \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$OWNER/$DST/contents/$FILE" \
+              | jq -r '.sha // empty')
+
+            # Costruisci body
+            if [ -n "$SHA" ]; then
+              BODY=$(jq -n --arg c "$CONTENT" --arg s "$SHA" \
+                --arg m "sync: $FILE da cmspush" \
+                '{message: $m, content: $c, sha: $s}')
+            else
+              BODY=$(jq -n --arg c "$CONTENT" \
+                --arg m "sync: $FILE da cmspush" \
+                '{message: $m, content: $c}')
+            fi
+
+            # Scrivi su cmspush-ai
+            RESULT=$(curl -sf -X PUT \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$OWNER/$DST/contents/$FILE" \
+              -d "$BODY")
+
+            echo "  OK: $FILE sincronizzato"
+          done
