@@ -3,13 +3,6 @@ name: Sync to cmspush-ai
 on:
   push:
     branches: [main]
-    paths:
-      - 'admin/index.html'
-      - 'assets/css/main.scss'
-      - '_layouts/**'
-      - '_includes/head/**'
-      - '_includes/changelog.md'
-      - 'Gemfile'
 
 jobs:
   sync:
