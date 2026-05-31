@@ -221,3 +221,6 @@ blockquote {
 
 /* Blog: nasconde il page__title di MM (già mostrato nel blog-header) */
 .page--blog #page-title { display: none !important; }
+
+/* Nasconde copyright duplicato MM — lascia solo custom.html */
+.page__footer-copyright { display: none !important; }
