@@ -15,41 +15,54 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
           OWNER: cialdecompatibili-netizen
-          SRC: cmspush
           DST: cmspush-ai
         run: |
-          FILES=(
-            "admin/index.html"
-            "assets/css/main.scss"
-            "_layouts/single.html"
-            "_layouts/home.html"
-            "_layouts/blog-custom.html"
-            "_layouts/categories.html"
-            "_layouts/product.html"
-            "_includes/head/custom.html"
-            "_includes/footer/custom.html"
-            "_includes/changelog.md"
-            "Gemfile"
+          # File esclusi — iniettati dal launcher via JSON
+          EXCLUDE=(
+            "_config.yml"
+            "_includes/home-content.html"
+            "_posts/2026-01-01-demo.md"
+            "_data/categorie.json"
+            "_pages/about.md"
+            ".github/workflows/sync-to-ai.yml"
+            "CLAUDE.md"
+            "README.md"
+            "cmspush.zip"
+            "template-map.json"
+            "wb.ps1"
+            "wb2.ps1"
           )
 
-          for FILE in "${FILES[@]}"; do
-            echo "Syncing $FILE..."
+          # Funzione per verificare se un file è escluso
+          is_excluded() {
+            local f="$1"
+            for ex in "${EXCLUDE[@]}"; do
+              if [ "$f" = "$ex" ]; then return 0; fi
+            done
+            return 1
+          }
 
-            # Leggi contenuto dal checkout locale (non via API)
-            if [ ! -f "$FILE" ]; then
-              echo "  SKIP: $FILE non trovato nel checkout"
+          # Trova tutti i file nel repo (escludi .git)
+          FILES=$(find . -type f -not -path './.git/*' | sed 's|^\./||' | sort)
+
+          OK=0; SKIP=0; ERR=0
+
+          while IFS= read -r FILE; do
+            if is_excluded "$FILE"; then
+              echo "  EXCLUDED: $FILE"
+              SKIP=$((SKIP+1))
               continue
             fi
-            CONTENT=$(base64 -w 0 "$FILE")
 
-            # Leggi SHA destinazione (cmspush-ai)
+            # Leggi SHA destinazione
             SHA=$(curl -sf \
               -H "Authorization: Bearer $GH_TOKEN" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/$OWNER/$DST/contents/$FILE" \
               | jq -r '.sha // empty')
 
-            # Costruisci body
+            CONTENT=$(base64 -w 0 "$FILE")
+
             if [ -n "$SHA" ]; then
               BODY=$(jq -n --arg c "$CONTENT" --arg s "$SHA" \
                 --arg m "sync: $FILE da cmspush" \
@@ -60,7 +73,6 @@ jobs:
                 '{message: $m, content: $c}')
             fi
 
-            # Scrivi su cmspush-ai
             RESULT=$(curl -s -w "\n%{http_code}" -X PUT \
               -H "Authorization: Bearer $GH_TOKEN" \
               -H "Accept: application/vnd.github+json" \
@@ -69,9 +81,14 @@ jobs:
 
             HTTP_CODE=$(echo "$RESULT" | tail -1)
             if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
-              echo "  OK ($HTTP_CODE): $FILE sincronizzato"
+              echo "  OK ($HTTP_CODE): $FILE"
+              OK=$((OK+1))
             else
-              echo "  ERRORE ($HTTP_CODE): $FILE — $(echo "$RESULT" | head -1)"
-              exit 1
+              echo "  ERRORE ($HTTP_CODE): $FILE"
+              ERR=$((ERR+1))
             fi
-          done
+          done <<< "$FILES"
+
+          echo ""
+          echo "--- RISULTATO: $OK OK, $SKIP esclusi, $ERR errori ---"
+          if [ $ERR -gt 0 ]; then exit 1; fi
