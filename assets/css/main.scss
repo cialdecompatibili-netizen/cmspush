@@ -222,8 +222,5 @@ blockquote {
 /* Blog: nasconde il page__title di MM (già mostrato nel blog-header) */
 .page--blog #page-title { display: none !important; }
 
-/* Nasconde "Powered by Jekyll & Minimal Mistakes" nel footer */
-.page__footer-follow + p,
-.page__footer p a[href*="jekyllrb"],
-.page__footer p a[href*="mademistakes"],
-.page__footer-copyright { display: none !important; }
+/* Nasconde solo "Powered by Jekyll & Minimal Mistakes" — footer visibile */
+.page__footer-copyright { visibility: hidden !important; }
