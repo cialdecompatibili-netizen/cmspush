@@ -223,6 +223,13 @@ document.addEventListener('DOMContentLoaded', function(){
   // Aggiorna ogni 2s per catturare aggiunte nella stessa tab
   setInterval(renderCartIcon, 2000);
 
+  // --- SPOSTA COPYRIGHT DOPO SOCIAL ---
+  var custom = document.querySelector('.page__footer-custom');
+  var follow = document.querySelector('.page__footer-follow');
+  if (custom && follow && follow.nextSibling !== custom) {
+    follow.parentNode.insertBefore(custom, follow.nextSibling);
+  }
+
   // --- DROPDOWN SHOP ---
   var links = document.querySelectorAll('.greedy-nav .visible-links a, .greedy-nav .hidden-links a');
   links.forEach(function(a){
