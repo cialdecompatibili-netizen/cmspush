@@ -34,17 +34,12 @@ jobs:
           for FILE in "${FILES[@]}"; do
             echo "Syncing $FILE..."
 
-            # Leggi contenuto da cmspush (base64)
-            CONTENT=$(curl -sf \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/$OWNER/$SRC/contents/$FILE" \
-              | jq -r '.content' | tr -d '\n')
-
-            if [ -z "$CONTENT" ]; then
-              echo "  SKIP: $FILE non trovato in sorgente"
+            # Leggi contenuto dal checkout locale (non via API)
+            if [ ! -f "$FILE" ]; then
+              echo "  SKIP: $FILE non trovato nel checkout"
               continue
             fi
+            CONTENT=$(base64 -w 0 "$FILE")
 
             # Leggi SHA destinazione (cmspush-ai)
             SHA=$(curl -sf \
