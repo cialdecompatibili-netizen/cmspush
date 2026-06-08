@@ -38,26 +38,28 @@ share: false
 
 .blog-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
 
-/* PILL CATEGORIA — viola/indigo con ombra leggera 3D */
+/* PILL CATEGORIA — bordo viola, testo viola, bianco pieno all'hover */
 .blog-cats { display: flex; gap: 8px; flex-wrap: wrap; }
 .blog-cat {
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(135deg, #7c6ff7 0%, #5a4fcf 100%);
+  color: #7c6ff7;
+  background: transparent;
+  border: 1.5px solid #7c6ff7;
   border-radius: 999px;
-  padding: 4px 13px;
+  padding: 3px 12px;
   text-decoration: none;
-  box-shadow: 0 2px 6px rgba(108, 99, 255, 0.35), 0 1px 2px rgba(0,0,0,0.10);
-  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 6px rgba(108, 99, 255, 0.15);
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
   display: inline-block;
 }
 .blog-cat:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.45), 0 2px 4px rgba(0,0,0,0.12);
+  background: linear-gradient(135deg, #7c6ff7 0%, #5a4fcf 100%);
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.40);
 }
 
 .blog-title {
@@ -65,7 +67,7 @@ share: false
   font-weight: 500; line-height: 1.4; color: #111;
   text-decoration: none; display: block;
 }
-.blog-title:hover { color: #444; }
+.blog-title:hover { color: #444; text-decoration: underline; text-underline-offset: 3px; }
 
 .blog-excerpt {
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
@@ -77,17 +79,18 @@ share: false
 .blog-meta { font-size: 0.78rem; color: #bbb; display: flex; align-items: center; gap: 0.5rem; }
 .blog-meta-sep { color: #ddd; }
 
+/* Footer card: niente riga, solo spazio */
 .blog-footer {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 0.5rem;
-  margin-top: 0.3rem; padding-top: 0.8rem; border-top: 1px solid #f0f0f0;
+  margin-top: 0.4rem;
 }
 
 .blog-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .blog-tag { font-size: 0.7rem; letter-spacing: 0.07em; color: #ccc; text-decoration: none; }
 .blog-tag:hover { color: #111; }
 
-/* BOTTONE LEGGI TUTTO — tab arrotondata grigio chiaro, niente righe */
+/* BOTTONE LEGGI TUTTO — tab arrotondata grigio chiaro */
 .blog-readmore {
   font-size: 0.72rem;
   font-weight: 600;

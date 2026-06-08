@@ -108,11 +108,31 @@ body {
 }
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 img { max-width: 100%; height: auto; }
-.page__content a {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+
+/* ============================================================
+   LINK STILE GOOGLE — globale
+   Nessun underline di default, appare solo all'hover
+   ============================================================ */
+a {
+  text-decoration: none !important;
 }
+a:hover {
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 3px !important;
+}
+/* Eccezioni: navbar, bottoni, pill — no underline mai */
+.greedy-nav a,
+.greedy-nav a:hover,
+.blog-cat, .blog-cat:hover,
+.blog-readmore, .blog-readmore:hover,
+.blog-tag, .blog-tag:hover,
+.blog-title:hover,
+.cart-nav-btn, .cart-nav-btn:hover,
+.page__taxonomy-item, .page__taxonomy-item:hover {
+  text-decoration: none !important;
+}
+
 blockquote {
   font-size: clamp(1.05rem, 1.8vw, 1.25rem);
   font-style: italic;
@@ -155,7 +175,6 @@ a.page__taxonomy-item:hover {
 
 /* ============================================================
    SIDEBAR A DESTRA — CSS Grid
-   Override completo dei float/width MM su tutti i breakpoint
    ============================================================ */
 @media (min-width: 64em) {
   #main:has(> .sidebar) {
@@ -194,7 +213,7 @@ a.page__taxonomy-item:hover {
 }
 
 /* ============================================================
-   YOU MAY ALSO ENJOY — card affiancate
+   YOU MAY ALSO ENJOY
    ============================================================ */
 .page__related { clear: both !important; }
 .page__related .grid__wrapper::after { content: ""; display: table; clear: both; }
@@ -232,7 +251,7 @@ a.page__taxonomy-item:hover {
 .page__footer-copyright,
 .page__footer-copyright a { color: #888 !important; }
 .page__footer-follow ul li a:hover,
-.page__footer-copyright a:hover { color: #111 !important; text-decoration: none; }
+.page__footer-copyright a:hover { color: #111 !important; text-decoration: none !important; }
 
 /* ============================================================
    WIDE PAGE
