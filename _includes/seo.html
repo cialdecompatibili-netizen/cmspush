@@ -24,7 +24,7 @@
 {% endif %}
 
 {% if seo_title %}
-  {% assign seo_title_full = seo_title | append: ' | ' | append: site.title %}
+  {% assign seo_title_full = seo_title | append: ' - ' | append: site.title %}
 {% else %}
   {% assign seo_title_full = site.title %}
 {% endif %}
