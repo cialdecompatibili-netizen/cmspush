@@ -513,6 +513,66 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 
 ---
 
+## 🔌 PLUGIN MANAGER — Piano implementazione (sessione 2026-06-08)
+
+### Obiettivo
+Sezione "Integrazioni" nell'admin con toggle on/off per analytics e altri servizi. Zero snippet manuali — l'utente inserisce solo l'ID e il CMS inietta tutto automaticamente nel sito.
+
+### Architettura
+
+**1. `_config.yml`** — aggiungere in fondo:
+```yaml
+integrations:
+  ga4:
+    enabled: false
+    id: ""
+  search_console:
+    enabled: false
+    verification: ""
+```
+
+**2. `_includes/head/custom.html`** — aggiungere in fondo i blocchi Jekyll condizionali:
+```liquid
+{% if site.integrations.ga4.enabled and site.integrations.ga4.id != "" %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.integrations.ga4.id }}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ site.integrations.ga4.id }}');</script>
+{% endif %}
+{% if site.integrations.search_console.enabled and site.integrations.search_console.verification != "" %}
+<meta name="google-site-verification" content="{{ site.integrations.search_console.verification }}" />
+{% endif %}
+```
+
+**3. `admin/index.html`** — aggiungere tab "🔌 Integrazioni" con:
+- Toggle on/off + campo ID per GA4
+- Toggle on/off + campo meta tag per Search Console
+- Pulsante Salva → legge `_config.yml` via `ghGet`, modifica i valori, riscrive via `ghPut`
+- Copia anche su `cms/admin/index.html` (regola sincronizzazione 2 copie)
+
+### Integrazioni da includere (in ordine di priorità)
+| Priorità | Integrazione | Campo richiesto |
+|---|---|---|
+| 🔴 Alta | Google Analytics 4 | ID (es. G-XXXXXXX) |
+| 🔴 Alta | Google Search Console | Meta tag verification |
+| 🟡 Media | Facebook/Meta Pixel | ID numerico |
+| 🟡 Media | Hotjar | ID numerico |
+| 🟡 Media | Cookie banner (iubenda/cookieyes) | Snippet embed |
+| 🟢 Bassa | Plausible | Dominio |
+| 🟢 Bassa | Mailchimp popup | Snippet embed |
+
+### Logica salvataggio config
+1. `ghGet('_config.yml')` → legge SHA + contenuto attuale
+2. Modifica solo le righe `integrations:` con regex o split su righe
+3. `ghPut('_config.yml', msg, nuovoContenuto, sha)` → push
+4. Jekyll rebuilda → snippet attivo sul sito in ~60s
+
+### ⚠️ Attenzione YAML
+Il `_config.yml` è parsato da Jekyll — non usare caratteri speciali nei valori. Gli ID GA4 (G-XXXXXXX) e verification code sono stringa pura, sicuri. Per snippet embed multi-riga usare un approccio diverso (file separato o JS injection).
+
+### Riferimento UI
+Copiare la UX di Ghost "Integrations" tab: toggle + campo ID + bottone Save per ogni servizio. Semplice, pulito, familiare per chi conosce altri CMS.
+
+---
+
 ## Backlog (prossimi step possibili)
 
 - [ ] **Portare modulo e-commerce su cmspush-launcher** (`C:\Users\mirco\Desktop\cmspush-launcher`) — copiare i file shop + find-and-replace OWNER/REPO nel JS. Vedi sezione 🛒 per la lista file completa. Script PowerShell da scrivere al momento.
