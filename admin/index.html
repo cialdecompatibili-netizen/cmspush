@@ -819,7 +819,6 @@ async function caricaPagine(){
   if(!tok())return;
   const res=await ghGet('_pages');if(!res.ok)return;
   const files=await res.json();
-  // Aggiunge "Home" in cima come voce speciale che punta a _includes/home-content.html
   const homeRow=`<div class="list-row" style="background:#fffbeb;border-radius:7px;padding:10px;margin-bottom:8px">
     <span>🏠 <strong>home</strong> <span style="font-size:11px;color:#aaa">— pagina principale del sito</span></span>
     <button class="btn btn-secondary btn-sm" onclick="modificaHomeContent()">✏️ Modifica</button>
@@ -827,8 +826,27 @@ async function caricaPagine(){
   document.getElementById('lista-pagine').innerHTML=homeRow+files.map(f=>`
     <div class="list-row">
       <span>${f.name.replace(/\.md$/,'')}</span>
-      <button class="btn btn-secondary btn-sm" onclick="modificaPagina('${f.path}','${f.sha}')">✏️ Modifica</button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="modificaPagina('${f.path}','${f.sha}')">✏️ Modifica</button>
+        <button class="btn btn-danger btn-sm" onclick="eliminaPagina('${f.path}','${f.sha}','${f.name}')">🗑️ Elimina</button>
+      </div>
     </div>`).join('');
+}
+
+async function eliminaPagina(path,sha,nome){
+  if(!tok())return;
+  if(!confirm('Eliminare definitivamente "'+nome+'"?\n\nQuesta azione non è reversibile.'))return;
+  showMsg('msg-pag','⏳ Eliminazione in corso...','');
+  try{
+    const res=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+path,{
+      method:'DELETE',
+      headers:{'Authorization':'token '+tok(),'Content-Type':'application/json'},
+      body:JSON.stringify({message:'Elimina pagina: '+nome,sha:sha})
+    });
+    const json=await res.json();
+    if(res.ok){showMsg('msg-pag','✅ Pagina eliminata!','ok');caricaPagine();}
+    else showMsg('msg-pag','❌ '+json.message,'err');
+  }catch(e){showMsg('msg-pag','❌ Errore: '+e.message,'err');}
 }
 
 async function modificaHomeContent(){
