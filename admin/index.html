@@ -807,6 +807,11 @@ function setPagEditor(mode){
   document.getElementById('pag-quill-box').style.display=mode==='visuale'?'block':'none';
   document.getElementById('pag-corpo').style.display=mode==='html'?'block':'none';
   document.getElementById('pag-md-box').style.display=mode==='markdown'?'block':'none';
+  // Quando si passa al visuale, sincronizza il contenuto da pag-md
+  if(mode==='visuale'){
+    const md=document.getElementById('pag-md').value;
+    document.getElementById('pag-vis-editor').innerHTML=md;
+  }
 }
 function getPagCorpo(){
   if(_pagEditorMode==='visuale') return document.getElementById('pag-vis-editor').innerHTML;
