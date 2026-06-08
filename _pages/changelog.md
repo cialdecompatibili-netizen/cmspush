@@ -1,8 +1,49 @@
----
+﻿---
 layout: single
-title: "Pagina"
+title: "Changelog"
 permalink: /changelog/
-author_profile: true
+author_profile: false
 ---
 
----<br>layout: single<br>title: "Changelog"<br>permalink: /changelog/<br>author_profile: false<br>---<p></p><p></p><h1>CHANGELOGcc — CMSPush</h1><p></p><p>Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude per sapere cosa c'è in ogni versione.</p><p>---</p><p></p><h2>[1.1.1] — 2026-04-30</h2><p></p><p></p><h3>Fix layout articolo caccola</h3><p></p><p></p><li>Testo articolo ora occupa tutta la larghezza disponibile accanto alla sidebar (fix CSS Grid con override completo width/float/padding di Minimal Mistakes)</li><p></p><p>---</p><p></p><h2>[1.1.0] — 2026-04-30</h2><p></p><p></p><h3>Miglioramenti layout e admin</h3><p></p><p></p><li>Sidebar autore spostata a destra sugli articoli (soluzione CSS definitiva, zero rotture)</li><br><li>"You May Also Enjoy" — card affiancate corrette (2 colonne tablet, 4 colonne desktop)</li><br><li>Bottone 🚀 Deploy nella topbar admin — link diretto a GitHub Actions, dinamico per ogni cliente</li><br><li>Link "Admin" nella topbar ora apre nella stessa finestra invece di aprirne una nuova</li><p></p><p>---</p><p></p><h2>[1.0.0] — 2026-04-28</h2><p></p><p></p><h3>Prima versione pubblica</h3><p></p><p></p><li>CMS completo per Jekyll + GitHub Pages</li><br><li>Tab Articoli: crea, modifica, elimina articoli</li><br><li>Tab Pagine: modifica pagine statiche + home</li><br><li>Tab Menu: gestione navigazione</li><br><li>Tab Categorie: gestione categorie articoli</li><br><li>Tab Token: salvataggio token GitHub in localStorage</li><br><li>Tab Tema: selezione skin Minimal Mistakes (9 skin)</li><br><li>Tab Impostazioni: titolo, email, autore, bio, social, homepage</li><br><li>Editor visuale (contenteditable) + HTML grezzo</li><br><li>Sistema auto-update con bottone nel menu</li><br><li>Changelog visibile nel menu del CMS</li><br><li>Licenza: Commons Clause + MIT (uso commerciale richiede licenza)</li><p></p><p></p>
+# CHANGELOG — CMSPush
+
+Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude per sapere cosa c'è in ogni versione.
+
+---
+
+## [1.1.1] — 2026-04-30
+
+### Fix layout articolo caccola caccola
+
+- Testo articolo ora occupa tutta la larghezza disponibile accanto alla sidebar (fix CSS Grid con override completo width/float/padding di Minimal Mistakes)
+
+---
+
+## [1.1.0] — 2026-04-30
+
+### Miglioramenti layout e admin
+
+- Sidebar autore spostata a destra sugli articoli (soluzione CSS definitiva, zero rotture)
+- "You May Also Enjoy" — card affiancate corrette (2 colonne tablet, 4 colonne desktop)
+- Bottone Deploy nella topbar admin — link diretto a GitHub Actions, dinamico per ogni cliente
+- Link "Admin" nella topbar ora apre nella stessa finestra invece di aprirne una nuova
+
+---
+
+## [1.0.0] — 2026-04-28
+
+### Prima versione pubblica
+
+- CMS completo per Jekyll + GitHub Pages
+- Tab Articoli: crea, modifica, elimina articoli
+- Tab Pagine: modifica pagine statiche + home
+- Tab Menu: gestione navigazione
+- Tab Categorie: gestione categorie articoli
+- Tab Token: salvataggio token GitHub in localStorage
+- Tab Tema: selezione skin Minimal Mistakes (9 skin)
+- Tab Impostazioni: titolo, email, autore, bio, social, homepage
+- Editor visuale (contenteditable) + HTML grezzo
+- Sistema auto-update con bottone nel menu
+- Changelog visibile nel menu del CMS
+- Licenza: Commons Clause + MIT (uso commerciale richiede licenza)
+

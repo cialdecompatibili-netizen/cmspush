@@ -814,10 +814,12 @@ function getPagCorpo(){
   return document.getElementById('pag-corpo').value;
 }
 function setPagCorpo(content){
-  // Imposta il contenuto in tutte e 3 le aree
+  // Imposta il contenuto grezzo (Markdown) in textarea e pag-md
+  // NON caricare in pag-vis-editor — evita che HTML spuri sovrascriva il MD
   document.getElementById('pag-corpo').value=content;
-  document.getElementById('pag-vis-editor').innerHTML=content;
   document.getElementById('pag-md').value=content;
+  // vis-editor solo se si e' in modalita' visuale
+  if(_pagEditorMode==='visuale') document.getElementById('pag-vis-editor').innerHTML=content;
 }
 // Inserisce sintassi Markdown nel punto del cursore
 function mdInsert(before, after, id){
