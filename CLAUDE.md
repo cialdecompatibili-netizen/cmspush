@@ -155,14 +155,19 @@ cd "C:\Users\mirco\Desktop\cmspush"; git add .; git commit -m "Release v1.x.x - 
 
 Script polling da usare dopo ogni push:
 ```powershell
+# ⚠️ NOTA: filtrare per SHA non funziona — il workflow sync-to-ai aggiunge un commit sopra.
+# Filtrare per branch + nome workflow è l'unico modo affidabile.
+$token = (git -C "C:\Users\mirco\Desktop\cmspush" remote get-url origin) -replace '.*ghp_([A-Za-z0-9]+)@.*','ghp_$1'
+$headers = @{ Authorization = "token $token" }
 $repo = "cialdecompatibili-netizen/cmspush"
 $maxTentativi = 18; $intervallo = 10
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 8
 for ($i = 1; $i -le $maxTentativi; $i++) {
-    $run = (Invoke-RestMethod "https://api.github.com/repos/$repo/actions/runs?per_page=1").workflow_runs[0]
-    if ($run.status -eq "completed") {
-        if ($run.conclusion -eq "success") { Write-Host "✅ Deploy completato! Live ora → https://cialdecompatibili-netizen.github.io/cmspush/" }
-        else { Write-Host "❌ Deploy fallito ($($run.conclusion))" }
+    $runs = (Invoke-RestMethod "https://api.github.com/repos/$repo/actions/runs?branch=main&per_page=10" -Headers $headers).workflow_runs
+    $run = $runs | Where-Object { $_.name -eq "pages build and deployment" } | Select-Object -First 1
+    if ($run -and $run.status -eq "completed") {
+        if ($run.conclusion -eq "success") { Write-Host "✅ Deploy completato! Live → https://cialdecompatibili-netizen.github.io/cmspush/" }
+        else { Write-Host "❌ Deploy fallito ($($run.conclusion)) → $($run.html_url)" }
         break
     }
     Write-Host "⏳ Build in corso... ($($i * $intervallo)s)"; Start-Sleep -Seconds $intervallo
@@ -484,6 +489,7 @@ Aggiorna questa tabella ad ogni fix. Non fare 2 volte la stessa cosa.
 | 2026-04-30 | Bottone Deploy topbar (link dinamico GitHub Actions) + Admin stessa finestra | admin/index.html, cms/admin/index.html | 3ba29e7 |
 | 2026-04-30 | Release v1.1.1 — fix testo articolo a tutta larghezza | assets/css/main.scss, version.json, CHANGELOG.md | 1e93878 |
 | 2026-04-30 | Wide layout universale: .wide + pagine senza sidebar a larghezza navbar | assets/css/main.scss | c9fd95d |
+| 2026-06-08 | Tab 🔌 Integrazioni: GA4, Search Console, Meta Pixel, Hotjar — toggle + save su _config.yml via GitHub API + Liquid tag in head/custom.html | admin/index.html, cms/admin/index.html, _includes/head/custom.html | 88d0cee |
 | 2026-05-31 | Fix footer: nascosto "Powered by Jekyll & MM" via CSS in main.scss | assets/css/main.scss | f14d878 |
 | 2026-05-31 | GitHub Action sync-to-ai.yml: ogni push su cmspush sincronizza cmspush-ai automaticamente | .github/workflows/sync-to-ai.yml | 0ff65b3 |
 
