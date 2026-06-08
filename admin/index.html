@@ -128,8 +128,25 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <!-- ARTICOLI -->
     <div class="page active" id="page-articoli">
       <div class="page-title">📝 Articoli</div>
+
+      <!-- VISTA LISTA -->
+      <div id="art-lista-view">
+        <div style="margin-bottom:16px">
+          <button class="btn btn-primary" onclick="apriNuovoArticolo()">✚ Nuovo articolo</button>
+        </div>
+        <div class="card">
+          <div class="card-title" style="display:flex;justify-content:space-between">Pubblicati <button class="btn btn-secondary btn-sm" onclick="caricaLista()">↻ Aggiorna</button></div>
+          <div id="lista-articoli"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+        </div>
+      </div>
+
+      <!-- VISTA EDITOR -->
+      <div id="art-editor-view" style="display:none">
+        <div style="margin-bottom:16px">
+          <button class="btn btn-secondary" onclick="tornaListaArticoli()">← Torna alla lista</button>
+        </div>
       <div class="card">
-        <div class="card-title">Nuovo / Modifica articolo</div>
+        <div class="card-title" id="art-editor-title">Nuovo articolo</div>
         <div class="field"><label>Titolo *</label><input type="text" id="titolo" placeholder="Titolo dell'articolo"></div>
         <div class="grid2">
           <div class="field"><label>Data</label><input type="date" id="data"></div>
@@ -172,8 +189,8 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         </div>
         <div class="btn-group">
           <button class="btn btn-primary" onclick="pubblica()">🚀 Pubblica</button>
-          <button class="btn btn-secondary" onclick="nuovoArticolo()">✚ Nuovo</button>
           <button class="btn btn-secondary btn-sm" onclick="anteprima()">👁 Anteprima</button>
+          <button class="btn btn-secondary" onclick="tornaListaArticoli()">✕ Annulla</button>
         </div>
         <div class="msg" id="msg-art"></div>
       </div>
@@ -181,21 +198,35 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         <div class="card-title">Anteprima .md</div>
         <pre id="preview-content" style="font-size:12px;line-height:1.7;white-space:pre-wrap;background:#f8f8f8;padding:14px;border-radius:7px;overflow-x:auto"></pre>
       </div>
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between">Pubblicati <button class="btn btn-secondary btn-sm" onclick="caricaLista()">↻ Aggiorna</button></div>
-        <div id="lista-articoli"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
-      </div>
+      </div><!-- fine art-editor-view -->
     </div>
 
     <!-- PAGINE -->
     <div class="page" id="page-pagine">
       <div class="page-title">📄 Pagine</div>
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between">Pagine del sito <button class="btn btn-secondary btn-sm" onclick="caricaPagine()">↻ Aggiorna</button></div>
-        <div id="lista-pagine"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+
+      <!-- VISTA LISTA -->
+      <div id="pag-lista-view">
+        <div style="margin-bottom:16px">
+          <button class="btn btn-primary" onclick="apriNuovaPagina()">✚ Nuova pagina</button>
+        </div>
+        <div class="card">
+          <div class="card-title" style="display:flex;justify-content:space-between">Pagine del sito <button class="btn btn-secondary btn-sm" onclick="caricaPagine()">↻ Aggiorna</button></div>
+          <div id="lista-pagine"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+        </div>
       </div>
-      <div class="card" id="editor-pagina" style="display:none">
+
+      <!-- VISTA EDITOR -->
+      <div id="pag-editor-view" style="display:none">
+        <div style="margin-bottom:16px">
+          <button class="btn btn-secondary" onclick="tornaPagine()">← Torna alla lista</button>
+        </div>
+      <div class="card" id="editor-pagina">
         <div class="card-title">Modifica: <span id="nome-pagina" style="color:#6c63ff;text-transform:none"></span></div>
+        <div class="field" id="pag-permalink-field" style="display:none">
+          <label>Permalink (es. /contatti/)</label>
+          <input type="text" id="pag-permalink" placeholder="/nome-pagina/">
+        </div>
         <div class="field"><label>Titolo</label><input type="text" id="pag-titolo"></div>
         <div class="field">
           <label>Contenuto</label>
@@ -227,7 +258,7 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         <div class="btn-group">
           <button class="btn btn-primary" onclick="salvaPagina()">💾 Salva</button>
           <button class="btn btn-secondary" onclick="anteprimaPagina()">👁 Anteprima live</button>
-          <button class="btn btn-secondary" onclick="chiudiPagina()">✕ Annulla</button>
+          <button class="btn btn-secondary" onclick="tornaPagine()">✕ Annulla</button>
         </div>
         <div class="msg" id="msg-pag"></div>
       </div>
@@ -237,6 +268,7 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         </div>
         <iframe id="preview-pagina-frame" src="" style="width:100%;height:500px;border:none;border-radius:7px;background:#f5f6fa"></iframe>
       </div>
+      </div><!-- fine pag-editor-view -->
     </div>
 
     <!-- MENU -->
@@ -830,8 +862,10 @@ async function modificaHomeContent(){
   setPagCorpo(dec(d.content));
   setPagEditor('html'); // home è HTML strutturato — grezzo è più utile del visuale
   document.getElementById('nome-pagina').textContent='home-content.html (Home)';
-  document.getElementById('editor-pagina').style.display='block';
-  document.getElementById('editor-pagina').scrollIntoView({behavior:'smooth'});
+  document.getElementById('pag-permalink-field').style.display='none';
+  document.getElementById('pag-lista-view').style.display='none';
+  document.getElementById('pag-editor-view').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 async function modificaPagina(path,sha){
   const res=await ghGet(path);const d=await res.json();
@@ -843,8 +877,10 @@ async function modificaPagina(path,sha){
   document.getElementById('pag-titolo').value=titleMatch?titleMatch[1].trim():'';
   setPagCorpo(corpo);
   document.getElementById('nome-pagina').textContent=path.split('/').pop();
-  document.getElementById('editor-pagina').style.display='block';
-  document.getElementById('editor-pagina').scrollIntoView({behavior:'smooth'});
+  document.getElementById('pag-permalink-field').style.display='none';
+  document.getElementById('pag-lista-view').style.display='none';
+  document.getElementById('pag-editor-view').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 async function salvaPagina(){
   if(!tok())return showMsg('msg-pag','⚠️ Token mancante.','err');
@@ -883,17 +919,47 @@ function chiudiPagina(){
   document.getElementById('editor-pagina').style.display='none';
   document.getElementById('preview-pagina-box').style.display='none';
 }
-// ARTICOLI
-function slugify(s){return s.toLowerCase().replace(/[àáâ]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}
-function nuovoArticolo(){
-  ['titolo','excerpt','teaser','tags','corpo'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('categorie').value='';
-  document.getElementById('data').value=new Date().toISOString().split('T')[0];
-  document.getElementById('preview-box').style.display='none';
-  window._editSha=null;window._editPath=null;
-  document.getElementById('msg-art').style.display='none';
+function tornaPagine(){
+  document.getElementById('pag-editor-view').style.display='none';
+  document.getElementById('pag-lista-view').style.display='block';
+  document.getElementById('preview-pagina-box').style.display='none';
+  caricaPagine();
+}
+function apriNuovaPagina(){
+  _paginaPath=null;_paginaSha=null;
+  document.getElementById('pag-titolo').value='';
+  document.getElementById('pag-permalink').value='';
+  document.getElementById('pag-permalink-field').style.display='block';
+  document.getElementById('pag-vis-editor').innerHTML='';
+  document.getElementById('pag-corpo').value='';
+  document.getElementById('nome-pagina').textContent='Nuova pagina';
+  document.getElementById('msg-pag').style.display='none';
+  document.getElementById('preview-pagina-box').style.display='none';
+  document.getElementById('pag-lista-view').style.display='none';
+  document.getElementById('pag-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// ARTICOLI
+function slugify(s){return s.toLowerCase().replace(/[àáâ]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}
+function tornaListaArticoli(){
+  document.getElementById('art-editor-view').style.display='none';
+  document.getElementById('art-lista-view').style.display='block';
+  caricaLista();
+}
+function apriNuovoArticolo(){
+  ['titolo','excerpt','teaser','tags','corpo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('categorie').value='';
+  document.getElementById('vis-editor').innerHTML='';
+  document.getElementById('data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('preview-box').style.display='none';
+  document.getElementById('msg-art').style.display='none';
+  document.getElementById('art-editor-title').textContent='Nuovo articolo';
+  window._editSha=null;window._editPath=null;
+  document.getElementById('art-lista-view').style.display='none';
+  document.getElementById('art-editor-view').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nuovoArticolo(){apriNuovoArticolo();}
 function buildContent(){
   const titolo=document.getElementById('titolo').value.trim();
   const data=document.getElementById('data').value;
@@ -946,7 +1012,10 @@ async function modificaArticolo(path){
   // Carica corpo: HTML diretto, niente conversioni
   setCorpo(body);
   window._editSha=data.sha;window._editPath=path;
+  document.getElementById('art-editor-title').textContent='Modifica articolo';
   showMsg('msg-art','✏️ Articolo caricato — modifica e pubblica.','ok');
+  document.getElementById('art-lista-view').style.display='none';
+  document.getElementById('art-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 async function pubblica(){
@@ -965,7 +1034,7 @@ async function pubblica(){
   try{
     const res=await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
     const json=await res.json();
-    if(res.ok){showMsg('msg-art','✅ Pubblicato! Live in ~60 secondi.','ok');window._editSha=null;window._editPath=null;caricaLista();}
+    if(res.ok){showMsg('msg-art','✅ Pubblicato! Live in ~60 secondi.','ok');window._editSha=null;window._editPath=null;setTimeout(()=>tornaListaArticoli(),1200);}
     else showMsg('msg-art','❌ '+json.message,'err');
   }catch(e){showMsg('msg-art','❌ Errore di rete.','err');}
 }
