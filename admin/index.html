@@ -864,7 +864,6 @@ async function modificaPagina(path,sha){
 async function salvaPagina(){
   try{
     if(!tok())return showMsg('msg-pag','⚠️ Token mancante.','err');
-    if(!_paginaPath)return showMsg('msg-pag','⚠️ Nessuna pagina caricata.','err');
     const titolo=document.getElementById('pag-titolo').value.trim();
     const corpo=getPagCorpo();
     let content;
@@ -876,7 +875,7 @@ async function salvaPagina(){
     }
     let dots=0;
     const timer=setInterval(()=>{dots=(dots+1)%4;showMsg('msg-pag','⏳ Invio a GitHub'+'.'.repeat(dots),'ok');},400);
-    const res=await ghPut(_paginaPath,`Aggiorna pagina: ${titolo}`,content,_paginaSha);
+    const res=await ghPut(_paginaPath,`Aggiorna pagina: ${titolo}`,content,_paginaSha||undefined);
     clearInterval(timer);
     const j=await res.json();
     if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Torno alla lista...','ok');setTimeout(()=>tornaPagine(),1200);}
