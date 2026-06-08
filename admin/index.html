@@ -927,7 +927,8 @@ async function salvaPagina(){
       let fm=window._paginaFrontmatter||'';
       if(fm){
         fm=fm.replace(/title:\s*"[^"]*"/,'title: "'+titolo+'"');
-        content=fm+'\n'+corpo;
+        // fm finisce con --- senza newline — aggiungiamo \n\n prima del corpo
+        content=fm.trimEnd()+'\n\n'+corpo;
       } else {
         const slug=_paginaPath.split('/').pop().replace('.md','');
         content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: /'+slug+'/\nauthor_profile: true\n---\n\n'+corpo;
