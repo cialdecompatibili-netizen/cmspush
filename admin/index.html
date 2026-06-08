@@ -897,7 +897,7 @@ async function salvaPagina(){
   showMsg('msg-pag','⏳ Salvataggio...','');
   const res=await ghPut(_paginaPath,`Aggiorna pagina: ${titolo}`,content,_paginaSha);
   const j=await res.json();
-  if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Live in ~60s.','ok');}
+  if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Live in ~60s.','ok');setTimeout(()=>tornaPagine(),1200);}
   else showMsg('msg-pag','❌ '+j.message,'err');
 }
 function anteprimaPagina(){
