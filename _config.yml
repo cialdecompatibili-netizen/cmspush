@@ -9,6 +9,36 @@ github_username: username
 minimal_mistakes_skin: default
 search: true
 
+# SEO globale
+author:
+  name: "Il tuo nome"
+  avatar: "/assets/images/bio-photo.jpg"
+  bio: "Una frase su di te."
+  links:
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://"
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/"
+    - label: "Instagram"
+      icon: "fab fa-fw fa-instagram"
+      url: "https://instagram.com/"
+
+social:
+  name: CMSPush
+  links:
+    - https://twitter.com/username
+    - https://github.com/cialdecompatibili-netizen
+
+twitter:
+  username: username
+
+logo: "/assets/images/logo.png"
+
 markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes
 exclude:
@@ -33,24 +63,7 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-include-cache
-
-author:
-  name   : "Il tuo nome"
-  avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Una frase su di te."
-  links:
-    - label: "Website"
-      icon: "fas fa-fw fa-link"
-      url: "https://"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+  - jekyll-seo-tag
 
 footer:
   links:
@@ -81,13 +94,13 @@ defaults:
     values:
       layout: single
       author_profile: true
-
   - scope:
       path: ""
       type: products
     values:
       layout: product
       classes: wide
+
 category_archive:
   type: liquid
   path: /categories/

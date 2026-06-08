@@ -182,6 +182,9 @@ button.sp-btn-wish {
 }
 </style>
 
+<!-- SEO Plugin CMSPush -->
+{% include seo.html %}
+
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var BASE = '/cmspush';
@@ -206,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       return;
     }
-    // Inserisce prima del bottone search
     var searchBtn = document.querySelector('.search__toggle');
     if (!searchBtn) return;
     var a = document.createElement('a');
@@ -218,9 +220,7 @@ document.addEventListener('DOMContentLoaded', function(){
     searchBtn.parentNode.insertBefore(a, searchBtn);
   }
   renderCartIcon();
-  // Aggiorna badge ogni volta che sessionStorage cambia (cross-tab)
   window.addEventListener('storage', renderCartIcon);
-  // Aggiorna ogni 2s per catturare aggiunte nella stessa tab
   setInterval(renderCartIcon, 2000);
 
   // --- SPOSTA COPYRIGHT DOPO SOCIAL ---
