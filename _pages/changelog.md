@@ -1,4 +1,11 @@
-﻿---
+---
+layout: single
+title: "Pagina"
+permalink: /changelog/
+author_profile: true
+---
+
+---
 layout: single
 title: "Changelog"
 permalink: /changelog/
@@ -15,7 +22,7 @@ Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude pe
 
 ### Fix layout articolo caccola caccola
 
-- Testo articolo ora occupa tutta la larghezza disponibile accanto alla sidebar (fix CSS Grid con override completo width/float/padding di Minimal Mistakes)
+- caccol aTesto articolo ora occupa tutta la larghezza disponibile accanto alla sidebar (fix CSS Grid con override completo width/float/padding di Minimal Mistakes)
 
 ---
 
@@ -46,4 +53,3 @@ Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude pe
 - Sistema auto-update con bottone nel menu
 - Changelog visibile nel menu del CMS
 - Licenza: Commons Clause + MIT (uso commerciale richiede licenza)
-
