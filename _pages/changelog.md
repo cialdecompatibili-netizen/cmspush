@@ -1,3 +1,10 @@
+﻿---
+layout: single
+title: "Changelog"
+permalink: /changelog/
+author_profile: false
+---
+
 # CHANGELOG — CMSPush
 
 Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude per sapere cosa c'è in ogni versione.
@@ -39,3 +46,4 @@ Questo file traccia tutte le versioni di CMSPush. Viene letto anche da Claude pe
 - Sistema auto-update con bottone nel menu
 - Changelog visibile nel menu del CMS
 - Licenza: Commons Clause + MIT (uso commerciale richiede licenza)
+
