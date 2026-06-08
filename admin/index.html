@@ -806,8 +806,8 @@ async function salvaMenu(){
 }
 
 // EDITOR PAGINE
-// EDITOR PAGINE — 3 modalità: visuale / html / markdown (default)
-let _pagEditorMode='markdown';
+// EDITOR PAGINE — 3 modalità: visuale (default) / html / markdown
+let _pagEditorMode='visuale';
 function setPagEditor(mode){
   _pagEditorMode=mode;
   document.getElementById('btn-pag-visuale').classList.toggle('active',mode==='visuale');
@@ -938,7 +938,7 @@ async function modificaPagina(path,sha){
   window._paginaFrontmatter=fm?fm[0]+'\n':'';
   document.getElementById('pag-titolo').value=titleMatch?titleMatch[1].trim():'';
   setPagCorpo(corpo);
-  setPagEditor('markdown');
+  setPagEditor('visuale');
   document.getElementById('nome-pagina').textContent=path.split('/').pop();
   document.getElementById('pag-permalink-field').style.display='none';
   document.getElementById('pag-lista-view').style.display='none';
@@ -1015,7 +1015,7 @@ function apriNuovaPagina(){
   document.getElementById('pag-vis-editor').innerHTML='';
   document.getElementById('pag-corpo').value='';
   document.getElementById('pag-md').value='';
-  setPagEditor('markdown');
+  setPagEditor('visuale');
   document.getElementById('nome-pagina').textContent='Nuova pagina';
   document.getElementById('msg-pag').style.display='none';
   document.getElementById('preview-pagina-box').style.display='none';
