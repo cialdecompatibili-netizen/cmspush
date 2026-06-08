@@ -387,6 +387,15 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <div class="page" id="page-integrazioni">
       <div class="page-title">🔌 Integrazioni</div>
 
+      <!-- STRUMENTI AUTOMATICI -->
+      <div class="card">
+        <div class="card-title">⚙️ Strumenti automatici (già attivi)</div>
+        <div class="list-row"><div><div style="font-size:13px;font-weight:600">🗺️ Sitemap XML</div><div style="font-size:11px;color:#aaa">Generata automaticamente da Jekyll</div></div><a id="link-sitemap" href="#" target="_blank" class="btn btn-secondary btn-sm">↗ Apri</a></div>
+        <div class="list-row"><div><div style="font-size:13px;font-weight:600">📡 Feed RSS</div><div style="font-size:11px;color:#aaa">Aggiornato ad ogni nuovo articolo</div></div><a id="link-rss" href="#" target="_blank" class="btn btn-secondary btn-sm">↗ Apri</a></div>
+        <div class="list-row"><div><div style="font-size:13px;font-weight:600">🔍 Google Search Console</div><div style="font-size:11px;color:#aaa">Invia la sitemap per indicizzare il sito</div></div><a href="https://search.google.com/search-console" target="_blank" class="btn btn-secondary btn-sm">↗ Apri</a></div>
+        <div class="list-row"><div><div style="font-size:13px;font-weight:600">📊 Google Analytics</div><div style="font-size:11px;color:#aaa">Configura il tuo account qui sotto</div></div><a href="https://analytics.google.com" target="_blank" class="btn btn-secondary btn-sm">↗ Apri</a></div>
+      </div>
+
       <!-- GA4 -->
       <div class="card">
         <div class="card-title">📊 Google Analytics 4</div>
@@ -1396,6 +1405,10 @@ function toggleIntegrazione(key){
   _toggleUI(key,_integrazioniStato[key].enabled);
 }
 async function caricaIntegrazioni(){
+  // Popola link automatici dinamicamente
+  const base=location.origin+location.pathname.replace(/\/admin\/?.*$/,'/');
+  document.getElementById('link-sitemap').href=base+'sitemap.xml';
+  document.getElementById('link-rss').href=base+'feed.xml';
   if(!tok())return;
   const res=await ghGet('_config.yml');
   if(!res.ok)return;
