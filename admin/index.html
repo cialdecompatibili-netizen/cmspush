@@ -992,27 +992,24 @@ async function modificaArticolo(path){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 async function pubblica(){
+  if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
+  const titolo=document.getElementById('titolo').value.trim();
+  const cat=document.getElementById('categorie').value;
+  const corpo=getCorpo().trim();
+  if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
+  if(!cat)return showMsg('msg-art','⚠️ Seleziona una categoria!','err');
+  if(!corpo)return showMsg('msg-art','⚠️ Scrivi il contenuto!','err');
+  const data=document.getElementById('data').value;
+  const filename=window._editPath||`_posts/${data}-${slugify(titolo)}.md`;
+  const body={message:`${window._editSha?'Aggiorna':'Nuovo'} articolo: ${titolo}`,content:enc(buildContent())};
+  if(window._editSha)body.sha=window._editSha;
+  showMsg('msg-art','⏳ Pubblicazione...','');
   try{
-    if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
-    const titolo=document.getElementById('titolo').value.trim();
-    const cat=document.getElementById('categorie').value;
-    const corpo=getCorpo().trim();
-    if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
-    if(!cat)return showMsg('msg-art','⚠️ Seleziona una categoria!','err');
-    if(!corpo)return showMsg('msg-art','⚠️ Scrivi il contenuto!','err');
-    const data=document.getElementById('data').value;
-    if(!data)return showMsg('msg-art','⚠️ Inserisci una data!','err');
-    const contenuto=buildContent();
-    if(!contenuto)return showMsg('msg-art','⚠️ Errore generazione contenuto.','err');
-    const filename=window._editPath||`_posts/${data}-${slugify(titolo)}.md`;
-    const body={message:`${window._editSha?'Aggiorna':'Nuovo'} articolo: ${titolo}`,content:enc(contenuto)};
-    if(window._editSha)body.sha=window._editSha;
-    showMsg('msg-art','⏳ Pubblicazione...','');
     const res=await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
     const json=await res.json();
     if(res.ok){showMsg('msg-art','✅ Pubblicato! Live in ~60 secondi.','ok');window._editSha=null;window._editPath=null;setTimeout(()=>tornaListaArticoli(),1200);}
     else showMsg('msg-art','❌ '+json.message,'err');
-  }catch(e){showMsg('msg-art','❌ Errore JS: '+e.message,'err');}
+  }catch(e){showMsg('msg-art','❌ Errore di rete.','err');}
 }
 
 // ELIMINA ARTICOLO
