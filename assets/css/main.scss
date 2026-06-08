@@ -125,6 +125,35 @@ blockquote {
 }
 
 /* ============================================================
+   CATEGORY TAG — pill luxury viola/indigo con ombra 3D
+   ============================================================ */
+.archive__item .page__taxonomy-item,
+.page__taxonomy-item,
+a.page__taxonomy-item,
+.page__meta .page__taxonomy-item {
+  display: inline-block !important;
+  font-size: 10px !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  background: linear-gradient(135deg, #c084fc, #818cf8) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 4px 14px !important;
+  box-shadow: 0 4px 10px rgba(129, 140, 248, 0.4), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  text-decoration: none !important;
+  margin-right: 4px !important;
+  margin-bottom: 4px !important;
+}
+.archive__item .page__taxonomy-item:hover,
+a.page__taxonomy-item:hover {
+  background: linear-gradient(135deg, #a855f7, #6366f1) !important;
+  box-shadow: 0 6px 14px rgba(129, 140, 248, 0.5), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+  color: #fff !important;
+}
+
+/* ============================================================
    SIDEBAR A DESTRA — CSS Grid
    Override completo dei float/width MM su tutti i breakpoint
    ============================================================ */
@@ -206,8 +235,7 @@ blockquote {
 .page__footer-copyright a:hover { color: #111 !important; text-decoration: none; }
 
 /* ============================================================
-   WIDE PAGE — larghezza identica alla navbar (da logo a lente)
-   MM usa .wide sul body quando classes: wide nel front matter
+   WIDE PAGE
    ============================================================ */
 .wide #main > article.page,
 .wide #main > article.page .page__inner-wrap,
@@ -218,10 +246,9 @@ blockquote {
   padding-right: 0 !important;
 }
 
-
-/* Blog: nasconde il page__title di MM (già mostrato nel blog-header) */
+/* Blog: nasconde il page__title di MM */
 .page--blog #page-title { display: none !important; }
 
-/* Nasconde copyright duplicato MM — lascia solo custom.html */
+/* Nasconde copyright duplicato MM */
 .page__footer-copyright { display: none !important; }
 .page__footer-custom { color: #888; font-size: 0.65em; }
