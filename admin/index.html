@@ -592,6 +592,9 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 <script>
 // Rileva REPO dinamicamente dall'URL della pagina (funziona su qualsiasi repo cliente)
 // URL formato: https://USERNAME.github.io/REPO/admin/ oppure https://USERNAME.github.io/admin/
+// ⚠️ CRITICO: non toccare detectRepo() — funziona su qualsiasi repo cliente.
+// Legge hostname e pathname per ricavare USERNAME/REPO dinamicamente.
+// Se si hardcoda il repo qui, il CMS smette di funzionare sui repo dei clienti.
 function detectRepo(){
   const h=location.hostname; // es. pippo.github.io
   const p=location.pathname; // es. /miosito/admin/index.html
@@ -691,11 +694,17 @@ function toggleToken(){const i=document.getElementById('token-input');i.type=i.t
 
 // UTILS
 // UTILS
+// ⚠️ CRITICO: enc() e dec() usano unescape/escape per gestire UTF-8 in btoa/atob.
+// NON usare btoa(string) diretto — crasha su caratteri italiani (àèìòù) e emoji.
+// Formula corretta: btoa(unescape(encodeURIComponent(s))) e inverso per dec().
 function tok(){return localStorage.getItem('gh_token');}
 function enc(s){return btoa(unescape(encodeURIComponent(s)));}
 function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))));}
 function showMsg(id,txt,cls){const m=document.getElementById(id);m.textContent=txt;m.className='msg '+cls;}
 async function ghGet(path){return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{headers:{'Authorization':`token ${tok()}`}});}
+// ⚠️ CRITICO: sha e' obbligatorio per aggiornare file esistenti su GitHub API.
+// Se sha e' stringa vuota ('') GitHub risponde 422. Passare sempre sha||undefined.
+// Se sha e' undefined GitHub crea un nuovo file (ok solo per file nuovi).
 async function ghPut(path,msg,content,sha){
   const body={message:msg,content:enc(content)};if(sha)body.sha=sha;
   return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -1049,6 +1058,9 @@ function buildContent(){
   if(teaser)fm+=`header:\n  teaser: "${teaser}"\n`;
   if(cat)fm+=`categories:\n  - ${cat}\n`;
   if(tags.length)fm+=`tags:\n${tags.map(t=>`  - ${t}`).join('\n')}\n`;
+  // ⚠️ NOTA: gli articoli usano HTML nel corpo (non Markdown) — scelta deliberata.
+  // L'editor visuale (contenteditable) produce HTML. Jekyll lo renderizza senza problemi.
+  // NON cambiare questo in Markdown senza aggiornare anche l'editor e setCorpo().
   // Corpo in HTML puro — Jekyll lo renderizza direttamente senza conversioni
   return fm+`---\n\n${corpo}`;
 }
@@ -1087,6 +1099,8 @@ async function modificaArticolo(path){
   if(tagsM)document.getElementById('tags').value=tagsM[1].replace(/\s*-\s*/g,'').trim().split('\n').join(', ');
   // Carica corpo: HTML diretto, niente conversioni
   setCorpo(body);
+  // _editSha e _editPath tengono traccia dell'articolo in modifica.
+  // ⚠️ Vengono azzerati a null dopo ogni pubblicazione — non riusare senza ricaricare.
   window._editSha=data.sha;window._editPath=path;
   document.getElementById('art-editor-title').textContent='Modifica articolo';
   showMsg('msg-art','✏️ Articolo caricato — modifica e pubblica.','ok');
@@ -1100,6 +1114,8 @@ async function pubblica(){
     showMsg('msg-art','⏳ Controllo campi...','ok');
     if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
     const titolo=document.getElementById('titolo').value.trim();
+    // ⚠️ CRITICO: cat deve essere let (non const) — viene riassegnata se vuota.
+    // Se si cambia in const, il fallback categoria default crasha silenziosamente.
     let cat=document.getElementById('categorie').value;
     const corpo=getCorpo().replace(/<br\s*\/?>/gi,'').replace(/<div>(\s|&nbsp;)*<\/div>/gi,'').trim();
     if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
@@ -1366,6 +1382,9 @@ async function eseguiAggiornamento(){
   document.getElementById('btn-aggiorna').disabled=true;
   showMsg('msg-update2','⏳ Download aggiornamento...','');
 
+  // ⚠️ CRITICO: questo metodo sovrascrive admin/index.html nel repo CLIENTE con la versione dal repo sorgente.
+  // CMS_SOURCE_REPO deve puntare sempre a cialdecompatibili-netizen/cmspush (repo pubblico).
+  // Se si rinomina il file o si sposta la cartella admin/, aggiornare CMS_SOURCE_PATH di conseguenza.
   // Legge il nuovo admin/index.html dal repo sorgente
   const resSrc=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_SOURCE_PATH}`);
   if(!resSrc.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore download.','err');}
@@ -1606,6 +1625,9 @@ async function salvaIntegrazione(key){
   if(!res.ok)return showMsg('msg-'+key,'❌ Errore lettura config.','err');
   const d=await res.json();_integrazioniSha=d.sha;
   let yaml=dec(d.content);
+  // ⚠️ CRITICO: strategia replace blocco integrations nel YAML.
+  // Si rimuove l'intero blocco con regex e si riscrive da zero — non si fa merge riga per riga.
+  // Se si cambia la struttura YAML delle integrazioni, aggiornare sia qui che in _includes/head/custom.html.
   // Rimuovi vecchio blocco integrations se esiste
   yaml=yaml.replace(/\nintegrations:[\s\S]*?(?=\n\w|\n#|$)/,'');
   // Aggiungi blocco integrations aggiornato
