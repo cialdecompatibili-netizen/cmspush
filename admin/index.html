@@ -962,7 +962,7 @@ function nuovoArticolo(){apriNuovoArticolo();}
 function buildContent(){
   const titolo=document.getElementById('titolo').value.trim();
   const data=document.getElementById('data').value;
-  const cat=document.getElementById('categorie').value;
+  let cat=document.getElementById('categorie').value;
   const tags=document.getElementById('tags').value.split(',').map(s=>s.trim()).filter(Boolean);
   const excerpt=document.getElementById('excerpt').value.trim();
   const teaser=document.getElementById('teaser').value.trim();
@@ -1022,7 +1022,7 @@ async function pubblica(){
     showMsg('msg-art','⏳ Controllo campi...','ok');
     if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
     const titolo=document.getElementById('titolo').value.trim();
-    const cat=document.getElementById('categorie').value;
+    let cat=document.getElementById('categorie').value;
     const corpo=getCorpo().replace(/<br\s*\/?>/gi,'').replace(/<div>(\s|&nbsp;)*<\/div>/gi,'').trim();
     if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
     if(!cat){const defOpt=document.querySelector('#categorie option:not([value=""])');cat=defOpt?defOpt.value:'generale';document.getElementById('categorie').value=cat;}
