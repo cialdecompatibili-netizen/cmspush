@@ -864,18 +864,23 @@ async function modificaPagina(path,sha){
 async function salvaPagina(){
   try{
     if(!tok())return showMsg('msg-pag','⚠️ Token mancante.','err');
-    const titolo=document.getElementById('pag-titolo').value.trim();
-    const corpo=getPagCorpo();
+    const titolo=(document.getElementById('pag-titolo').value||'Pagina').trim();
+    const corpo=getPagCorpo().trim()||' ';
     let content;
     if(_paginaPath==='_includes/home-content.html'){
       content=corpo;
-    } else {
+    } else if(_paginaPath){
       const slug=_paginaPath.split('/').pop().replace('.md','');
-      content=`---\nlayout: single\ntitle: "${titolo}"\npermalink: /${slug}/\nauthor_profile: true\n---\n\n${corpo}`;
+      content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: /'+slug+'/\nauthor_profile: true\n---\n\n'+corpo;
+    } else {
+      const slug=titolo.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+      const permalink=document.getElementById('pag-permalink').value.trim()||'/'+(slug||'nuova-pagina')+'/';
+      _paginaPath='_pages/'+(slug||'nuova-pagina')+'.md';
+      content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: '+permalink+'\nauthor_profile: true\n---\n\n'+corpo;
     }
     let dots=0;
     const timer=setInterval(()=>{dots=(dots+1)%4;showMsg('msg-pag','⏳ Invio a GitHub'+'.'.repeat(dots),'ok');},400);
-    const res=await ghPut(_paginaPath,`Aggiorna pagina: ${titolo}`,content,_paginaSha||undefined);
+    const res=await ghPut(_paginaPath,'Aggiorna pagina: '+titolo,content,_paginaSha||undefined);
     clearInterval(timer);
     const j=await res.json();
     if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Torno alla lista...','ok');setTimeout(()=>tornaPagine(),1200);}
@@ -1002,7 +1007,7 @@ async function pubblica(){
     const cat=document.getElementById('categorie').value;
     const corpo=getCorpo().replace(/<br\s*\/?>/gi,'').replace(/<div>(\s|&nbsp;)*<\/div>/gi,'').trim();
     if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
-    if(!cat)return showMsg('msg-art','⚠️ Seleziona una categoria!','err');
+    if(!cat){const defOpt=document.querySelector('#categorie option:not([value=""])');cat=defOpt?defOpt.value:'generale';document.getElementById('categorie').value=cat;}
     if(!corpo)return showMsg('msg-art','⚠️ Scrivi il contenuto!','err');
     const data=document.getElementById('data').value;
     if(!data)return showMsg('msg-art','⚠️ Data mancante!','err');
