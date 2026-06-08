@@ -1008,9 +1008,17 @@ async function pubblica(){
     const contenuto=buildContent();
     const body={message:`${window._editSha?'Aggiorna':'Nuovo'} articolo: ${titolo}`,content:enc(contenuto)};
     if(window._editSha)body.sha=window._editSha;
+    // Progressione visiva reale
+    let dots=0;
+    const timer=setInterval(()=>{dots=(dots+1)%4;showMsg('msg-art','⏳ Invio a GitHub'+'.'.repeat(dots),'ok');},400);
     const res=await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    clearInterval(timer);
     const json=await res.json();
-    if(res.ok){showMsg('msg-art','✅ Pubblicato! Live in ~60 secondi.','ok');window._editSha=null;window._editPath=null;setTimeout(()=>tornaListaArticoli(),1200);}
+    if(res.ok){
+      window._editSha=null;window._editPath=null;
+      showMsg('msg-art','✅ Pubblicato! Torno alla lista...','ok');
+      setTimeout(()=>tornaListaArticoli(),1200);
+    }
     else showMsg('msg-art','❌ '+json.message,'err');
   }catch(e){showMsg('msg-art','❌ Errore: '+e.message,'err');}
 }
