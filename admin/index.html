@@ -219,10 +219,11 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         <div class="field">
           <label>Contenuto</label>
           <div class="editor-toggle">
-            <button class="active" id="btn-pag-visuale" onclick="setPagEditor('visuale')">✏️ Visuale</button>
+            <button id="btn-pag-visuale" onclick="setPagEditor('visuale')">✏️ Visuale</button>
             <button id="btn-pag-html" onclick="setPagEditor('html')">🔣 HTML grezzo</button>
+            <button class="active" id="btn-pag-md" onclick="setPagEditor('markdown')">📝 Markdown</button>
           </div>
-          <div id="pag-quill-box">
+          <div id="pag-quill-box" style="display:none">
             <div class="vis-toolbar">
               <select onchange="fmtPag(this.value);this.value=''">
                 <option value="">Paragrafo</option>
@@ -240,6 +241,20 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
               <button onclick="document.getElementById('pag-vis-editor').focus();document.execCommand('removeFormat')" title="Rimuovi formato">✕</button>
             </div>
             <div id="pag-vis-editor" contenteditable="true" style="min-height:260px;border:1.5px solid #e8e8e8;border-radius:0 0 7px 7px;padding:12px 14px;font-size:14px;line-height:1.8;outline:none;background:white;overflow-y:auto"></div>
+          </div>
+          <div id="pag-md-box">
+            <div class="vis-toolbar">
+              <button onclick="mdInsert('# ','','pag-md')" title="H1"><b>H1</b></button>
+              <button onclick="mdInsert('## ','','pag-md')" title="H2"><b>H2</b></button>
+              <button onclick="mdInsert('### ','','pag-md')" title="H3"><b>H3</b></button>
+              <button onclick="mdInsert('**','**','pag-md')" title="Grassetto"><b>B</b></button>
+              <button onclick="mdInsert('*','*','pag-md')" title="Corsivo"><i>I</i></button>
+              <button onclick="mdInsert('- ','','pag-md')" title="Lista">≡</button>
+              <button onclick="mdInsert('[','](url)','pag-md')" title="Link">🔗</button>
+              <button onclick="mdInsert('---
+','','pag-md')" title="Separatore">—</button>
+            </div>
+            <textarea id="pag-md" class="md" placeholder="Scrivi in Markdown..." style="border-radius:0 0 7px 7px;border-top:none;min-height:280px"></textarea>
           </div>
           <textarea class="sm" id="pag-corpo" style="display:none"></textarea>
         </div>
@@ -782,32 +797,38 @@ async function salvaMenu(){
 }
 
 // EDITOR PAGINE
-// EDITOR PAGINE
-let _pagEditorMode='visuale';
+// EDITOR PAGINE — 3 modalità: visuale / html / markdown (default)
+let _pagEditorMode='markdown';
 function setPagEditor(mode){
   _pagEditorMode=mode;
   document.getElementById('btn-pag-visuale').classList.toggle('active',mode==='visuale');
   document.getElementById('btn-pag-html').classList.toggle('active',mode==='html');
-  if(mode==='visuale'){
-    const html=document.getElementById('pag-corpo').value;
-    if(html) document.getElementById('pag-vis-editor').innerHTML=html;
-    document.getElementById('pag-quill-box').style.display='block';
-    document.getElementById('pag-corpo').style.display='none';
-  } else {
-    document.getElementById('pag-corpo').value=document.getElementById('pag-vis-editor').innerHTML;
-    document.getElementById('pag-quill-box').style.display='none';
-    document.getElementById('pag-corpo').style.display='block';
-  }
+  document.getElementById('btn-pag-md').classList.toggle('active',mode==='markdown');
+  document.getElementById('pag-quill-box').style.display=mode==='visuale'?'block':'none';
+  document.getElementById('pag-corpo').style.display=mode==='html'?'block':'none';
+  document.getElementById('pag-md-box').style.display=mode==='markdown'?'block':'none';
 }
 function getPagCorpo(){
   if(_pagEditorMode==='visuale') return document.getElementById('pag-vis-editor').innerHTML;
+  if(_pagEditorMode==='markdown') return document.getElementById('pag-md').value;
   return document.getElementById('pag-corpo').value;
 }
-function setPagCorpo(html){
-  const isLegacyMd = html && !html.trim().startsWith('<') && html.includes('\n');
-  const content = isLegacyMd ? legacyMdToHtml(html) : html;
+function setPagCorpo(content){
+  // Imposta il contenuto in tutte e 3 le aree
   document.getElementById('pag-corpo').value=content;
   document.getElementById('pag-vis-editor').innerHTML=content;
+  document.getElementById('pag-md').value=content;
+}
+// Inserisce sintassi Markdown nel punto del cursore
+function mdInsert(before, after, id){
+  const ta=document.getElementById(id);
+  ta.focus();
+  const s=ta.selectionStart, e=ta.selectionEnd;
+  const sel=ta.value.substring(s,e);
+  const ins=before+sel+after;
+  ta.value=ta.value.substring(0,s)+ins+ta.value.substring(e);
+  ta.selectionStart=s+before.length;
+  ta.selectionEnd=s+before.length+sel.length;
 }
 function fmtPag(tag){
   if(!tag)return;
@@ -879,8 +900,11 @@ async function modificaPagina(path,sha){
   const corpo=content.replace(/^---[\s\S]*?---\n\n?/,'');
   const titleMatch=(fm?fm[1]:'').match(/title:\s*"?([^"\n]+)"?/);
   _paginaPath=d.path||path;_paginaSha=d.sha;
+  // Salva il frontmatter originale completo per preservarlo al salvataggio
+  window._paginaFrontmatter=fm?fm[0]+'\n':'';
   document.getElementById('pag-titolo').value=titleMatch?titleMatch[1].trim():'';
   setPagCorpo(corpo);
+  setPagEditor('markdown');
   document.getElementById('nome-pagina').textContent=path.split('/').pop();
   document.getElementById('pag-permalink-field').style.display='none';
   document.getElementById('pag-lista-view').style.display='none';
@@ -897,8 +921,15 @@ async function salvaPagina(){
     if(_paginaPath==='_includes/home-content.html'){
       content=corpo;
     } else if(_paginaPath){
-      const slug=_paginaPath.split('/').pop().replace('.md','');
-      content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: /'+slug+'/\nauthor_profile: true\n---\n\n'+corpo;
+      // Preserva il frontmatter originale, aggiorna solo il titolo
+      let fm=window._paginaFrontmatter||'';
+      if(fm){
+        fm=fm.replace(/title:\s*"[^"]*"/,'title: "'+titolo+'"');
+        content=fm+'\n'+corpo;
+      } else {
+        const slug=_paginaPath.split('/').pop().replace('.md','');
+        content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: /'+slug+'/\nauthor_profile: true\n---\n\n'+corpo;
+      }
     } else {
       const slug=titolo.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
       const permalink=document.getElementById('pag-permalink').value.trim()||'/'+(slug||'nuova-pagina')+'/';
@@ -940,6 +971,8 @@ function apriNuovaPagina(){
   document.getElementById('pag-permalink-field').style.display='block';
   document.getElementById('pag-vis-editor').innerHTML='';
   document.getElementById('pag-corpo').value='';
+  document.getElementById('pag-md').value='';
+  setPagEditor('markdown');
   document.getElementById('nome-pagina').textContent='Nuova pagina';
   document.getElementById('msg-pag').style.display='none';
   document.getElementById('preview-pagina-box').style.display='none';
