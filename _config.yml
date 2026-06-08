@@ -37,8 +37,6 @@ social:
 twitter:
   username: username
 
-logo: "/assets/images/logo.png"
-
 markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes
 exclude:
@@ -63,7 +61,6 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-include-cache
-  - jekyll-seo-tag
 
 footer:
   links:
