@@ -38,7 +38,7 @@ share: false
 
 .blog-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
 
-/* PILL CATEGORIA — bordo viola, testo viola, bianco pieno all'hover */
+/* PILL CATEGORIA */
 .blog-cats { display: flex; gap: 8px; flex-wrap: wrap; }
 .blog-cat {
   font-size: 0.68rem;
@@ -50,24 +50,30 @@ share: false
   border: 1.5px solid #7c6ff7;
   border-radius: 999px;
   padding: 3px 12px;
-  text-decoration: none;
+  text-decoration: none !important;
   box-shadow: 0 2px 6px rgba(108, 99, 255, 0.15);
   transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
   display: inline-block;
 }
 .blog-cat:hover {
   background: linear-gradient(135deg, #7c6ff7 0%, #5a4fcf 100%);
-  color: #fff;
+  color: #fff !important;
+  text-decoration: none !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(108, 99, 255, 0.40);
 }
 
+/* TITOLO — no sottolineatura di default, appare solo all'hover */
 .blog-title {
   font-size: clamp(1.05rem, 2vw, 1.35rem);
   font-weight: 500; line-height: 1.4; color: #111;
-  text-decoration: none; display: block;
+  text-decoration: none !important; display: block;
 }
-.blog-title:hover { color: #444; text-decoration: underline; text-underline-offset: 3px; }
+.blog-title:hover {
+  color: #444;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
 
 .blog-excerpt {
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
@@ -79,7 +85,6 @@ share: false
 .blog-meta { font-size: 0.78rem; color: #bbb; display: flex; align-items: center; gap: 0.5rem; }
 .blog-meta-sep { color: #ddd; }
 
-/* Footer card: niente riga, solo spazio */
 .blog-footer {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 0.5rem;
@@ -87,17 +92,20 @@ share: false
 }
 
 .blog-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.blog-tag { font-size: 0.7rem; letter-spacing: 0.07em; color: #ccc; text-decoration: none; }
-.blog-tag:hover { color: #111; }
+.blog-tag {
+  font-size: 0.7rem; letter-spacing: 0.07em; color: #ccc;
+  text-decoration: none !important;
+}
+.blog-tag:hover { color: #111; text-decoration: none !important; }
 
-/* BOTTONE LEGGI TUTTO — tab arrotondata grigio chiaro */
+/* BOTTONE LEGGI TUTTO */
 .blog-readmore {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #555;
-  text-decoration: none;
+  text-decoration: none !important;
   background: #f2f2f2;
   border-radius: 999px;
   padding: 6px 16px;
@@ -108,6 +116,7 @@ share: false
 .blog-readmore:hover {
   background: #e4e4e4;
   color: #111;
+  text-decoration: none !important;
 }
 
 @media (max-width: 640px) {
