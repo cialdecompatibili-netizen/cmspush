@@ -597,11 +597,13 @@ const REPO=detectRepo();
   document.getElementById('topbar-admin-link').href=base+'admin/';
   document.getElementById('topbar-deploy-link').href=`https://github.com/${REPO}/actions`;
 })();
+// STATO GLOBALE
 let _categorie=[];let _catSha=null;
 let _menuVoci=[];let _menuSha=null;
 let _paginaPath='';let _paginaSha='';
 
 // EDITOR VISUALE (zero dipendenze esterne)
+// EDITOR ARTICOLI
 let _editorMode='visuale';
 
 function fmt(cmd){ document.getElementById('vis-editor').focus(); document.execCommand(cmd,false,null); }
@@ -661,6 +663,7 @@ function showPage(id,btn){
   btn.classList.add('active');
 }
 // TOKEN
+// TOKEN
 function salvaToken(){
   const t=document.getElementById('token-input').value.trim();
   if(!t)return;
@@ -672,6 +675,7 @@ function cancellaToken(){localStorage.removeItem('gh_token');showMsg('msg-token'
 function toggleToken(){const i=document.getElementById('token-input');i.type=i.type==='password'?'text':'password';}
 
 // UTILS
+// UTILS
 function tok(){return localStorage.getItem('gh_token');}
 function enc(s){return btoa(unescape(encodeURIComponent(s)));}
 function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))));}
@@ -682,6 +686,7 @@ async function ghPut(path,msg,content,sha){
   return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
 }
 
+// CATEGORIE
 // CATEGORIE
 async function caricaCategorie(){
   const res=await ghGet('_data/categorie.json');
@@ -726,6 +731,7 @@ async function salvaCategorie(){
   else showMsg('msg-cat','❌ '+j.message,'err');
 }
 
+// MENU
 // MENU
 async function caricaMenu(){
   const res=await ghGet('_data/navigation.yml');
@@ -776,6 +782,7 @@ async function salvaMenu(){
 }
 
 // EDITOR PAGINE
+// EDITOR PAGINE
 let _pagEditorMode='visuale';
 function setPagEditor(mode){
   _pagEditorMode=mode;
@@ -814,6 +821,7 @@ function insertLinkPag(){
   document.execCommand('createLink',false,url);
 }
 
+// PAGINE
 // PAGINE
 async function caricaPagine(){
   if(!tok())return;
@@ -879,6 +887,7 @@ async function modificaPagina(path,sha){
   document.getElementById('pag-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// AVVISO: usare _paginaSha||undefined, stringa vuota causa errore 422
 async function salvaPagina(){
   try{
     if(!tok())return showMsg('msg-pag','⚠️ Token mancante.','err');
@@ -938,6 +947,7 @@ function apriNuovaPagina(){
   document.getElementById('pag-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// ARTICOLI
 // ARTICOLI
 function slugify(s){return s.toLowerCase().replace(/[àáâ]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}
 function tornaListaArticoli(){
@@ -1017,6 +1027,7 @@ async function modificaArticolo(path){
   document.getElementById('art-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// AVVISO: cat deve essere let, non const
 async function pubblica(){
   try{
     showMsg('msg-art','⏳ Controllo campi...','ok');
@@ -1066,6 +1077,7 @@ async function eliminaArticolo(path, sha, nome){
   }catch(e){showMsg('msg-art','❌ Errore di rete.','err');}
 }
 
+// TEMA
 // TEMA
 const SKINS=[
   {id:'default', label:'Default', bg:'#fff', accent:'#6c63ff', text:'#222'},
@@ -1117,6 +1129,7 @@ async function salvaTema(){
   else showMsg('msg-tema','❌ '+j.message,'err');
 }
 
+// IMPOSTAZIONI SITO
 // IMPOSTAZIONI SITO
 let _configShaImp=null;
 
@@ -1238,6 +1251,7 @@ async function aggiornaIndexHome(pagePath){
 }
 
 // AGGIORNAMENTI
+// AGGIORNAMENTI
 const CMS_SOURCE_REPO='cialdecompatibili-netizen/cmspush';
 const CMS_SOURCE_PATH='admin/index.html';
 const CMS_VERSION_PATH='version.json';
@@ -1313,6 +1327,7 @@ async function eseguiAggiornamento(){
 }
 
 // ============ SHOP — CATEGORIE ============
+// SHOP CATEGORIE
 let _shopcatSha=null;
 let _shopcats=[];
 
@@ -1379,6 +1394,7 @@ async function eliminaCatShop(slug){
 }
 
 // ============ SHOP — PRODOTTI ============
+// SHOP PRODOTTI
 let _prodPath=null;
 
 function nuovoProdotto(){
@@ -1461,6 +1477,7 @@ async function eliminaProdotto(path,sha){
 }
 
 // ============ INTEGRAZIONI ============
+// INTEGRAZIONI
 let _integrazioniSha=null;
 let _integrazioniStato={ga4:{enabled:false,id:''},gsc:{enabled:false,verification:''},pixel:{enabled:false,id:''},hotjar:{enabled:false,id:''}};
 
@@ -1544,7 +1561,8 @@ function salvaTokenOnboarding(){
   document.getElementById('onboarding-overlay').style.display='none';
   document.getElementById('token-input').value=t;
   caricaCategorie();caricaLista();caricaPagine();caricaMenu();caricaTema();caricaImpostazioni();controllaAggiornamenti();
-}window.onload=function(){
+}// INIT
+window.onload=function(){
   document.getElementById('data').value=new Date().toISOString().split('T')[0];
   document.getElementById('quill-box').style.display='block';
   document.getElementById('corpo').style.display='none';
