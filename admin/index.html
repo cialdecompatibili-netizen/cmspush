@@ -923,18 +923,9 @@ async function modificaPagina(path,sha){
   const corpo=content.replace(/^---[\s\S]*?---\n\n?/,'');
   const titleMatch=(fm?fm[1]:'').match(/title:\s*"?([^"\n]+)"?/);
   _paginaPath=d.path||path;_paginaSha=d.sha;
-  // Salva il frontmatter originale completo per preservarlo al salvataggio
   // Salva frontmatter originale completo (es. author_profile:false, permalink custom).
-  // ⚠️ fm[0] e' il match di /^---
-...
----/ — NON include il 
-
- dopo il ---.
-  // Il 
-
- viene aggiunto in salvaPagina con trimEnd()+'
-
-'+corpo.
+  // ⚠️ fm[0] e' il match di /^---[\s\S]*?---/ — NON include il \n\n dopo il ---.
+  // Il \n\n viene aggiunto in salvaPagina con trimEnd()+'\n\n'+corpo.
   window._paginaFrontmatter=fm?fm[0]+'\n':'';
   document.getElementById('pag-titolo').value=titleMatch?titleMatch[1].trim():'';
   setPagCorpo(corpo);
@@ -959,14 +950,9 @@ async function salvaPagina(){
       let fm=window._paginaFrontmatter||'';
       if(fm){
         fm=fm.replace(/title:\s*"[^"]*"/,'title: "'+titolo+'"');
-        // ⚠️ CRITICO: Jekyll richiede ESATTAMENTE 
-
- tra fine frontmatter (---) e corpo.
+        // ⚠️ CRITICO: Jekyll richiede esattamente \n\n tra fine frontmatter (---) e corpo.
         // fm.trimEnd() rimuove spazi/newline extra dalla fine del frontmatter estratto.
-        // Se si usa 
- invece di 
-
- Jekyll non riconosce il frontmatter e lo mostra come testo.
+        // Se si usa \n invece di \n\n Jekyll non riconosce il frontmatter e lo mostra come testo.
         // fm finisce con --- senza newline — aggiungiamo \n\n prima del corpo
         content=fm.trimEnd()+'\n\n'+corpo;
       } else {
