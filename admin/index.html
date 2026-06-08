@@ -992,6 +992,7 @@ async function modificaArticolo(path){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 async function pubblica(){
+  alert('DEBUG: pubblica() chiamata');
   if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
   const titolo=document.getElementById('titolo').value.trim();
   const cat=document.getElementById('categorie').value;
