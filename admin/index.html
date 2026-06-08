@@ -807,17 +807,24 @@ function setPagEditor(mode){
   document.getElementById('pag-quill-box').style.display=mode==='visuale'?'block':'none';
   document.getElementById('pag-corpo').style.display=mode==='html'?'block':'none';
   document.getElementById('pag-md-box').style.display=mode==='markdown'?'block':'none';
-  // Quando si passa al visuale, sincronizza il contenuto da pag-md
+  // Sincronizza da pag-md → vis-editor SOLO quando l'utente clicca Visuale.
+  // NON fare il contrario (vis-editor → pag-md) perche' il contenteditable produce HTML spuri.
   if(mode==='visuale'){
     const md=document.getElementById('pag-md').value;
     document.getElementById('pag-vis-editor').innerHTML=md;
   }
 }
+// ⚠️ CRITICO: legge sempre da pag-md in modalita' markdown.
+// Non leggere da pag-vis-editor per le pagine — contiene HTML che rompe il Markdown.
 function getPagCorpo(){
   if(_pagEditorMode==='visuale') return document.getElementById('pag-vis-editor').innerHTML;
   if(_pagEditorMode==='markdown') return document.getElementById('pag-md').value;
   return document.getElementById('pag-corpo').value;
 }
+// ⚠️ CRITICO: caricare content SOLO in pag-md e pag-corpo — MAI in pag-vis-editor qui.
+// pag-vis-editor viene sincronizzato SOLO quando l'utente clicca tab Visuale (vedi setPagEditor).
+// Se si carica qui nel vis-editor, il contenteditable converte MD in HTML e al salvataggio
+// il file sul repo diventa HTML invece di Markdown — pagina rotta su Jekyll.
 function setPagCorpo(content){
   // Imposta il contenuto grezzo (Markdown) in textarea e pag-md
   // NON caricare in pag-vis-editor — evita che HTML spuri sovrascriva il MD
@@ -908,6 +915,17 @@ async function modificaPagina(path,sha){
   const titleMatch=(fm?fm[1]:'').match(/title:\s*"?([^"\n]+)"?/);
   _paginaPath=d.path||path;_paginaSha=d.sha;
   // Salva il frontmatter originale completo per preservarlo al salvataggio
+  // Salva frontmatter originale completo (es. author_profile:false, permalink custom).
+  // ⚠️ fm[0] e' il match di /^---
+...
+---/ — NON include il 
+
+ dopo il ---.
+  // Il 
+
+ viene aggiunto in salvaPagina con trimEnd()+'
+
+'+corpo.
   window._paginaFrontmatter=fm?fm[0]+'\n':'';
   document.getElementById('pag-titolo').value=titleMatch?titleMatch[1].trim():'';
   setPagCorpo(corpo);
@@ -932,6 +950,14 @@ async function salvaPagina(){
       let fm=window._paginaFrontmatter||'';
       if(fm){
         fm=fm.replace(/title:\s*"[^"]*"/,'title: "'+titolo+'"');
+        // ⚠️ CRITICO: Jekyll richiede ESATTAMENTE 
+
+ tra fine frontmatter (---) e corpo.
+        // fm.trimEnd() rimuove spazi/newline extra dalla fine del frontmatter estratto.
+        // Se si usa 
+ invece di 
+
+ Jekyll non riconosce il frontmatter e lo mostra come testo.
         // fm finisce con --- senza newline — aggiungiamo \n\n prima del corpo
         content=fm.trimEnd()+'\n\n'+corpo;
       } else {
