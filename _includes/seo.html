@@ -4,16 +4,24 @@
 
   Campi supportati nel front matter di ogni post/pagina:
     seo_title:       titolo custom per <title> e og:title (se assente usa page.title)
-    seo_description: meta description custom (se assente usa page.excerpt)
+    seo_description: meta description custom (se assente usa l'inizio del post, poi site.description)
     seo_image:       immagine Open Graph (se assente usa site.og_image)
     noindex:         true = esclude la pagina dai motori di ricerca
     canonical:       URL canonico custom (opzionale)
 {% endcomment %}
 
-{% assign seo_title       = page.seo_title       | default: page.title %}
-{% assign seo_description = page.seo_description | default: page.excerpt | default: site.description %}
-{% assign seo_image       = page.seo_image       | default: site.og_image %}
-{% assign seo_url         = page.canonical       | default: page.url | absolute_url %}
+{% assign seo_title = page.seo_title | default: page.title %}
+{% assign seo_image = page.seo_image | default: site.og_image %}
+{% assign seo_url   = page.canonical | default: page.url | absolute_url %}
+
+{% comment %} Description: seo_description → inizio del post (excerpt) → descrizione sito {% endcomment %}
+{% if page.seo_description %}
+  {% assign seo_description = page.seo_description %}
+{% elsif page.excerpt %}
+  {% assign seo_description = page.excerpt | strip_html | normalize_whitespace | truncate: 160 %}
+{% else %}
+  {% assign seo_description = site.description %}
+{% endif %}
 
 {% if seo_title %}
   {% assign seo_title_full = seo_title | append: ' | ' | append: site.title %}
@@ -31,7 +39,7 @@
 {% endif %}
 
 {% if seo_description %}
-  <meta name="description" content="{{ seo_description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+  <meta name="description" content="{{ seo_description | escape }}">
 {% endif %}
 
 {% if seo_url %}
@@ -44,7 +52,7 @@
 <meta property="og:url"         content="{{ seo_url }}">
 <meta property="og:site_name"   content="{{ site.title | escape }}">
 {% if seo_description %}
-  <meta property="og:description" content="{{ seo_description | strip_html | normalize_whitespace | truncate: 200 | escape }}">
+  <meta property="og:description" content="{{ seo_description | truncate: 200 | escape }}">
 {% endif %}
 {% if seo_image %}
   <meta property="og:image" content="{{ seo_image | absolute_url }}">
@@ -54,7 +62,7 @@
 <meta name="twitter:card"  content="summary_large_image">
 <meta name="twitter:title" content="{{ seo_title | escape }}">
 {% if seo_description %}
-  <meta name="twitter:description" content="{{ seo_description | strip_html | normalize_whitespace | truncate: 200 | escape }}">
+  <meta name="twitter:description" content="{{ seo_description | truncate: 200 | escape }}">
 {% endif %}
 {% if seo_image %}
   <meta name="twitter:image" content="{{ seo_image | absolute_url }}">
