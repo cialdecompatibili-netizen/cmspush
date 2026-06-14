@@ -1,0 +1,18 @@
+{% assign maxrelated = 3 %}
+{% assign count = 0 %}
+
+{% if page.related and posts %}
+<div class="page__related">
+  <h2 class="page__related-title">{{ site.data.ui-text[site.locale].related_label | default: "You May Also Enjoy" }}</h2>
+  <div class="grid__wrapper">
+    {% for post in posts %}
+      {% unless post.id == page.id %}
+        {% if count < maxrelated %}
+          {% assign count = count | plus: 1 %}
+          {% include archive-single.html type="grid" %}
+        {% endif %}
+      {% endunless %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
