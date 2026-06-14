@@ -24,8 +24,19 @@ function setEditor(mode){
     document.getElementById('corpo').style.display='block';
   }
 }
+// Aggiunge righe vuote prima/dopo i tag block-level HTML
+// così kramdown (Jekyll) li riconosce come blocchi HTML puri
+// e non li tratta come testo da escapare.
+function fixHtmlSpacing(html){
+  if(!html)return html;
+  const blockTags='div|p|ul|ol|li|h1|h2|h3|h4|h5|h6|blockquote|table|tr|td|th|thead|tbody|pre|figure|section|article|header|footer';
+  html=html.replace(new RegExp(`(?!^)(<(?:${blockTags})(?:\\s[^>]*)?>)`,'gi'),'\n\n$1');
+  html=html.replace(new RegExp(`(<\\/(?:${blockTags})>)(?!$)`,'gi'),'$1\n\n');
+  html=html.replace(/\n{3,}/g,'\n\n');
+  return html.trim();
+}
 function getCorpo(){
-  if(_editorMode==='visuale')return document.getElementById('vis-editor').innerHTML;
+  if(_editorMode==='visuale')return fixHtmlSpacing(document.getElementById('vis-editor').innerHTML);
   return document.getElementById('corpo').value;
 }
 function setCorpo(html){

@@ -25,8 +25,19 @@ function setEditor(mode){
     document.getElementById('corpo').style.display='block';
   }
 }
+// Aggiunge righe vuote tra i tag block-level così kramdown li riconosce come HTML
+// e non li tratta (escapandoli) come testo normale.
+function formatHtmlForKramdown(html){
+  if(!html)return html;
+  const blockTags='div|p|ul|ol|li|h1|h2|h3|h4|h5|h6|table|blockquote|pre|section|article|figure';
+  let out=html
+    .replace(new RegExp(`(?!^)<(${blockTags})(\\s[^>]*)?>`,'g'),'\n\n<$1$2>')
+    .replace(new RegExp(`</(${blockTags})>`,'g'),'</$1>\n\n');
+  out=out.replace(/\n{3,}/g,'\n\n').trim();
+  return out;
+}
 function getCorpo(){
-  if(_editorMode==='visuale')return document.getElementById('vis-editor').innerHTML;
+  if(_editorMode==='visuale')return formatHtmlForKramdown(document.getElementById('vis-editor').innerHTML);
   return document.getElementById('corpo').value;
 }
 function setCorpo(html){
