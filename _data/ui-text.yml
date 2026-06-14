@@ -24,6 +24,7 @@ en: &DEFAULT_EN
   breadcrumb_separator          : "/"
 
   toc_label                     : "In questa pagina"
+  related_label                 : "Potrebbe interessarti anche"
 
   ext_link_label                : "Link diretto"
   edit_on_github                : "Modifica su GitHub"
