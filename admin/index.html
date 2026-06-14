@@ -1122,7 +1122,7 @@ async function pubblica(){
     if(!corpo)return showMsg('msg-art','⚠️ Scrivi il contenuto!','err');
     const data=document.getElementById('data').value;
     if(!data)return showMsg('msg-art','⚠️ Data mancante!','err');
-    const filename=window._editPath||`_posts/${data}-${slugify(titolo)}.md`;
+    const filename=window._editPath||`_posts/${data}-${slugify(titolo)}.html`;
     showMsg('msg-art','⏳ Pubblicazione in corso...','ok');
     const contenuto=buildContent();
     const body={message:`${window._editSha?'Aggiorna':'Nuovo'} articolo: ${titolo}`,content:enc(contenuto)};

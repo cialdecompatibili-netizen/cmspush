@@ -128,8 +128,19 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <!-- ARTICOLI -->
     <div class="page active" id="page-articoli">
       <div class="page-title">📝 Articoli</div>
+      <!-- VISTA LISTA -->
+      <div id="art-lista-view">
+        <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="apriNuovoArticolo()">✚ Nuovo articolo</button></div>
+        <div class="card">
+          <div class="card-title" style="display:flex;justify-content:space-between">Pubblicati <button class="btn btn-secondary btn-sm" onclick="caricaLista()">↻ Aggiorna</button></div>
+          <div id="lista-articoli"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+        </div>
+      </div>
+      <!-- VISTA EDITOR -->
+      <div id="art-editor-view" style="display:none">
+        <div style="margin-bottom:16px"><button class="btn btn-secondary" onclick="tornaListaArticoli()">← Torna alla lista</button></div>
       <div class="card">
-        <div class="card-title">Nuovo / Modifica articolo</div>
+        <div class="card-title" id="art-editor-title">Nuovo articolo</div>
         <div class="field"><label>Titolo *</label><input type="text" id="titolo" placeholder="Titolo dell'articolo"></div>
         <div class="grid2">
           <div class="field"><label>Data</label><input type="date" id="data"></div>
@@ -172,8 +183,8 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         </div>
         <div class="btn-group">
           <button class="btn btn-primary" onclick="pubblica()">🚀 Pubblica</button>
-          <button class="btn btn-secondary" onclick="nuovoArticolo()">✚ Nuovo</button>
           <button class="btn btn-secondary btn-sm" onclick="anteprima()">👁 Anteprima</button>
+          <button class="btn btn-secondary" onclick="tornaListaArticoli()">✕ Annulla</button>
         </div>
         <div class="msg" id="msg-art"></div>
       </div>
@@ -181,29 +192,38 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         <div class="card-title">Anteprima .md</div>
         <pre id="preview-content" style="font-size:12px;line-height:1.7;white-space:pre-wrap;background:#f8f8f8;padding:14px;border-radius:7px;overflow-x:auto"></pre>
       </div>
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between">Pubblicati <button class="btn btn-secondary btn-sm" onclick="caricaLista()">↻ Aggiorna</button></div>
-        <div id="lista-articoli"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
-      </div>
+      </div><!-- fine art-editor-view -->
     </div>
 
     <!-- PAGINE -->
     <div class="page" id="page-pagine">
       <div class="page-title">📄 Pagine</div>
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between">Pagine del sito <button class="btn btn-secondary btn-sm" onclick="caricaPagine()">↻ Aggiorna</button></div>
-        <div id="lista-pagine"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+      <!-- VISTA LISTA -->
+      <div id="pag-lista-view">
+        <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="apriNuovaPagina()">✚ Nuova pagina</button></div>
+        <div class="card">
+          <div class="card-title" style="display:flex;justify-content:space-between">Pagine del sito <button class="btn btn-secondary btn-sm" onclick="caricaPagine()">↻ Aggiorna</button></div>
+          <div id="lista-pagine"><span style="color:#bbb;font-size:13px">Clicca ↻ per caricare</span></div>
+        </div>
       </div>
-      <div class="card" id="editor-pagina" style="display:none">
+      <!-- VISTA EDITOR -->
+      <div id="pag-editor-view" style="display:none">
+        <div style="margin-bottom:16px"><button class="btn btn-secondary" onclick="tornaPagine()">← Torna alla lista</button></div>
+      <div class="card" id="editor-pagina">
         <div class="card-title">Modifica: <span id="nome-pagina" style="color:#6c63ff;text-transform:none"></span></div>
+        <div class="field" id="pag-permalink-field" style="display:none">
+          <label>Permalink (es. /contatti/)</label>
+          <input type="text" id="pag-permalink" placeholder="/nome-pagina/">
+        </div>
         <div class="field"><label>Titolo</label><input type="text" id="pag-titolo"></div>
         <div class="field">
           <label>Contenuto</label>
           <div class="editor-toggle">
-            <button class="active" id="btn-pag-visuale" onclick="setPagEditor('visuale')">✏️ Visuale</button>
+            <button id="btn-pag-visuale" onclick="setPagEditor('visuale')">✏️ Visuale</button>
             <button id="btn-pag-html" onclick="setPagEditor('html')">🔣 HTML grezzo</button>
+            <button class="active" id="btn-pag-md" onclick="setPagEditor('markdown')">📝 Markdown</button>
           </div>
-          <div id="pag-quill-box">
+          <div id="pag-quill-box" style="display:none">
             <div class="vis-toolbar">
               <select onchange="fmtPag(this.value);this.value=''">
                 <option value="">Paragrafo</option>
@@ -222,12 +242,26 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
             </div>
             <div id="pag-vis-editor" contenteditable="true" style="min-height:260px;border:1.5px solid #e8e8e8;border-radius:0 0 7px 7px;padding:12px 14px;font-size:14px;line-height:1.8;outline:none;background:white;overflow-y:auto"></div>
           </div>
+          <div id="pag-md-box">
+            <div class="vis-toolbar">
+              <button onclick="mdInsert('# ','','pag-md')" title="H1"><b>H1</b></button>
+              <button onclick="mdInsert('## ','','pag-md')" title="H2"><b>H2</b></button>
+              <button onclick="mdInsert('### ','','pag-md')" title="H3"><b>H3</b></button>
+              <button onclick="mdInsert('**','**','pag-md')" title="Grassetto"><b>B</b></button>
+              <button onclick="mdInsert('*','*','pag-md')" title="Corsivo"><i>I</i></button>
+              <button onclick="mdInsert('- ','','pag-md')" title="Lista">≡</button>
+              <button onclick="mdInsert('[','](url)','pag-md')" title="Link">🔗</button>
+              <button onclick="mdInsert('---
+','','pag-md')" title="Separatore">—</button>
+            </div>
+            <textarea id="pag-md" class="md" placeholder="Scrivi in Markdown..." style="border-radius:0 0 7px 7px;border-top:none;min-height:280px"></textarea>
+          </div>
           <textarea class="sm" id="pag-corpo" style="display:none"></textarea>
         </div>
         <div class="btn-group">
           <button class="btn btn-primary" onclick="salvaPagina()">💾 Salva</button>
           <button class="btn btn-secondary" onclick="anteprimaPagina()">👁 Anteprima live</button>
-          <button class="btn btn-secondary" onclick="chiudiPagina()">✕ Annulla</button>
+          <button class="btn btn-secondary" onclick="tornaPagine()">✕ Annulla</button>
         </div>
         <div class="msg" id="msg-pag"></div>
       </div>
@@ -237,6 +271,7 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
         </div>
         <iframe id="preview-pagina-frame" src="" style="width:100%;height:500px;border:none;border-radius:7px;background:#f5f6fa"></iframe>
       </div>
+      </div><!-- fine pag-editor-view -->
     </div>
 
     <!-- MENU -->
@@ -557,6 +592,9 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 <script>
 // Rileva REPO dinamicamente dall'URL della pagina (funziona su qualsiasi repo cliente)
 // URL formato: https://USERNAME.github.io/REPO/admin/ oppure https://USERNAME.github.io/admin/
+// ⚠️ CRITICO: non toccare detectRepo() — funziona su qualsiasi repo cliente.
+// Legge hostname e pathname per ricavare USERNAME/REPO dinamicamente.
+// Se si hardcoda il repo qui, il CMS smette di funzionare sui repo dei clienti.
 function detectRepo(){
   const h=location.hostname; // es. pippo.github.io
   const p=location.pathname; // es. /miosito/admin/index.html
@@ -577,11 +615,13 @@ const REPO=detectRepo();
   document.getElementById('topbar-admin-link').href=base+'admin/';
   document.getElementById('topbar-deploy-link').href=`https://github.com/${REPO}/actions`;
 })();
+// STATO GLOBALE
 let _categorie=[];let _catSha=null;
 let _menuVoci=[];let _menuSha=null;
 let _paginaPath='';let _paginaSha='';
 
 // EDITOR VISUALE (zero dipendenze esterne)
+// EDITOR ARTICOLI
 let _editorMode='visuale';
 
 function fmt(cmd){ document.getElementById('vis-editor').focus(); document.execCommand(cmd,false,null); }
@@ -610,8 +650,21 @@ function setEditor(mode){
     document.getElementById('corpo').style.display='block';
   }
 }
+function formatHtmlForKramdown(html){
+  // Aggiunge una riga vuota prima e dopo ogni tag block-level
+  // così kramdown li riconosce come HTML vero invece di escaparli come testo
+  const blockTags=['div','p','ul','ol','li','h1','h2','h3','h4','h5','h6','blockquote','pre','table','tr','thead','tbody'];
+  const openRe=new RegExp('<('+blockTags.join('|')+')(\\s[^>]*)?>','gi');
+  const closeRe=new RegExp('<\\/('+blockTags.join('|')+')>','gi');
+  let out=html
+    .replace(openRe, '\n\n$&')
+    .replace(closeRe, '$&\n\n');
+  // Compatta più di 2 newline consecutive in 2
+  out=out.replace(/\n{3,}/g,'\n\n').trim();
+  return out;
+}
 function getCorpo(){
-  if(_editorMode==='visuale') return document.getElementById('vis-editor').innerHTML;
+  if(_editorMode==='visuale') return formatHtmlForKramdown(document.getElementById('vis-editor').innerHTML);
   return document.getElementById('corpo').value;
 }
 function setCorpo(html){
@@ -641,6 +694,7 @@ function showPage(id,btn){
   btn.classList.add('active');
 }
 // TOKEN
+// TOKEN
 function salvaToken(){
   const t=document.getElementById('token-input').value.trim();
   if(!t)return;
@@ -652,16 +706,24 @@ function cancellaToken(){localStorage.removeItem('gh_token');showMsg('msg-token'
 function toggleToken(){const i=document.getElementById('token-input');i.type=i.type==='password'?'text':'password';}
 
 // UTILS
+// UTILS
+// ⚠️ CRITICO: enc() e dec() usano unescape/escape per gestire UTF-8 in btoa/atob.
+// NON usare btoa(string) diretto — crasha su caratteri italiani (àèìòù) e emoji.
+// Formula corretta: btoa(unescape(encodeURIComponent(s))) e inverso per dec().
 function tok(){return localStorage.getItem('gh_token');}
 function enc(s){return btoa(unescape(encodeURIComponent(s)));}
 function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))));}
 function showMsg(id,txt,cls){const m=document.getElementById(id);m.textContent=txt;m.className='msg '+cls;}
 async function ghGet(path){return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{headers:{'Authorization':`token ${tok()}`}});}
+// ⚠️ CRITICO: sha e' obbligatorio per aggiornare file esistenti su GitHub API.
+// Se sha e' stringa vuota ('') GitHub risponde 422. Passare sempre sha||undefined.
+// Se sha e' undefined GitHub crea un nuovo file (ok solo per file nuovi).
 async function ghPut(path,msg,content,sha){
   const body={message:msg,content:enc(content)};if(sha)body.sha=sha;
   return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
 }
 
+// CATEGORIE
 // CATEGORIE
 async function caricaCategorie(){
   const res=await ghGet('_data/categorie.json');
@@ -706,6 +768,7 @@ async function salvaCategorie(){
   else showMsg('msg-cat','❌ '+j.message,'err');
 }
 
+// MENU
 // MENU
 async function caricaMenu(){
   const res=await ghGet('_data/navigation.yml');
@@ -756,31 +819,52 @@ async function salvaMenu(){
 }
 
 // EDITOR PAGINE
+// EDITOR PAGINE — 3 modalità: visuale (default) / html / markdown
 let _pagEditorMode='visuale';
 function setPagEditor(mode){
   _pagEditorMode=mode;
   document.getElementById('btn-pag-visuale').classList.toggle('active',mode==='visuale');
   document.getElementById('btn-pag-html').classList.toggle('active',mode==='html');
+  document.getElementById('btn-pag-md').classList.toggle('active',mode==='markdown');
+  document.getElementById('pag-quill-box').style.display=mode==='visuale'?'block':'none';
+  document.getElementById('pag-corpo').style.display=mode==='html'?'block':'none';
+  document.getElementById('pag-md-box').style.display=mode==='markdown'?'block':'none';
+  // Sincronizza da pag-md → vis-editor SOLO quando l'utente clicca Visuale.
+  // NON fare il contrario (vis-editor → pag-md) perche' il contenteditable produce HTML spuri.
   if(mode==='visuale'){
-    const html=document.getElementById('pag-corpo').value;
-    if(html) document.getElementById('pag-vis-editor').innerHTML=html;
-    document.getElementById('pag-quill-box').style.display='block';
-    document.getElementById('pag-corpo').style.display='none';
-  } else {
-    document.getElementById('pag-corpo').value=document.getElementById('pag-vis-editor').innerHTML;
-    document.getElementById('pag-quill-box').style.display='none';
-    document.getElementById('pag-corpo').style.display='block';
+    const md=document.getElementById('pag-md').value;
+    document.getElementById('pag-vis-editor').innerHTML=md;
   }
 }
+// ⚠️ CRITICO: legge sempre da pag-md in modalita' markdown.
+// Non leggere da pag-vis-editor per le pagine — contiene HTML che rompe il Markdown.
 function getPagCorpo(){
   if(_pagEditorMode==='visuale') return document.getElementById('pag-vis-editor').innerHTML;
+  if(_pagEditorMode==='markdown') return document.getElementById('pag-md').value;
   return document.getElementById('pag-corpo').value;
 }
-function setPagCorpo(html){
-  const isLegacyMd = html && !html.trim().startsWith('<') && html.includes('\n');
-  const content = isLegacyMd ? legacyMdToHtml(html) : html;
+// ⚠️ CRITICO: caricare content SOLO in pag-md e pag-corpo — MAI in pag-vis-editor qui.
+// pag-vis-editor viene sincronizzato SOLO quando l'utente clicca tab Visuale (vedi setPagEditor).
+// Se si carica qui nel vis-editor, il contenteditable converte MD in HTML e al salvataggio
+// il file sul repo diventa HTML invece di Markdown — pagina rotta su Jekyll.
+function setPagCorpo(content){
+  // Imposta il contenuto grezzo (Markdown) in textarea e pag-md
+  // NON caricare in pag-vis-editor — evita che HTML spuri sovrascriva il MD
   document.getElementById('pag-corpo').value=content;
-  document.getElementById('pag-vis-editor').innerHTML=content;
+  document.getElementById('pag-md').value=content;
+  // vis-editor solo se si e' in modalita' visuale
+  if(_pagEditorMode==='visuale') document.getElementById('pag-vis-editor').innerHTML=content;
+}
+// Inserisce sintassi Markdown nel punto del cursore
+function mdInsert(before, after, id){
+  const ta=document.getElementById(id);
+  ta.focus();
+  const s=ta.selectionStart, e=ta.selectionEnd;
+  const sel=ta.value.substring(s,e);
+  const ins=before+sel+after;
+  ta.value=ta.value.substring(0,s)+ins+ta.value.substring(e);
+  ta.selectionStart=s+before.length;
+  ta.selectionEnd=s+before.length+sel.length;
 }
 function fmtPag(tag){
   if(!tag)return;
@@ -795,11 +879,11 @@ function insertLinkPag(){
 }
 
 // PAGINE
+// PAGINE
 async function caricaPagine(){
   if(!tok())return;
   const res=await ghGet('_pages');if(!res.ok)return;
   const files=await res.json();
-  // Aggiunge "Home" in cima come voce speciale che punta a _includes/home-content.html
   const homeRow=`<div class="list-row" style="background:#fffbeb;border-radius:7px;padding:10px;margin-bottom:8px">
     <span>🏠 <strong>home</strong> <span style="font-size:11px;color:#aaa">— pagina principale del sito</span></span>
     <button class="btn btn-secondary btn-sm" onclick="modificaHomeContent()">✏️ Modifica</button>
@@ -807,8 +891,27 @@ async function caricaPagine(){
   document.getElementById('lista-pagine').innerHTML=homeRow+files.map(f=>`
     <div class="list-row">
       <span>${f.name.replace(/\.md$/,'')}</span>
-      <button class="btn btn-secondary btn-sm" onclick="modificaPagina('${f.path}','${f.sha}')">✏️ Modifica</button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="modificaPagina('${f.path}','${f.sha}')">✏️ Modifica</button>
+        <button class="btn btn-danger btn-sm" onclick="eliminaPagina('${f.path}','${f.sha}','${f.name}')">🗑️ Elimina</button>
+      </div>
     </div>`).join('');
+}
+
+async function eliminaPagina(path,sha,nome){
+  if(!tok())return;
+  if(!confirm('Eliminare definitivamente "'+nome+'"?\n\nQuesta azione non è reversibile.'))return;
+  showMsg('msg-pag','⏳ Eliminazione in corso...','');
+  try{
+    const res=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+path,{
+      method:'DELETE',
+      headers:{'Authorization':'token '+tok(),'Content-Type':'application/json'},
+      body:JSON.stringify({message:'Elimina pagina: '+nome,sha:sha})
+    });
+    const json=await res.json();
+    if(res.ok){showMsg('msg-pag','✅ Pagina eliminata!','ok');caricaPagine();}
+    else showMsg('msg-pag','❌ '+json.message,'err');
+  }catch(e){showMsg('msg-pag','❌ Errore: '+e.message,'err');}
 }
 
 async function modificaHomeContent(){
@@ -821,8 +924,10 @@ async function modificaHomeContent(){
   setPagCorpo(dec(d.content));
   setPagEditor('html'); // home è HTML strutturato — grezzo è più utile del visuale
   document.getElementById('nome-pagina').textContent='home-content.html (Home)';
-  document.getElementById('editor-pagina').style.display='block';
-  document.getElementById('editor-pagina').scrollIntoView({behavior:'smooth'});
+  document.getElementById('pag-permalink-field').style.display='none';
+  document.getElementById('pag-lista-view').style.display='none';
+  document.getElementById('pag-editor-view').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 async function modificaPagina(path,sha){
   const res=await ghGet(path);const d=await res.json();
@@ -831,64 +936,118 @@ async function modificaPagina(path,sha){
   const corpo=content.replace(/^---[\s\S]*?---\n\n?/,'');
   const titleMatch=(fm?fm[1]:'').match(/title:\s*"?([^"\n]+)"?/);
   _paginaPath=d.path||path;_paginaSha=d.sha;
+  // Salva frontmatter originale completo (es. author_profile:false, permalink custom).
+  // ⚠️ fm[0] e' il match di /^---[\s\S]*?---/ — NON include il \n\n dopo il ---.
+  // Il \n\n viene aggiunto in salvaPagina con trimEnd()+'\n\n'+corpo.
+  window._paginaFrontmatter=fm?fm[0]+'\n':'';
   document.getElementById('pag-titolo').value=titleMatch?titleMatch[1].trim():'';
   setPagCorpo(corpo);
+  setPagEditor('visuale');
   document.getElementById('nome-pagina').textContent=path.split('/').pop();
-  document.getElementById('editor-pagina').style.display='block';
-  document.getElementById('editor-pagina').scrollIntoView({behavior:'smooth'});
+  document.getElementById('pag-permalink-field').style.display='none';
+  document.getElementById('pag-lista-view').style.display='none';
+  document.getElementById('pag-editor-view').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+// AVVISO: usare _paginaSha||undefined, stringa vuota causa errore 422
 async function salvaPagina(){
-  if(!tok())return showMsg('msg-pag','⚠️ Token mancante.','err');
-  const titolo=document.getElementById('pag-titolo').value.trim();
-  const corpo=getPagCorpo();
-  let content;
-  // home-content.html = HTML puro, niente front matter
-  if(_paginaPath==='_includes/home-content.html'){
-    content=corpo;
-  } else {
-    const slug=_paginaPath.split('/').pop().replace('.md','');
-    content=`---\nlayout: single\ntitle: "${titolo}"\npermalink: /${slug}/\nauthor_profile: true\n---\n\n${corpo}`;
-  }
-  showMsg('msg-pag','⏳ Salvataggio...','');
-  const res=await ghPut(_paginaPath,`Aggiorna pagina: ${titolo}`,content,_paginaSha);
-  const j=await res.json();
-  if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Live in ~60s.','ok');}
-  else showMsg('msg-pag','❌ '+j.message,'err');
+  try{
+    if(!tok())return showMsg('msg-pag','⚠️ Token mancante.','err');
+    const titolo=(document.getElementById('pag-titolo').value||'Pagina').trim();
+    const corpo=getPagCorpo().trim()||' ';
+    let content;
+    if(_paginaPath==='_includes/home-content.html'){
+      content=corpo;
+    } else if(_paginaPath){
+      // Preserva il frontmatter originale, aggiorna solo il titolo
+      let fm=window._paginaFrontmatter||'';
+      if(fm){
+        fm=fm.replace(/title:\s*"[^"]*"/,'title: "'+titolo+'"');
+        // ⚠️ CRITICO: Jekyll richiede esattamente \n\n tra fine frontmatter (---) e corpo.
+        // fm.trimEnd() rimuove spazi/newline extra dalla fine del frontmatter estratto.
+        // Se si usa \n invece di \n\n Jekyll non riconosce il frontmatter e lo mostra come testo.
+        // fm finisce con --- senza newline — aggiungiamo \n\n prima del corpo
+        content=fm.trimEnd()+'\n\n'+corpo;
+      } else {
+        const slug=_paginaPath.split('/').pop().replace('.md','');
+        content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: /'+slug+'/\nauthor_profile: true\n---\n\n'+corpo;
+      }
+    } else {
+      const slug=titolo.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+      const permalink=document.getElementById('pag-permalink').value.trim()||'/'+(slug||'nuova-pagina')+'/';
+      _paginaPath='_pages/'+(slug||'nuova-pagina')+'.md';
+      content='---\nlayout: single\ntitle: "'+titolo+'"\npermalink: '+permalink+'\nauthor_profile: true\n---\n\n'+corpo;
+    }
+    let dots=0;
+    const timer=setInterval(()=>{dots=(dots+1)%4;showMsg('msg-pag','⏳ Invio a GitHub'+'.'.repeat(dots),'ok');},400);
+    const res=await ghPut(_paginaPath,'Aggiorna pagina: '+titolo,content,_paginaSha||undefined);
+    clearInterval(timer);
+    const j=await res.json();
+    if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Torno alla lista...','ok');setTimeout(()=>tornaPagine(),1200);}
+    else showMsg('msg-pag','❌ '+j.message,'err');
+  }catch(e){showMsg('msg-pag','❌ Errore: '+e.message,'err');}
 }
 function anteprimaPagina(){
-  // Mappa il path al permalink live corrispondente
   const base=location.origin+location.pathname.replace(/\/admin\/?.*$/,'/');
-  const urlMap={
-    '_includes/home-content.html':base,
-    '_pages/about.md':base+'about/',
-    '_pages/blog.md':base+'blog/',
-  };
+  const urlMap={'_includes/home-content.html':base,'_pages/about.md':base+'about/','_pages/blog.md':base+'blog/'};
   const slug=_paginaPath.split('/').pop().replace('.md','');
   const url=urlMap[_paginaPath]||`${base}${slug}/`;
   const box=document.getElementById('preview-pagina-box');
   document.getElementById('preview-pagina-frame').src=url;
-  box.style.display='block';
-  box.scrollIntoView({behavior:'smooth'});
+  box.style.display='block';box.scrollIntoView({behavior:'smooth'});
 }
 function chiudiPagina(){
   document.getElementById('editor-pagina').style.display='none';
   document.getElementById('preview-pagina-box').style.display='none';
 }
-// ARTICOLI
-function slugify(s){return s.toLowerCase().replace(/[àáâ]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}
-function nuovoArticolo(){
-  ['titolo','excerpt','teaser','tags','corpo'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('categorie').value='';
-  document.getElementById('data').value=new Date().toISOString().split('T')[0];
-  document.getElementById('preview-box').style.display='none';
-  window._editSha=null;window._editPath=null;
-  document.getElementById('msg-art').style.display='none';
+function tornaPagine(){
+  document.getElementById('pag-editor-view').style.display='none';
+  document.getElementById('pag-lista-view').style.display='block';
+  document.getElementById('preview-pagina-box').style.display='none';
+  caricaPagine();
+}
+function apriNuovaPagina(){
+  _paginaPath=null;_paginaSha=null;
+  document.getElementById('pag-titolo').value='';
+  document.getElementById('pag-permalink').value='';
+  document.getElementById('pag-permalink-field').style.display='block';
+  document.getElementById('pag-vis-editor').innerHTML='';
+  document.getElementById('pag-corpo').value='';
+  document.getElementById('pag-md').value='';
+  setPagEditor('visuale');
+  document.getElementById('nome-pagina').textContent='Nuova pagina';
+  document.getElementById('msg-pag').style.display='none';
+  document.getElementById('preview-pagina-box').style.display='none';
+  document.getElementById('pag-lista-view').style.display='none';
+  document.getElementById('pag-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// ARTICOLI
+// ARTICOLI
+function slugify(s){return s.toLowerCase().replace(/[àáâ]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}
+function tornaListaArticoli(){
+  document.getElementById('art-editor-view').style.display='none';
+  document.getElementById('art-lista-view').style.display='block';
+  caricaLista();
+}
+function apriNuovoArticolo(){
+  ['titolo','excerpt','teaser','tags','corpo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('categorie').value='';
+  document.getElementById('vis-editor').innerHTML='';
+  document.getElementById('data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('preview-box').style.display='none';
+  document.getElementById('msg-art').style.display='none';
+  document.getElementById('art-editor-title').textContent='Nuovo articolo';
+  window._editSha=null;window._editPath=null;
+  document.getElementById('art-lista-view').style.display='none';
+  document.getElementById('art-editor-view').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nuovoArticolo(){apriNuovoArticolo();}
 function buildContent(){
   const titolo=document.getElementById('titolo').value.trim();
   const data=document.getElementById('data').value;
-  const cat=document.getElementById('categorie').value;
+  let cat=document.getElementById('categorie').value;
   const tags=document.getElementById('tags').value.split(',').map(s=>s.trim()).filter(Boolean);
   const excerpt=document.getElementById('excerpt').value.trim();
   const teaser=document.getElementById('teaser').value.trim();
@@ -898,6 +1057,9 @@ function buildContent(){
   if(teaser)fm+=`header:\n  teaser: "${teaser}"\n`;
   if(cat)fm+=`categories:\n  - ${cat}\n`;
   if(tags.length)fm+=`tags:\n${tags.map(t=>`  - ${t}`).join('\n')}\n`;
+  // ⚠️ NOTA: gli articoli usano HTML nel corpo (non Markdown) — scelta deliberata.
+  // L'editor visuale (contenteditable) produce HTML. Jekyll lo renderizza senza problemi.
+  // NON cambiare questo in Markdown senza aggiornare anche l'editor e setCorpo().
   // Corpo in HTML puro — Jekyll lo renderizza direttamente senza conversioni
   return fm+`---\n\n${corpo}`;
 }
@@ -936,29 +1098,48 @@ async function modificaArticolo(path){
   if(tagsM)document.getElementById('tags').value=tagsM[1].replace(/\s*-\s*/g,'').trim().split('\n').join(', ');
   // Carica corpo: HTML diretto, niente conversioni
   setCorpo(body);
+  // _editSha e _editPath tengono traccia dell'articolo in modifica.
+  // ⚠️ Vengono azzerati a null dopo ogni pubblicazione — non riusare senza ricaricare.
   window._editSha=data.sha;window._editPath=path;
+  document.getElementById('art-editor-title').textContent='Modifica articolo';
   showMsg('msg-art','✏️ Articolo caricato — modifica e pubblica.','ok');
+  document.getElementById('art-lista-view').style.display='none';
+  document.getElementById('art-editor-view').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// AVVISO: cat deve essere let, non const
 async function pubblica(){
-  if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
-  const titolo=document.getElementById('titolo').value.trim();
-  const cat=document.getElementById('categorie').value;
-  const corpo=getCorpo().trim();
-  if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
-  if(!cat)return showMsg('msg-art','⚠️ Seleziona una categoria!','err');
-  if(!corpo)return showMsg('msg-art','⚠️ Scrivi il contenuto!','err');
-  const data=document.getElementById('data').value;
-  const filename=window._editPath||`_posts/${data}-${slugify(titolo)}.md`;
-  const body={message:`${window._editSha?'Aggiorna':'Nuovo'} articolo: ${titolo}`,content:enc(buildContent())};
-  if(window._editSha)body.sha=window._editSha;
-  showMsg('msg-art','⏳ Pubblicazione...','');
   try{
+    showMsg('msg-art','⏳ Controllo campi...','ok');
+    if(!tok())return showMsg('msg-art','⚠️ Token mancante!','err');
+    const titolo=document.getElementById('titolo').value.trim();
+    // ⚠️ CRITICO: cat deve essere let (non const) — viene riassegnata se vuota.
+    // Se si cambia in const, il fallback categoria default crasha silenziosamente.
+    let cat=document.getElementById('categorie').value;
+    const corpo=getCorpo().replace(/<br\s*\/?>/gi,'').replace(/<div>(\s|&nbsp;)*<\/div>/gi,'').trim();
+    if(!titolo)return showMsg('msg-art','⚠️ Inserisci un titolo!','err');
+    if(!cat){const defOpt=document.querySelector('#categorie option:not([value=""])');cat=defOpt?defOpt.value:'generale';document.getElementById('categorie').value=cat;}
+    if(!corpo)return showMsg('msg-art','⚠️ Scrivi il contenuto!','err');
+    const data=document.getElementById('data').value;
+    if(!data)return showMsg('msg-art','⚠️ Data mancante!','err');
+    const filename=window._editPath||`_posts/${data}-${slugify(titolo)}.html`;
+    showMsg('msg-art','⏳ Pubblicazione in corso...','ok');
+    const contenuto=buildContent();
+    const body={message:`${window._editSha?'Aggiorna':'Nuovo'} articolo: ${titolo}`,content:enc(contenuto)};
+    if(window._editSha)body.sha=window._editSha;
+    // Progressione visiva reale
+    let dots=0;
+    const timer=setInterval(()=>{dots=(dots+1)%4;showMsg('msg-art','⏳ Invio a GitHub'+'.'.repeat(dots),'ok');},400);
     const res=await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`,{method:'PUT',headers:{'Authorization':`token ${tok()}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    clearInterval(timer);
     const json=await res.json();
-    if(res.ok){showMsg('msg-art','✅ Pubblicato! Live in ~60 secondi.','ok');window._editSha=null;window._editPath=null;caricaLista();}
+    if(res.ok){
+      window._editSha=null;window._editPath=null;
+      showMsg('msg-art','✅ Pubblicato! Torno alla lista...','ok');
+      setTimeout(()=>tornaListaArticoli(),1200);
+    }
     else showMsg('msg-art','❌ '+json.message,'err');
-  }catch(e){showMsg('msg-art','❌ Errore di rete.','err');}
+  }catch(e){showMsg('msg-art','❌ Errore: '+e.message,'err');}
 }
 
 // ELIMINA ARTICOLO
@@ -978,6 +1159,7 @@ async function eliminaArticolo(path, sha, nome){
   }catch(e){showMsg('msg-art','❌ Errore di rete.','err');}
 }
 
+// TEMA
 // TEMA
 const SKINS=[
   {id:'default', label:'Default', bg:'#fff', accent:'#6c63ff', text:'#222'},
@@ -1029,6 +1211,7 @@ async function salvaTema(){
   else showMsg('msg-tema','❌ '+j.message,'err');
 }
 
+// IMPOSTAZIONI SITO
 // IMPOSTAZIONI SITO
 let _configShaImp=null;
 
@@ -1150,6 +1333,7 @@ async function aggiornaIndexHome(pagePath){
 }
 
 // AGGIORNAMENTI
+// AGGIORNAMENTI
 const CMS_SOURCE_REPO='cialdecompatibili-netizen/cmspush';
 const CMS_SOURCE_PATH='admin/index.html';
 const CMS_VERSION_PATH='version.json';
@@ -1197,6 +1381,9 @@ async function eseguiAggiornamento(){
   document.getElementById('btn-aggiorna').disabled=true;
   showMsg('msg-update2','⏳ Download aggiornamento...','');
 
+  // ⚠️ CRITICO: questo metodo sovrascrive admin/index.html nel repo CLIENTE con la versione dal repo sorgente.
+  // CMS_SOURCE_REPO deve puntare sempre a cialdecompatibili-netizen/cmspush (repo pubblico).
+  // Se si rinomina il file o si sposta la cartella admin/, aggiornare CMS_SOURCE_PATH di conseguenza.
   // Legge il nuovo admin/index.html dal repo sorgente
   const resSrc=await fetch(`https://api.github.com/repos/${CMS_SOURCE_REPO}/contents/${CMS_SOURCE_PATH}`);
   if(!resSrc.ok){document.getElementById('btn-aggiorna').disabled=false;return showMsg('msg-update2','❌ Errore download.','err');}
@@ -1225,6 +1412,7 @@ async function eseguiAggiornamento(){
 }
 
 // ============ SHOP — CATEGORIE ============
+// SHOP CATEGORIE
 let _shopcatSha=null;
 let _shopcats=[];
 
@@ -1291,6 +1479,7 @@ async function eliminaCatShop(slug){
 }
 
 // ============ SHOP — PRODOTTI ============
+// SHOP PRODOTTI
 let _prodPath=null;
 
 function nuovoProdotto(){
@@ -1373,6 +1562,7 @@ async function eliminaProdotto(path,sha){
 }
 
 // ============ INTEGRAZIONI ============
+// INTEGRAZIONI
 let _integrazioniSha=null;
 let _integrazioniStato={ga4:{enabled:false,id:''},gsc:{enabled:false,verification:''},pixel:{enabled:false,id:''},hotjar:{enabled:false,id:''}};
 
@@ -1434,6 +1624,9 @@ async function salvaIntegrazione(key){
   if(!res.ok)return showMsg('msg-'+key,'❌ Errore lettura config.','err');
   const d=await res.json();_integrazioniSha=d.sha;
   let yaml=dec(d.content);
+  // ⚠️ CRITICO: strategia replace blocco integrations nel YAML.
+  // Si rimuove l'intero blocco con regex e si riscrive da zero — non si fa merge riga per riga.
+  // Se si cambia la struttura YAML delle integrazioni, aggiornare sia qui che in _includes/head/custom.html.
   // Rimuovi vecchio blocco integrations se esiste
   yaml=yaml.replace(/\nintegrations:[\s\S]*?(?=\n\w|\n#|$)/,'');
   // Aggiungi blocco integrations aggiornato
@@ -1456,7 +1649,8 @@ function salvaTokenOnboarding(){
   document.getElementById('onboarding-overlay').style.display='none';
   document.getElementById('token-input').value=t;
   caricaCategorie();caricaLista();caricaPagine();caricaMenu();caricaTema();caricaImpostazioni();controllaAggiornamenti();
-}window.onload=function(){
+}// INIT
+window.onload=function(){
   document.getElementById('data').value=new Date().toISOString().split('T')[0];
   document.getElementById('quill-box').style.display='block';
   document.getElementById('corpo').style.display='none';
