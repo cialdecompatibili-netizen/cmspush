@@ -650,8 +650,21 @@ function setEditor(mode){
     document.getElementById('corpo').style.display='block';
   }
 }
+function formatHtmlForKramdown(html){
+  // Aggiunge una riga vuota prima e dopo ogni tag block-level
+  // così kramdown li riconosce come HTML vero invece di escaparli come testo
+  const blockTags=['div','p','ul','ol','li','h1','h2','h3','h4','h5','h6','blockquote','pre','table','tr','thead','tbody'];
+  const openRe=new RegExp('<('+blockTags.join('|')+')(\\s[^>]*)?>','gi');
+  const closeRe=new RegExp('<\\/('+blockTags.join('|')+')>','gi');
+  let out=html
+    .replace(openRe, '\n\n$&')
+    .replace(closeRe, '$&\n\n');
+  // Compatta più di 2 newline consecutive in 2
+  out=out.replace(/\n{3,}/g,'\n\n').trim();
+  return out;
+}
 function getCorpo(){
-  if(_editorMode==='visuale') return document.getElementById('vis-editor').innerHTML;
+  if(_editorMode==='visuale') return formatHtmlForKramdown(document.getElementById('vis-editor').innerHTML);
   return document.getElementById('corpo').value;
 }
 function setCorpo(html){
