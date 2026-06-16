@@ -9,18 +9,23 @@ shop_category_name: Abbigliamento
 ---
 
 <style>
-.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5em;margin-top:1.5em}
-.prod-card{background:white;border:1.5px solid #eee;border-radius:12px;padding:1.5em;text-decoration:none;color:#1a1a2e;transition:all .2s;display:block}
-.prod-card:hover{border-color:#6c63ff;box-shadow:0 4px 16px rgba(108,99,255,.12);transform:translateY(-2px)}
-.prod-card h3{font-size:1em;font-weight:700;margin:0 0 .4em}
-.prod-card .price{font-size:1.1em;font-weight:700;color:#6c63ff}
+.shop-list{display:flex;flex-direction:column;gap:1em;margin-top:1.5em}
+.prod-card{background:white;border:1.5px solid #eee;border-radius:12px;padding:1.2em 1.5em;color:#1a1a2e;display:flex;gap:1.2em;align-items:center}
+.prod-card:hover{border-color:#6c63ff;box-shadow:0 4px 16px rgba(108,99,255,.12)}
+.prod-card img{width:90px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.prod-card-body{flex:1;min-width:0}
+.prod-card h3{font-size:1em;font-weight:700;margin:0 0 .3em}
+.prod-card .desc{font-size:13px;color:#666;margin-bottom:.5em;line-height:1.5}
+.prod-card .price{font-size:1.05em;font-weight:700;color:#6c63ff}
+.btn-cart{background:#6c63ff;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.btn-cart:hover{background:#574fd6}
 </style>
 
 <p style="margin-bottom:.5em"><a href="{{ '/shop/' | relative_url }}" style="color:#6c63ff;font-size:13px;text-decoration:none">← Torna allo Shop</a></p>
 <p style="color:#666;font-size:14px">Prodotti nella categoria <strong>{{ page.shop_category_name }}</strong></p>
 
 <div id="prods-loading" style="color:#aaa;font-size:14px">Caricamento prodotti...</div>
-<div class="shop-grid" id="prods-grid"></div>
+<div class="shop-list" id="prods-grid"></div>
 
 <script>
 const OWNER = 'cialdecompatibili-netizen';
@@ -63,14 +68,16 @@ async function loadCat() {
       pGrid.innerHTML = '<p style="color:#bbb">Nessun prodotto in questa categoria.</p>';
     } else {
       products.forEach(p => {
-        const card = document.createElement('a');
+        const card = document.createElement('div');
         card.className = 'prod-card';
-        card.href = BASE + '/shop/prodotto/?slug=' + p._slug;
         card.innerHTML = `
-          ${p.image ? `<img src="${p.image}" alt="${p.title}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:.8em">` : ''}
-          <h3>${p.title||p._slug}</h3>
-          <div class="price">€ ${p.price||'—'}</div>
-          ${p.stock ? `<div style="font-size:12px;color:#27ae60;margin-top:.3em">✅ ${p.stock} pz</div>` : ''}`;
+          ${p.image ? `<img src="${p.image}" alt="${p.title||p._slug}">` : ''}
+          <div class="prod-card-body">
+            <h3><a href="${BASE}/shop/prodotto/?slug=${p._slug}" style="color:inherit;text-decoration:none">${p.title||p._slug}</a></h3>
+            ${p.description ? `<div class="desc">${p.description.slice(0,120)}${p.description.length>120?'…':''}</div>` : ''}
+            <div class="price">€ ${p.price||'—'}</div>
+          </div>
+          <button class="btn-cart" onclick="aggiungiCarrello('${p._slug}','${(p.title||p._slug).replace(/'/g,"\\'")}',${p.price||0})">🛒 Aggiungi</button>`;
         pGrid.appendChild(card);
       });
     }
@@ -78,5 +85,15 @@ async function loadCat() {
     loading.innerHTML = '<p style="color:#e74c3c">Errore caricamento prodotti.</p>';
   }
 }
+function aggiungiCarrello(slug, title, price) {
+  let cart = JSON.parse(localStorage.getItem('cmspush_cart') || '[]');
+  const idx = cart.findIndex(i => i.slug === slug);
+  if (idx >= 0) cart[idx].qty++;
+  else cart.push({slug, title, price, qty: 1});
+  localStorage.setItem('cmspush_cart', JSON.stringify(cart));
+  const tot = cart.reduce((s,i) => s + i.qty, 0);
+  alert(`✅ "${title}" aggiunto al carrello (tot. ${tot} articoli)`);
+}
+
 loadCat();
 </script>
