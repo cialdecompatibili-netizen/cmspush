@@ -13,12 +13,15 @@ classes: wide
 .cat-header-desc{font-size:14px;color:#888;margin:0}
 .cat-back{font-size:13px;color:#6c63ff;text-decoration:none;display:inline-block;margin-bottom:1.2em}
 .cat-back:hover{text-decoration:underline}
-.post-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.4em}
-.post-card{background:#fff;border:1.5px solid #eee;border-radius:12px;padding:1.2em 1.4em;text-decoration:none;color:inherit;display:block;transition:box-shadow .15s,border-color .15s}
-.post-card:hover{border-color:#6c63ff;box-shadow:0 4px 16px rgba(108,99,255,.10);text-decoration:none}
-.post-card-date{font-size:11px;color:#bbb;margin-bottom:.4em}
-.post-card-title{font-size:1em;font-weight:700;color:#1a1a2e;margin-bottom:.4em;line-height:1.4}
-.post-card-excerpt{font-size:13px;color:#888;line-height:1.5}
+.art-list{display:flex;flex-direction:column;gap:.8em}
+.art-row{display:flex;gap:1.2em;align-items:flex-start;background:#fff;border:1.5px solid #eee;border-radius:12px;padding:1em 1.2em;text-decoration:none;color:inherit;transition:box-shadow .15s,border-color .15s}
+.art-row:hover{border-color:#6c63ff;box-shadow:0 4px 16px rgba(108,99,255,.10);text-decoration:none}
+.art-row-img{width:90px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.art-row-img-ph{width:90px;height:70px;border-radius:8px;flex-shrink:0;background:#f0f0f8;display:flex;align-items:center;justify-content:center;font-size:1.6em;color:#ccc}
+.art-row-body{flex:1;min-width:0}
+.art-row-date{font-size:11px;color:#bbb;margin-bottom:.3em}
+.art-row-title{font-size:.95em;font-weight:700;color:#1a1a2e;margin-bottom:.3em;line-height:1.4}
+.art-row-excerpt{font-size:13px;color:#888;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cat-empty{color:#bbb;font-size:14px;padding:2em 0;text-align:center}
 </style>
 
@@ -26,14 +29,14 @@ classes: wide
 <div id="cat-container"><div class="cat-empty">⏳ Caricamento...</div></div>
 
 <script>
-const BASE_URL = '{{ site.baseurl }}';
 const SITE_POSTS = [
   {% for post in site.posts %}
   {
     title: {{ post.title | jsonify }},
     url: "{{ post.url | relative_url }}",
     date: "{{ post.date | date: '%d %b %Y' }}",
-    excerpt: {{ post.excerpt | strip_html | truncate: 100 | jsonify }},
+    excerpt: {{ post.excerpt | strip_html | truncate: 120 | jsonify }},
+    image: {{ post.header.teaser | default: "" | jsonify }},
     categories: {{ post.categories | jsonify }}
   }{% unless forloop.last %},{% endunless %}
   {% endfor %}
@@ -43,17 +46,13 @@ const SITE_POSTS = [
   const params = new URLSearchParams(window.location.search);
   const cat = params.get('cat') || '';
   const container = document.getElementById('cat-container');
-
   if(!cat){ container.innerHTML = '<div class="cat-empty">Nessuna categoria specificata.</div>'; return; }
 
-  // Cerca descrizione categoria da data
   const CAT_DATA = {{ site.data.categorie | jsonify }};
   const catInfo = (CAT_DATA||[]).find(c => c.nome === cat) || {};
-
   const posts = SITE_POSTS.filter(p => p.categories && p.categories.includes(cat));
 
   document.title = cat + ' — Categorie';
-  document.querySelector('.cat-back') && (document.querySelector('.cat-back').textContent = '← Tutte le categorie');
 
   let html = `<div class="cat-header">
     <div class="cat-header-name">${cat}</div>
@@ -63,12 +62,18 @@ const SITE_POSTS = [
   if(!posts.length){
     html += '<div class="cat-empty">Nessun articolo in questa categoria.</div>';
   } else {
-    html += '<div class="post-grid">';
+    html += '<div class="art-list">';
     posts.forEach(p => {
-      html += `<a class="post-card" href="${p.url}">
-        <div class="post-card-date">${p.date}</div>
-        <div class="post-card-title">${p.title}</div>
-        <div class="post-card-excerpt">${p.excerpt}</div>
+      const img = p.image
+        ? `<img class="art-row-img" src="${p.image}" alt="${p.title}">`
+        : `<div class="art-row-img-ph">📄</div>`;
+      html += `<a class="art-row" href="${p.url}">
+        ${img}
+        <div class="art-row-body">
+          <div class="art-row-date">${p.date}</div>
+          <div class="art-row-title">${p.title}</div>
+          <div class="art-row-excerpt">${p.excerpt}</div>
+        </div>
       </a>`;
     });
     html += '</div>';
