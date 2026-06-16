@@ -79,6 +79,7 @@ author_profile: false
 .sp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .sp-sku{font-size:11px;color:#bbb;margin-top:1em}
+.sp-short-desc{font-size:14px;color:#444;line-height:1.7;margin:.6em 0 1em;border-left:3px solid #e8e8ff;padding-left:.8em}
 </style>
 
 <div id="prod-container" style="color:#aaa;padding:3em 0;text-align:center">
@@ -198,9 +199,10 @@ async function loadProduct() {
 
     // Prezzo
     const disc = discount(p.price_original, p.price);
+    const priceVal = p.price && parseFloat(p.price) > 0 ? `€ ${parseFloat(p.price).toFixed(2)}` : '<span style="color:#e74c3c;font-size:1em">Prezzo non impostato</span>';
     const priceHtml = `
       <div class="sp-price-row">
-        <span class="sp-price">€ ${p.price||'—'}</span>
+        <span class="sp-price">${priceVal}</span>
         ${p.price_original ? `<span class="sp-price-orig">€ ${p.price_original}</span>` : ''}
         ${disc ? `<span class="sp-discount">${disc}</span>` : ''}
       </div>
@@ -254,13 +256,14 @@ async function loadProduct() {
           ${p.badge ? `<div class="sp-badge">${p.badge}</div>` : ''}
           <h1 class="sp-title">${p.title||slug}</h1>
           ${ratingHtml}
+          <hr class="sp-divider" style="margin:.6em 0">
           ${priceHtml}
-          ${p.description ? `<div class="sp-short-desc" style="font-size:14px;color:#555;line-height:1.6;margin-bottom:1em">${p.description}</div>` : ''}
-          ${p.shipping ? `<div class="sp-shipping">🚚 ${p.shipping}</div>` : ''}
+          ${p.description ? `<p class="sp-short-desc">${p.description}</p>` : ''}
           <hr class="sp-divider">
           ${colorsHtml}
           ${sizesHtml}
           ${stockHtml}
+          ${p.shipping ? `<div class="sp-shipping">🚚 ${p.shipping}</div>` : ''}
           <div class="sp-qty-row">
             <div class="sp-qty">
               <button onclick="changeQty(-1)">−</button>
