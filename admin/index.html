@@ -553,7 +553,8 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
           <div class="field"><label>SKU</label><input type="text" id="prod-sku" placeholder="PROD-001"></div>
         </div>
         <div class="field"><label>Immagine (URL)</label><input type="text" id="prod-immagine" placeholder="https://..."></div>
-        <div class="field"><label>Descrizione</label><textarea class="sm" id="prod-corpo" placeholder="Descrizione del prodotto..."></textarea></div>
+        <div class="field"><label>Descrizione breve <span class="hint" style="display:inline">max 160 caratteri — mostrata nella lista categoria</span></label><input type="text" id="prod-description" placeholder="Breve descrizione del prodotto..."></div>
+        <div class="field"><label>Descrizione completa</label><textarea class="sm" id="prod-corpo" placeholder="Descrizione lunga del prodotto..."></textarea></div>
         <div class="btn-group">
           <button class="btn btn-primary" onclick="pubblicaProdotto()">🚀 Salva prodotto</button>
           <button class="btn btn-secondary" onclick="nuovoProdotto()">✚ Nuovo</button>
@@ -1525,6 +1526,7 @@ async function modificaProdotto(path){
   document.getElementById('prod-sku').value=meta.sku||'';
   document.getElementById('prod-immagine').value=meta.image||'';
   document.getElementById('prod-categoria').value=meta.category||'';
+  document.getElementById('prod-description').value=meta.description||'';
   document.getElementById('prod-corpo').value=fm[2].trim();
   _prodPath=path;
   showMsg('msg-prod','','');
@@ -1544,7 +1546,8 @@ async function pubblicaProdotto(){
   const path=_prodPath||`_products/${slug}.md`;
   let sha=undefined;
   if(_prodPath){const r=await ghGet(_prodPath);if(r.ok){const d=await r.json();sha=d.sha;}}
-  const md=`---\ntitle: "${titolo}"\nprice: ${prezzo||0}\nstock: ${stock||''}\nsku: "${sku}"\ncategory: "${categoria}"\nimage: "${immagine}"\nlayout: product\n---\n${corpo}`;
+  const description=document.getElementById('prod-description').value.trim();
+  const md=`---\ntitle: "${titolo}"\nprice: ${prezzo||0}\nstock: ${stock||''}\nsku: "${sku}"\ncategory: "${categoria}"\nimage: "${immagine}"\ndescription: "${description}"\nlayout: product\n---\n${corpo}`;
   showMsg('msg-prod','⏳ Salvataggio...','');
   const res=await ghPut(path,`Prodotto: ${titolo}`,md,sha);
   if(res.ok){showMsg('msg-prod','✅ Prodotto salvato!','ok');_prodPath=path;caricaProdotti();}

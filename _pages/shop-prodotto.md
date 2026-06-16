@@ -255,6 +255,7 @@ async function loadProduct() {
           <h1 class="sp-title">${p.title||slug}</h1>
           ${ratingHtml}
           ${priceHtml}
+          ${p.description ? `<div class="sp-short-desc" style="font-size:14px;color:#555;line-height:1.6;margin-bottom:1em">${p.description}</div>` : ''}
           ${p.shipping ? `<div class="sp-shipping">🚚 ${p.shipping}</div>` : ''}
           <hr class="sp-divider">
           ${colorsHtml}
