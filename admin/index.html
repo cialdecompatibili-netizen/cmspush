@@ -59,6 +59,10 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
 .vis-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:7px 8px;background:#f5f5f5;border:1.5px solid #e8e8e8;border-bottom:none;border-radius:7px 7px 0 0}
 .vis-toolbar button{padding:4px 9px;font-size:13px;font-weight:700;border:1.5px solid #ddd;border-radius:5px;background:white;cursor:pointer;color:#333;transition:all .12s;min-width:30px}
 .vis-toolbar button:hover{background:#6c63ff;color:white;border-color:#6c63ff}
+/* Deploy bar */
+.deploy-bar{position:absolute;bottom:0;left:0;width:0%;height:3px;background:linear-gradient(90deg,#6c63ff,#a89fff);transition:width .4s ease;border-radius:0 2px 2px 0}
+.deploy-live{font-size:11px;font-weight:700;color:#27ae60;background:rgba(39,174,96,.15);padding:3px 10px;border-radius:10px;opacity:0;transition:opacity .4s;pointer-events:none}
+.deploy-live.show{opacity:1}
 .vis-toolbar select{padding:4px 7px;font-size:12px;border:1.5px solid #ddd;border-radius:5px;background:white;cursor:pointer}
 #vis-editor{min-height:260px;border:1.5px solid #e8e8e8;border-radius:0 0 7px 7px;padding:12px 14px;font-size:14px;line-height:1.8;outline:none;background:white;overflow-y:auto}
 
@@ -96,12 +100,14 @@ textarea.sm{min-height:180px;font-family:'Courier New',monospace;font-size:13px;
     <div class="msg" id="msg-onboarding" style="margin-bottom:12px"></div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="salvaTokenOnboarding()">Inizia a usare il CMS</button>
   </div>
-</div><div class="topbar">
+</div><div class="topbar" style="position:fixed;overflow:hidden">
   <a id="topbar-admin-link" href="#" target="_self" class="topbar-title" style="text-decoration:none;color:white;cursor:pointer">✍️ cmspush Admin</a>
   <div style="display:flex;align-items:center;gap:14px">
+    <span id="deploy-live" class="deploy-live">✅ Live</span>
     <a id="topbar-deploy-link" href="#" target="_blank" class="topbar-link" title="Vedi deploy su GitHub Actions">🚀 Deploy ↗</a>
     <a id="topbar-site-link" href="#" target="_blank" class="topbar-link">🌐 Vai al sito ↗</a>
   </div>
+  <div id="deploy-bar" class="deploy-bar"></div>
 </div>
 
 <div class="layout">
@@ -688,6 +694,45 @@ function legacyMdToHtml(md){
     .replace(/\n\n/g,'</p><p>')
     .replace(/\n/g,'<br>');
 }
+// DEPLOY BAR — polling GitHub Actions dopo ogni salvataggio
+function startDeployPolling(){
+  const bar=document.getElementById('deploy-bar');
+  const live=document.getElementById('deploy-live');
+  if(!bar)return;
+  live.classList.remove('show');
+  bar.style.transition='none';bar.style.width='0%';
+  // Animazione simulata: 0→85% in 50s, poi aspetta il deploy reale
+  let pct=0;
+  const fakeTimer=setInterval(()=>{
+    if(pct<85){pct+=pct<30?3:pct<60?1.5:.5;}
+    bar.style.transition='width .8s ease';
+    bar.style.width=pct+'%';
+  },1200);
+  // Polling reale GitHub Actions
+  const token=(()=>{try{return localStorage.getItem('gh_token')||'';}catch(e){return '';}})();
+  if(!token){clearInterval(fakeTimer);bar.style.width='0%';return;}
+  let tentativi=0;
+  const pollTimer=setInterval(async()=>{
+    tentativi++;
+    if(tentativi>24){clearInterval(pollTimer);clearInterval(fakeTimer);bar.style.width='0%';return;}
+    try{
+      const res=await fetch('https://api.github.com/repos/'+REPO+'/actions/runs?branch=main&per_page=5',{headers:{Authorization:'token '+token}});
+      if(!res.ok)return;
+      const data=await res.json();
+      const run=(data.workflow_runs||[]).find(r=>r.name==='pages build and deployment');
+      if(run&&run.status==='completed'){
+        clearInterval(pollTimer);clearInterval(fakeTimer);
+        bar.style.transition='width .3s ease';bar.style.width='100%';
+        setTimeout(()=>{
+          bar.style.transition='width .6s ease';bar.style.width='0%';
+          live.classList.add('show');
+          setTimeout(()=>live.classList.remove('show'),3000);
+        },500);
+      }
+    }catch(e){}
+  },10000);
+}
+
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
@@ -984,7 +1029,7 @@ async function salvaPagina(){
     const res=await ghPut(_paginaPath,'Aggiorna pagina: '+titolo,content,_paginaSha||undefined);
     clearInterval(timer);
     const j=await res.json();
-    if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Torno alla lista...','ok');setTimeout(()=>tornaPagine(),1200);}
+    if(res.ok){_paginaSha=j.content.sha;showMsg('msg-pag','✅ Salvata! Torno alla lista...','ok');startDeployPolling();setTimeout(()=>tornaPagine(),1200);}
     else showMsg('msg-pag','❌ '+j.message,'err');
   }catch(e){showMsg('msg-pag','❌ Errore: '+e.message,'err');}
 }
@@ -1137,6 +1182,7 @@ async function pubblica(){
     if(res.ok){
       window._editSha=null;window._editPath=null;
       showMsg('msg-art','✅ Pubblicato! Torno alla lista...','ok');
+      startDeployPolling();
       setTimeout(()=>tornaListaArticoli(),1200);
     }
     else showMsg('msg-art','❌ '+json.message,'err');
@@ -1550,7 +1596,7 @@ async function pubblicaProdotto(){
   const md=`---\ntitle: "${titolo}"\nprice: ${prezzo||0}\nstock: ${stock||''}\nsku: "${sku}"\ncategory: "${categoria}"\nimage: "${immagine}"\ndescription: "${description}"\nlayout: product\n---\n${corpo}`;
   showMsg('msg-prod','⏳ Salvataggio...','');
   const res=await ghPut(path,`Prodotto: ${titolo}`,md,sha);
-  if(res.ok){showMsg('msg-prod','✅ Prodotto salvato!','ok');_prodPath=path;caricaProdotti();}
+  if(res.ok){showMsg('msg-prod','✅ Prodotto salvato!','ok');startDeployPolling();_prodPath=path;caricaProdotti();}
   else{const j=await res.json();showMsg('msg-prod','❌ '+j.message,'err');}
 }
 
