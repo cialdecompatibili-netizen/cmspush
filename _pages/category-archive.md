@@ -19,7 +19,7 @@ classes: wide
 {% assign cats = site.categories | sort %}
 {% for cat in cats %}
   {% assign cat_data = site.data.categorie | where: "nome", cat[0] | first %}
-  <a class="cat-card" href="{{ '/cat-list/#' | append: cat[0] | relative_url }}">
+  <a class="cat-card" href="{{ '/categoria/?cat=' | append: cat[0] | relative_url }}">
     <div class="cat-card-name">{{ cat[0] }}</div>
     <div class="cat-card-desc">{{ cat_data.descrizione | strip_html | truncate: 80 }}</div>
     <div class="cat-card-count">{{ cat[1].size }} articoli →</div>
