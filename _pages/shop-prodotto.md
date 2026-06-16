@@ -8,6 +8,7 @@ author_profile: false
 
 <style>
 *{box-sizing:border-box}
+#page-title{display:none}
 .sp-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2.5em;max-width:1000px;margin:0 auto}
 @media(max-width:700px){.sp-wrap{grid-template-columns:1fr}}
 
