@@ -80,7 +80,7 @@ author_profile: false
 .sp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .sp-sku{font-size:11px;color:#bbb;margin-top:1em}
-.sp-short-desc{font-size:14px;color:#444;line-height:1.7;margin:.6em 0 1em;border-left:3px solid #e8e8ff;padding-left:.8em}
+.sp-short-desc{font-size:14px;color:#555;line-height:1.6;margin-bottom:.8em}
 </style>
 
 <div id="prod-container" style="color:#aaa;padding:3em 0;text-align:center">
