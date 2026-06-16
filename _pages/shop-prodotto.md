@@ -256,14 +256,13 @@ async function loadProduct() {
           ${p.badge ? `<div class="sp-badge">${p.badge}</div>` : ''}
           <h1 class="sp-title">${p.title||slug}</h1>
           ${ratingHtml}
-          <hr class="sp-divider" style="margin:.6em 0">
           ${priceHtml}
           ${p.description ? `<p class="sp-short-desc">${p.description}</p>` : ''}
+          ${p.shipping ? `<div class="sp-shipping">🚚 ${p.shipping}</div>` : ''}
           <hr class="sp-divider">
           ${colorsHtml}
           ${sizesHtml}
           ${stockHtml}
-          ${p.shipping ? `<div class="sp-shipping">🚚 ${p.shipping}</div>` : ''}
           <div class="sp-qty-row">
             <div class="sp-qty">
               <button onclick="changeQty(-1)">−</button>
