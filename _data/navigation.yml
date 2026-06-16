@@ -18,8 +18,6 @@ main:
         url: /shop/carrello/
   - title: "Categories"
     url: /categories/
-  - title: "Tags"
-    url: /tags/
   - title: "Changelog"
     url: /changelog/
   - title: "About"
